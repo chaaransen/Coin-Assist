@@ -27,16 +27,23 @@ export class MyApp {
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider) {
     this.initializeApp();
     // used for an example of ngFor and navigation
-    console.log("APP component - get urls");
-    this.apiUrls = this.api.getApiUrl();
-
     this.pages = [
       { title: 'Home', component: HomePage }
     ];
   }
 
   ngOnInit() {
+    // console.log("GET - api urls from app component");
 
+    this.api.fetchApiUrl().subscribe(res => {
+      // console.log("fetched in app component");
+      // console.log(res);
+      this.api.storeApiUrl(res);
+    },
+      err => {
+        console.log("App component - error fetching data");
+
+      });
   }
 
   initializeApp() {

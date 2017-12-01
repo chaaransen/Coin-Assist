@@ -5,6 +5,7 @@ import 'rxjs/Rx';
 import { ApiUrls } from '../../models/api-urls';
 import { Storage } from '@ionic/storage';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
+import * as Constants from '../../constants/api-constants';
 
 @Component({
   selector: 'page-home',
@@ -13,17 +14,30 @@ import { NavParams } from 'ionic-angular/navigation/nav-params';
 export class HomePage {
 
   exchanges: any;
-  exchange: any;
+  exchange: string;
   apiUrls: any;
+  selExchange: any;
 
   constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams) {
-    this.apiUrls = this.navParam.get("apiUrls");
-    console.log(this.apiUrls);
-    console.log("home page");
+
   }
 
-  getExchanges() {
+  ngOnInit() {
+    // console.log("Home component - get urls");
 
+    this.api.getApiUrlStorage().then(res => {
+      if (res != null) {
+        this.apiUrls = res;
+      }
+      else {
+        this.apiUrls = this.api.getConstantApiUrl();
+      }
+      // console.log("Home Compo Value return");
+
+      // console.log(this.apiUrls);
+      this.api.setApiUrl(this.apiUrls);
+      this.populateView();
+    });
   }
 
   doRefresh(refresher) {
@@ -31,5 +45,27 @@ export class HomePage {
     setTimeout(() => {
       refresher.complete();
     }, 800);
+  }
+
+  populateView() {
+    this.exchanges = Object.keys(this.apiUrls.exchange);
+    this.selExchange = this.exchanges[0];
+    this.selectedExchange(this.selExchange);
+  }
+
+  public selectedExchange(sel: any) {
+    this.api.getExchangeData(sel).subscribe(res => {
+      console.log("this is Exchange data");
+      console.log(res);
+      this.api.processExchangeData(sel, res).subscribe(res => {
+        console.log("Processed data");
+        console.log(res);
+
+      });
+    },
+      err => {
+        console.log(err);
+
+      });
   }
 }

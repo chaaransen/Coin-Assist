@@ -8,6 +8,7 @@ import { NavController } from 'ionic-angular';
 export class CoinDetailPage {
 
   constructor(public navCtrl: NavController) {
+    console.log("coin detail component");
 
   }
 

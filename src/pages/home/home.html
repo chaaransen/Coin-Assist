@@ -14,14 +14,10 @@
     </ion-refresher-content>
   </ion-refresher>
 
-
-
-
   <ion-item>
     <ion-label>Exchange:</ion-label>
-    <ion-select [(ngModel)]="exchange">
-      <ion-option></ion-option>
+    <ion-select [(ngModel)]="selExchange" *ngIf="exchanges" interface="popover" (ngModelChange)="selectedExchange(selExchange)">
+      <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
     </ion-select>
   </ion-item>
-  <button (click)="getExchanges()"></button>
 </ion-content>
