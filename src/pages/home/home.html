@@ -20,4 +20,16 @@
       <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
     </ion-select>
   </ion-item>
+
+  <ion-list>
+    <ion-item *ngFor="let coin of coins">
+      <ion-thumbnail item-start>
+        <ion-img src="assets/imgs/{{coin.coinCode}}.png"></ion-img>
+        <h2>{{coin.coinName}} ({{coin.coinCode}})</h2>
+      </ion-thumbnail>
+      
+      <button ion-button clear item-end>></button>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

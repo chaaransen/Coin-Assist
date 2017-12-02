@@ -5,16 +5,17 @@ import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
 import { ApiUrls } from '../../models/api-urls';
 import * as Constants from '../../constants/api-constants'
+import { forkJoin } from "rxjs/observable/forkJoin";
 
 @Injectable()
 export class ApiDataProvider {
 
   apiUrls: any;
   apiUrlStore = "apiUrls";
-  coinListTemplate: any;
-  koinexData: any;
-  zebpayData: any;
+  koinexData: any[];
+  zebpayData: any[];
 
+  // ******************************************************************************
   // private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
 
   private coinAssistApis = "http://localhost:3000/apis";
@@ -61,6 +62,7 @@ export class ApiDataProvider {
     return this.storage.get(this.apiUrlStore);
   }
 
+  // ************************************************************************
   getKoinexData(): any {
     // console.log("GET - koinex data");
     // console.log(this.apiUrls.exchange.koinex);
@@ -69,6 +71,7 @@ export class ApiDataProvider {
     return Observable.of(JSON.parse(Constants.KOINEX_DATA));
   }
 
+  // TO BE TESTED
   getZebpayData(): any {
     // console.log("GET - zebpay data");
     return this.http.get(this.apiUrls.exchange.zebpay);
@@ -92,14 +95,15 @@ export class ApiDataProvider {
 
   }
 
+  // TO BE TESTED
   getCoinName(coin: any) {
     switch (coin) {
       case "BTC":
         return Constants.BTC;
       case "ETH":
         return Constants.ETH;
-      case "XPR":
-        return Constants.XPR;
+      case "XRP":
+        return Constants.XRP;
       case "BCH":
         return Constants.BCH;
       case "LTC":
@@ -107,25 +111,47 @@ export class ApiDataProvider {
     }
   }
 
-  koinexProcessor(data: any): any {
-
-    var coinList = data.stats;
+  // TO BE TESTED
+  koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
+    var processedKoinexData = [];
+    var coinList = exchangeData.stats;
     for (let coin in coinList) {
 
-      let template = this.coinListTemplate;
-      template.coin = this.getCoinName(coin);
-      template.market = coinList[coin].last_traded_price;
-      template.buy = coinList[coin].lowest_ask;
-      template.sell = coinList[coin].highest_bid;
-
+      let processedCoin: any = {};
+      processedCoin.coinName = this.getCoinName(coin);
+      processedCoin.coinCode = coin;
+      processedCoin.market = coinList[coin].last_traded_price;
+      processedCoin.buy = coinList[coin].lowest_ask;
+      processedCoin.sell = coinList[coin].highest_bid;
       let min = +coinList[coin].min_24hrs;
       let max = +coinList[coin].max_24hrs;
 
-      template.price_index = this.getPriceIndex(min, max, template.market);
-
+      processedCoin.price_index = this.getPriceIndex(min, max, processedCoin.market);
+      processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+      // console.log(processedCoin);
+      processedKoinexData.push(processedCoin);
     }
 
-    return "koinex Processed";
+    return processedKoinexData;
+  }
+
+  // TO BE TESTED
+  getCoinGlobalStats(coinSymbol, coinMarketCapData, coinDeskData): any {
+    var coinGlobalStats: any = {};
+
+    for (let coin in coinMarketCapData) {
+      if (coinMarketCapData[coin].symbol == coinSymbol) {
+        coinGlobalStats.change = coinMarketCapData[coin].percent_change_24h;
+        if (coinMarketCapData[coin].symbol == "BTC") {
+          coinGlobalStats.globalINR = coinDeskData.bpi.INR.rate_float;
+          coinGlobalStats.globalUSD = coinDeskData.bpi.USD.rate_float;
+        } else {
+          coinGlobalStats.globalINR = coinMarketCapData[coin].price_inr;
+          coinGlobalStats.globalUSD = coinMarketCapData[coin].price_usd;
+        }
+        return coinGlobalStats;
+      }
+    }
   }
 
   // TO BE TESTED
@@ -136,85 +162,105 @@ export class ApiDataProvider {
     let lowRegionHigh = min + diff
     let mediumRegionHigh = (min + (2 * diff));
 
-    if (current <= min) {
-      return "VERY LOW"
-    } else if (current <= lowRegionHigh && current > min) {
+    if (current <= lowRegionHigh && current > min) {
       return "LOW"
     } else if (current <= mediumRegionHigh && current > lowRegionHigh) {
       return "MEDIUM";
     } else if (current <= max && current > mediumRegionHigh) {
       return "HIGH";
-    } else if (current > max) {
-      return "VERY HIGH";
     }
 
   }
 
-  zebpayProcessor(): any {
+  // TO BE TESTED
+  zebpayProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
+    var processedZebpayData = [];
+    let coin = "BTC";
+    let zebpayData = exchangeData;
 
+    let processedCoin: any = {};
+    processedCoin.coinName = this.getCoinName(coin);
+    processedCoin.coinCode = coin;
+    processedCoin.market = zebpayData.market;
+    processedCoin.buy = zebpayData.buy;
+    processedCoin.sell = zebpayData.sell;
+    processedCoin.price_index = this.getPriceIndexZebpay(+processedCoin.buy, +processedCoin.sell);
+
+    processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+    console.log(processedCoin);
+    processedZebpayData.push(processedCoin);
+    return processedZebpayData;
   }
 
-  // TO BE TESTED
-  getCoindeskData(currencyType: string): any {
-    switch (currencyType) {
-      case "INR": {
-        return this.http.get(this.apiUrls.global.coindesk.api.INR);
-      }
-      case "USD": {
-        return this.http.get(this.apiUrls.global.coindesk.api.USD);
-      }
+  injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData): any {
+    let coinGlobalStats = this.getCoinGlobalStats(coin, coinMarketCapData, coinDeskData);
+    processedCoin.globalINR = coinGlobalStats.globalINR;
+    processedCoin.globalUSD = coinGlobalStats.globalUSD;
+    processedCoin.change = coinGlobalStats.change;
+    return processedCoin;
+  }
+
+  getPriceIndexZebpay(buy, sell) {
+    let diff = buy - sell;
+
+    if (diff < 10000) { return "LOW" }
+    else if (diff < 20000 && diff >= 10000) {
+      return "MEDIUM";
+    } else if (diff >= 20000) {
+      return "HIGH";
     }
   }
 
   // TO BE TESTED
-  getCoinMarketCapDataCurrency(currencyType: string): any {
-    switch (currencyType) {
-      case "INR": {
-        return this.http.get(this.apiUrls.global.coinmarketcap.api.INR);
-      }
-      case "USD": {
-        return this.http.get(this.apiUrls.global.coinmarketcap.api.USD);
-      }
-    }
+  getCoindeskData(): any {
+    return this.http.get(this.apiUrls.global.coindesk.api);
   }
 
   // TO BE TESTED
-  getCoinMarketCapDataCoin(coin: string): any {
+  getCoinMarketCapData(coin: string): any {
     switch (coin) {
-      case "BTC": {
+      case Constants.BTC: {
         return this.http.get(this.apiUrls.global.coinmarketcap.coin.BTC);
       }
-      case "ETH": {
+      case Constants.ETH: {
         return this.http.get(this.apiUrls.global.coinmarketcap.coin.ETH);
       }
-      case "BCH": {
+      case Constants.BCH: {
         return this.http.get(this.apiUrls.global.coinmarketcap.coin.BCH);
       }
-      case "LTC": {
+      case Constants.LTC: {
         return this.http.get(this.apiUrls.global.coinmarketcap.coin.LTC);
       }
-      case "XPR": {
+      case Constants.XRP: {
         return this.http.get(this.apiUrls.global.coinmarketcap.coin.XPR);
+      }
+      case Constants.ALL: {
+        let coinMarketCapApi = this.apiUrls.global.coinmarketcap.api + this.apiUrls.global.coinmarketcap.coin_limit;
+        return this.http.get(coinMarketCapApi);
       }
     }
   }
 
-  
-  processExchangeData(exchange: any, exchangeData: any): Observable<any> {
-    this.coinListTemplate = JSON.parse(Constants.COIN_LIST_TEMPLATE);
+  // TO BE TESTED
+  processExchangeData(exchange: any, exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
+
     switch (exchange) {
       case "koinex":
         {
           // console.log("switch case koinex");
 
-          return Observable.of(this.koinexProcessor(exchangeData));
+          return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
         }
       case "zebpay":
         {
           // console.log("switch case zebpay");
-          return Observable.of(this.zebpayProcessor());
+          return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
         }
     }
   }
 
+  // TO BE TESTED
+  getMarketOverviewData(sel: string, coin: string): any {
+    return Observable.forkJoin([this.getExchangeData(sel), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+  }
 }

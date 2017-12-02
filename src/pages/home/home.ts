@@ -6,6 +6,7 @@ import { ApiUrls } from '../../models/api-urls';
 import { Storage } from '@ionic/storage';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import * as Constants from '../../constants/api-constants';
+import { forkJoin } from "rxjs/observable/forkJoin";
 
 @Component({
   selector: 'page-home',
@@ -14,7 +15,7 @@ import * as Constants from '../../constants/api-constants';
 export class HomePage {
 
   exchanges: any;
-  exchange: string;
+  coins: string;
   apiUrls: any;
   selExchange: any;
 
@@ -41,7 +42,7 @@ export class HomePage {
   }
 
   doRefresh(refresher) {
-
+    this.populateView();
     setTimeout(() => {
       refresher.complete();
     }, 800);
@@ -54,14 +55,19 @@ export class HomePage {
   }
 
   public selectedExchange(sel: any) {
-    this.api.getExchangeData(sel).subscribe(res => {
-      console.log("this is Exchange data");
-      console.log(res);
-      this.api.processExchangeData(sel, res).subscribe(res => {
-        console.log("Processed data");
-        console.log(res);
 
-      });
+    this.api.getMarketOverviewData(sel, Constants.ALL).subscribe(res => {
+      // console.log("first data - exchange data");
+      // console.log(res[0]);
+      // console.log("second data - coin market Cap data");
+      // console.log(res[1]);
+      // console.log("third data - coindesk data");
+      // console.log(res[2]);
+
+      this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
+      console.log("processed exchange data");
+      console.log(this.coins);
+
     },
       err => {
         console.log(err);
