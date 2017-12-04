@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import * as Constants from '../../constants/api-constants';
 import { forkJoin } from "rxjs/observable/forkJoin";
+import { CoinDetailPage } from '../coin-detail/coin-detail';
 
 @Component({
   selector: 'page-home',
@@ -73,5 +74,9 @@ export class HomePage {
         console.log(err);
 
       });
+  }
+
+  navCoinDetailPage(coin: any) {
+    this.navCtrl.push(CoinDetailPage, { "coin": coin });
   }
 }

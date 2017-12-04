@@ -25681,3 +25681,24 @@ ion-navbar.toolbar {
 .scroll-content {
   overflow-y: auto !important;
 }
+
+page-home .item-md ion-thumbnail ion-img,
+page-home .item-md ion-thumbnail img {
+  width: 5rem;
+  height: 5rem;
+}
+
+page-home .item-md ion-avatar[item-left],
+page-home .item-md ion-thumbnail[item-left],
+page-home .item-md ion-avatar[item-start],
+page-home .item-md ion-thumbnail[item-start] {
+  margin: 8px 0px 8px 0;
+}
+
+page-home * {
+  font-size: 1.3rem;
+}
+
+page-home .text-center {
+  text-align: center;
+}

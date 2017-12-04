@@ -8,4 +8,49 @@
 </ion-header>
 
 <ion-content padding>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-card>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-5>
+              <ion-thumbnail item-start>
+                <img src="assets/imgs/{{coinDetail.coinCode}}.png">
+              </ion-thumbnail>
+            </ion-col>
+            <ion-col col-7>
+              <h1>{{coinDetail.coinName}} ( {{coinDetail.coinCode}} )</h1>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+
+        <h1>{{coinDetail.market.formatted}}</h1>
+        <h2>{{coinDetail.change}}</h2>
+
+        <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>
+      </ion-item>
+      <ion-item>
+        Buy: {{coinDetail.buy.no}} Sell: {{coinDetail.sell.no}}
+      </ion-item>
+      <ion-item>
+        <h2> From : {{rangeRegion.lower}}</h2>
+        <h2> To: {{rangeRegion.upper}}</h2>
+      </ion-item>
+      <ion-item>
+        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"
+          [min]="coinDetail.minus30.no" [max]="coinDetail.plus30.no">
+          <ion-label range-left>{{coinDetail.minus30.formatted}}</ion-label>
+          <ion-label range-right>{{coinDetail.plus30.formatted}}</ion-label>
+        </ion-range>
+      </ion-item>
+    </ion-card>
+
+  </ion-list>
 </ion-content>

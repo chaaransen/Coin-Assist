@@ -1,3 +1,19 @@
 page-home {
-
+    .item-md ion-thumbnail ion-img,
+    .item-md ion-thumbnail img {
+        width: 5rem;
+        height: 5rem;
+    }
+    .item-md ion-avatar[item-left],
+    .item-md ion-thumbnail[item-left],
+    .item-md ion-avatar[item-start],
+    .item-md ion-thumbnail[item-start] {
+        margin: 8px 0px 8px 0;
+    }
+    * {
+        font-size: 1.3rem;
+    }
+    .text-center {
+        text-align: center;
+    }
 }
