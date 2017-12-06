@@ -67,8 +67,8 @@ export class ApiDataProvider {
     // console.log("GET - koinex data");
     // console.log(this.apiUrls.exchange.koinex);
 
-    return this.http.get(this.apiUrls.exchange.koinex);
-    // return Observable.of(JSON.parse(Constants.KOINEX_DATA));
+    // return this.http.get(this.apiUrls.exchange.koinex);
+    return Observable.of(JSON.parse(Constants.KOINEX_DATA));
   }
 
   // TO BE TESTED
@@ -115,6 +115,21 @@ export class ApiDataProvider {
   koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
     var processedKoinexData = [];
     var coinList = exchangeData.stats;
+
+    // console.log(coinList, "before");
+
+    if (coinMarketCapData.length == 1) {
+      var singleCoin = {}
+      // console.log(coinMarketCapData);
+
+      // console.log(coinList[coinMarketCapData[0].symbol]);
+
+      singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
+      coinList = singleCoin;
+      // console.log(coinList, "after");
+
+    }
+
     for (let coin in coinList) {
 
       var processedCoin: any = {};
@@ -133,7 +148,7 @@ export class ApiDataProvider {
       processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
       processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
       processedCoin = this.coinDetailFormatter(processedCoin);
-      console.log(processedCoin);
+      // console.log(processedCoin);
       processedKoinexData.push(processedCoin);
     }
 
@@ -153,20 +168,20 @@ export class ApiDataProvider {
     return processedCoin;
   }
 
-  plusMinus30Percent(processedCoin, market): any {
+  plusMinus20Percent(processedCoin, market): any {
     let marketPrice = +market;
-    let percent30 = (marketPrice * 0.3);
-    let plus30 = marketPrice + percent30;
-    let minus30 = marketPrice - percent30;
+    let percent20 = (marketPrice * 0.2);
+    let plus20 = marketPrice + percent20;
+    let minus20 = marketPrice - percent20;
 
-    processedCoin.plus30 = {};
-    processedCoin.minus30 = {};
+    processedCoin.plus20 = {};
+    processedCoin.minus20 = {};
 
-    processedCoin.plus30.no = plus30;
-    processedCoin.minus30.no = minus30;
+    processedCoin.plus20.no = plus20;
+    processedCoin.minus20.no = minus20;
 
-    processedCoin.plus30.formatted = this.numberFormatter(processedCoin.plus30.no);
-    processedCoin.minus30.formatted = this.numberFormatter(processedCoin.minus30.no);
+    processedCoin.plus20.formatted = this.numberFormatter(processedCoin.plus20.no);
+    processedCoin.minus20.formatted = this.numberFormatter(processedCoin.minus20.no);
 
     return processedCoin;
   }
@@ -178,7 +193,7 @@ export class ApiDataProvider {
   rangeStepCalculator(min, max): any {
     let diff = max - min;
     let step = diff / 50;
-    console.log(step);
+    // console.log("Steps ", step);
 
     return step;
   }
@@ -241,7 +256,7 @@ export class ApiDataProvider {
 
     processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
     processedCoin = this.coinDetailFormatter(processedCoin);
-    console.log(processedCoin);
+    // console.log(processedCoin);
     processedZebpayData.push(processedCoin);
     return processedZebpayData;
   }

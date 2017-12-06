@@ -18,6 +18,7 @@
       <ion-item>
         <ion-grid>
           <ion-row>
+            {{exchange}}
             <ion-col col-5>
               <ion-thumbnail item-start>
                 <img src="assets/imgs/{{coinDetail.coinCode}}.png">
@@ -37,7 +38,7 @@
         <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>
       </ion-item>
       <ion-item>
-        Buy: {{coinDetail.buy.no}} Sell: {{coinDetail.sell.no}}
+        Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}
       </ion-item>
       <ion-item>
         <h2> From : {{rangeRegion.lower}}</h2>
@@ -45,10 +46,17 @@
       </ion-item>
       <ion-item>
         <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"
-          [min]="coinDetail.minus30.no" [max]="coinDetail.plus30.no">
-          <ion-label range-left>{{coinDetail.minus30.formatted}}</ion-label>
-          <ion-label range-right>{{coinDetail.plus30.formatted}}</ion-label>
+          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">
+          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>
+          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>
         </ion-range>
+      </ion-item>
+      <ion-item>
+        <button ion-button large>Set Alert</button>
+
+      </ion-item>
+      <ion-item>
+        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
       </ion-item>
     </ion-card>
 

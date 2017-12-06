@@ -8,6 +8,7 @@ import { FavouritesPage } from '../pages/favourites/favourites';
 import { RemindersPage } from '../pages/reminders/reminders';
 import { ProfitCalcPage } from '../pages/profit-calc/profit-calc';
 import { ApiDataProvider } from '../providers/api-data/api-data';
+import { NewsPage } from '../pages/news/news';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,6 +21,7 @@ export class MyApp {
   tab2Root = FavouritesPage;
   tab3Root = RemindersPage;
   tab4Root = ProfitCalcPage;
+  tab5Root = NewsPage;
 
   apiUrls: any;
   pages: Array<{ title: string, component: any }>;

@@ -66,8 +66,8 @@ export class HomePage {
       // console.log(res[2]);
 
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
-      console.log("processed exchange data");
-      console.log(this.coins);
+      // console.log("processed exchange data");
+      // console.log(this.coins);
 
     },
       err => {
@@ -77,6 +77,6 @@ export class HomePage {
   }
 
   navCoinDetailPage(coin: any) {
-    this.navCtrl.push(CoinDetailPage, { "coin": coin });
+    this.navCtrl.push(CoinDetailPage, { "coin": coin, "exchange": this.selExchange });
   }
 }

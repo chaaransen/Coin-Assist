@@ -14,6 +14,8 @@ import { ApiDataProvider } from '../providers/api-data/api-data';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from "@angular/common/http";
 import { IonicStorageModule } from '@ionic/storage';
+import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
+import { NewsPage } from '../pages/news/news';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { IonicStorageModule } from '@ionic/storage';
     FavouritesPage,
     RemindersPage,
     ProfitCalcPage,
+    QuantityCalcPage,
+    NewsPage,
 
   ],
   imports: [
@@ -46,6 +50,8 @@ import { IonicStorageModule } from '@ionic/storage';
     FavouritesPage,
     RemindersPage,
     ProfitCalcPage,
+    QuantityCalcPage,
+    NewsPage,
   ],
   providers: [
     StatusBar,
