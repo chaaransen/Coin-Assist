@@ -67,8 +67,8 @@ export class ApiDataProvider {
     // console.log("GET - koinex data");
     // console.log(this.apiUrls.exchange.koinex);
 
-    // return this.http.get(this.apiUrls.exchange.koinex);
-    return Observable.of(JSON.parse(Constants.KOINEX_DATA));
+    return this.http.get(this.apiUrls.exchange.koinex);
+    // return Observable.of(JSON.parse(Constants.KOINEX_DATA));
   }
 
   // TO BE TESTED
@@ -187,7 +187,7 @@ export class ApiDataProvider {
   }
 
   numberFormatter(number: any, locale: any = 'hi-IN', currency: any = 'INR'): any {
-    return parseInt(number).toLocaleString(locale, { style: 'currency', currency: currency });
+    return number.toLocaleString(locale, { style: 'currency', currency: currency });
   }
 
   rangeStepCalculator(min, max): any {

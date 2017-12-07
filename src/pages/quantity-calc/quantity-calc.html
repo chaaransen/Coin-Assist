@@ -8,28 +8,44 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-list>
+
+    <ion-item>
+      <ion-label fixed>Exchange</ion-label>
       <ion-select>
         <ion-option></ion-option>
       </ion-select>
-    </ion-row>
-    <ion-row>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Crypto-Coin</ion-label>
       <ion-select>
         <ion-option></ion-option>
       </ion-select>
-    </ion-row>
-    <ion-row>
-      <ion-input></ion-input>
-    </ion-row>
-    <ion-row>
-      <ion-input></ion-input>
-    </ion-row>
-    <ion-row>
-      <ion-input></ion-input>
-    </ion-row>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Coin Rate</ion-label>
+      <ion-input type="number" placeholder="Rate"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Amount in Rs</ion-label>
+      <ion-input type="number" placeholder="Rate"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Quantity</ion-label>
+      <ion-input type="number" placeholder="Quantity"></ion-input>
+    </ion-item>
+
     <ion-item>
       <button ion-button>Calculate Quantity / Amount</button>
     </ion-item>
-  </ion-grid>
+  </ion-list>
 </ion-content>

@@ -78,6 +78,6 @@ export class CoinDetailPage {
   }
 
   public gotoCalcQuantityPage() {
-    this.navCtrl.push(QuantityCalcPage);
+    this.navCtrl.push(QuantityCalcPage, { "coin": this.coinDetail, "exchange": this.exchange });
   }
 }
