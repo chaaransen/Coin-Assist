@@ -4,6 +4,7 @@ import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 import * as Constants from '../../constants/api-constants';
 import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
+import { CoinDetail } from '../../models/coin-detail';
 
 @Component({
   selector: 'page-coin-detail',
@@ -12,7 +13,7 @@ import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
 export class CoinDetailPage {
 
   exchange: any;
-  coinDetail: any;
+  coinDetail: CoinDetail;
   rangeRegion: any;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider) {
@@ -30,7 +31,6 @@ export class CoinDetailPage {
     }
     // console.log(this.rangeRegion);
     coin.step = this.api.rangeStepCalculator(coin.min.no, coin.max.no);
-    coin = this.api.plusMinus20Percent(coin, coin.market.no);
     this.coinDetail = coin;
 
     // console.log("coin detail");
@@ -55,8 +55,8 @@ export class CoinDetailPage {
 
   public selectedExchange(sel: any) {
 
-    let coinCode = this.api.getCoinName(this.coinDetail.coinCode);
-    this.api.getMarketOverviewData(sel, coinCode).subscribe(res => {
+    let coinName = this.api.getCoinName(this.coinDetail.coinCode);
+    this.api.getMarketOverviewData(sel, coinName).subscribe(res => {
       // console.log("COIN DETAIL");
       // console.log("first data - exchange data");
       // console.log(res[0]);
@@ -67,8 +67,7 @@ export class CoinDetailPage {
       var coinArray = this.api.processExchangeData(sel, res[0], res[1], res[2]);
       this.coinDetail = coinArray[0];
       this.initRange(this.coinDetail);
-      // console.log("coinDetail Processed Detail");
-      // console.log(this.coinDetail);
+      console.log(this.coinDetail, "coinDetail Processed Detail");
 
     },
       err => {
@@ -78,6 +77,6 @@ export class CoinDetailPage {
   }
 
   public gotoCalcQuantityPage() {
-    this.navCtrl.push(QuantityCalcPage, { "coin": this.coinDetail, "exchange": this.exchange });
+    this.navCtrl.push(QuantityCalcPage, { "coin": this.coinDetail.coinName, "exchange": this.exchange });
   }
 }

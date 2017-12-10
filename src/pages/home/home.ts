@@ -32,6 +32,8 @@ export class HomePage {
         this.apiUrls = res;
       }
       else {
+        console.log("constant Api urls called");
+
         this.apiUrls = this.api.getConstantApiUrl();
       }
       // console.log("Home Compo Value return");
@@ -50,6 +52,8 @@ export class HomePage {
   }
 
   populateView() {
+    // console.log(this.apiUrls.exchange);
+
     this.exchanges = Object.keys(this.apiUrls.exchange);
     this.selExchange = this.exchanges[0];
     this.selectedExchange(this.selExchange);
@@ -64,7 +68,7 @@ export class HomePage {
       // console.log(res[1]);
       // console.log("third data - coindesk data");
       // console.log(res[2]);
-
+      this.api.setExchangeData(sel, res[0]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
       // console.log("processed exchange data");
       // console.log(this.coins);
