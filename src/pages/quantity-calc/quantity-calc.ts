@@ -50,7 +50,7 @@ export class QuantityCalcPage {
   }
 
   doRefresh(refresher) {
-    console.log(this.selCoin.coinName,"sel Coin Name - Refresh");
+    console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.populateView();
     setTimeout(() => {
       refresher.complete();
@@ -73,8 +73,8 @@ export class QuantityCalcPage {
   }
 
   public populateCoinValues(selCoin: any) {
-    console.log(this.selCoin.coinName,"sel Coin Name - Refresh Populate");
-    
+    console.log(this.selCoin.coinName, "sel Coin Name - Refresh Populate");
+
     this.selCoin = this.coins.find(coin => this.selCoin.coinName == coin.coinName);
     console.log(this.selCoin, "selected coin - QTY");
     this.updateRange(this.selCoin.buy.no);

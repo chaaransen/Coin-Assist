@@ -71,8 +71,31 @@ export class ApiDataProvider {
       return Observable.of(JSON.parse(Constants.KOINEX_DATA));
     }
 
-    return this.http.get(this.apiUrls.exchange.koinex);
+    if (this.koinexData.lock != true) {
+      this.koinexData.lock = true;
+      setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
+      return this.http.get(this.apiUrls.exchange.koinex);
+    }
+    else {
+      console.log("Koinex Data call LOCKED");
 
+      return this.koinexData;
+    }
+
+
+  }
+
+  releaseExhangeLock(exchange: any) {
+    switch (exchange) {
+      case Constants.ZEBPAY:
+        this.koinexData.lock = false;
+        console.log(this.koinexData.lock, " LOCK released");
+
+        break;
+      case Constants.KOINEX:
+        this.zebpayData.lock = false;
+        break;
+    }
   }
 
   // TO BE TESTED

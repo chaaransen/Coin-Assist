@@ -38,9 +38,18 @@
         <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>
       </ion-item>
       <ion-item>
+        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
+      </ion-item>
+      <ion-item>
         Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}
       </ion-item>
       <ion-item>
+        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
+      </ion-item>
+
+      // Rage for setting price alert
+
+      <!-- <ion-item>
         <h2> From : {{rangeRegion.lower}}</h2>
         <h2> To: {{rangeRegion.upper}}</h2>
       </ion-item>
@@ -50,14 +59,14 @@
           <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>
           <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>
         </ion-range>
-      </ion-item>
-      <ion-item>
-        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
-      </ion-item>
-      <ion-item>
+      </ion-item> -->
+
+      // Alert Button
+
+      <!-- <ion-item>
         <button ion-button large>Set Alert</button>
 
-      </ion-item>
+      </ion-item> -->
 
     </ion-card>
 
