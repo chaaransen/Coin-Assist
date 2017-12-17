@@ -123,7 +123,7 @@ var HomePage = (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Market View</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-item>\n\n    <ion-label>Exchange:</ion-label>\n\n    <ion-select [(ngModel)]="selExchange" *ngIf="exchanges" interface="popover" (ngModelChange)="selectedExchange(selExchange)">\n\n      <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n    </ion-select>\n\n  </ion-item>\n\n\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-3>Cryptos</ion-col>\n\n          <ion-col col-4>\n\n            Market Price\n\n          </ion-col>\n\n          <ion-col col-2>Change\n\n            <br>%</ion-col>\n\n          <ion-col col-2>Price Index</ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card>\n\n    <ion-card *ngFor="let coin of coins" (click)="navCoinDetailPage(coin)">\n\n      <ion-item>\n\n        <ion-thumbnail item-start>\n\n          <img src="assets/imgs/{{coin.coinCode}}.png">\n\n          <h2>{{coin.coinName}}</h2>\n\n          <h2>({{coin.coinCode}})</h2>\n\n        </ion-thumbnail>\n\n        <ion-grid>\n\n          <ion-row>\n\n            <ion-col col-6>\n\n              <ion-row>\n\n                {{coin.market.formatted}}\n\n              </ion-row>\n\n            </ion-col>\n\n            <ion-col col-2>\n\n              {{coin.change}}\n\n            </ion-col>\n\n            <ion-col col-4>\n\n              {{coin.price_index}}\n\n            </ion-col>\n\n          </ion-row>\n\n          <ion-row *ngIf="coin.min.no">\n\n            <ion-col col-12>\n\n              Low: {{coin.min.formatted}}\n\n            </ion-col>\n\n          </ion-row>\n\n          <ion-row>\n\n            <ion-col col-12>\n\n              High: {{coin.max.formatted}}\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n        <button ion-button clear item-end>></button>\n\n      </ion-item>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Market View</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-item>\n\n    <ion-label>Exchange:</ion-label>\n\n    <ion-select [(ngModel)]="selExchange" *ngIf="exchanges" interface="popover" (ngModelChange)="selectedExchange(selExchange)">\n\n      <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n    </ion-select>\n\n  </ion-item>\n\n\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-3>Cryptos</ion-col>\n\n          <ion-col col-4>\n\n            Market Price\n\n          </ion-col>\n\n          <ion-col col-2>Change\n\n            <br>%</ion-col>\n\n          <ion-col col-2>Price Index</ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card>\n\n    <ion-card *ngFor="let coin of coins" (click)="navCoinDetailPage(coin)">\n\n      <ion-item>\n\n        <ion-thumbnail item-start>\n\n          <img src="assets/imgs/{{coin.coinCode}}.png">\n\n          <h2>{{coin.coinName}}</h2>\n\n          <h2>({{coin.coinCode}})</h2>\n\n        </ion-thumbnail>\n\n        <ion-grid>\n\n          <ion-row>\n\n            <ion-col col-6>\n\n              <ion-row>\n\n                {{coin.market.formatted}}\n\n              </ion-row>\n\n            </ion-col>\n\n            <ion-col col-2>\n\n              {{coin.change.hour}}\n\n            </ion-col>\n\n            <ion-col col-4>\n\n              {{coin.price_index}}\n\n            </ion-col>\n\n          </ion-row>\n\n          <ion-row *ngIf="coin.min.no">\n\n            <ion-col col-12>\n\n              Low: {{coin.min.formatted}}\n\n            </ion-col>\n\n          </ion-row>\n\n          <ion-row>\n\n            <ion-col col-12>\n\n              High: {{coin.max.formatted}}\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n        <button ion-button clear item-end>></button>\n\n      </ion-item>\n\n    </ion-card>\n\n  </ion-list>\n\n\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_5_ionic_angular_navigation_nav_params__["a" /* NavParams */]])
     ], HomePage);
@@ -249,7 +249,7 @@ var CoinDetailPage = (function () {
     };
     CoinDetailPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-item>\n\n        <ion-grid>\n\n          <ion-row>\n\n            {{exchange}}\n\n            <ion-col col-5>\n\n              <ion-thumbnail item-start>\n\n                <img src="assets/imgs/{{coinDetail.coinCode}}.png">\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-7>\n\n              <h1>{{coinDetail.coinName}} ( {{coinDetail.coinCode}} )</h1>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n      </ion-item>\n\n      <ion-item>\n\n\n\n        <h1>{{coinDetail.market.formatted}}</h1>\n\n        <h2>{{coinDetail.change}}</h2>\n\n\n\n        <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n      <ion-item>\n\n        Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n\n\n      // Rage for setting price alert\n\n\n\n      <!-- <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item> -->\n\n\n\n      // Alert Button\n\n\n\n      <!-- <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item> -->\n\n\n\n    </ion-card>\n\n\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
+            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-item>\n\n        <ion-grid>\n\n          <ion-row>\n\n            {{exchange}}\n\n            <ion-col col-5>\n\n              <ion-thumbnail item-start>\n\n                <img src="assets/imgs/{{coinDetail.coinCode}}.png">\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-7>\n\n              <h1>{{coinDetail.coinName}} ( {{coinDetail.coinCode}} )</h1>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n      </ion-item>\n\n      <ion-item>\n\n\n\n        <h1>{{coinDetail.market.formatted}}</h1>\n\n        <h2>{{coinDetail.change.hour}} {{coinDetail.change.day}} {{coinDetail.change.week}}\n\n        </h2>\n\n\n\n        <h2> [ global: {{coinDetail.global.INR.formatted}} ] ( {{coinDetail.global.USD.formatted}} ) </h2>\n\n        <h3>Global Difference: {{coinDetail.globalDiff.formatted}}</h3>\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n      <ion-item>\n\n        Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Invest</button>\n\n      </ion-item>\n\n\n\n      <!-- Rage for setting price alert -->\n\n\n\n      <!-- <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item> -->\n\n\n\n      <!-- Alert Button -->\n\n\n\n      <!-- <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item> -->\n\n\n\n    </ion-card>\n\n\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_3__providers_api_data_api_data__["a" /* ApiDataProvider */]])
     ], CoinDetailPage);
@@ -272,6 +272,7 @@ var CoinDetailPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__ = __webpack_require__(684);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_value_detail__ = __webpack_require__(685);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_range_value__ = __webpack_require__(686);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_range_value___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__models_range_value__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -307,7 +308,7 @@ var QuantityCalcPage = (function () {
     }
     ;
     QuantityCalcPage.prototype.initializeObjects = function () {
-        this.range = new __WEBPACK_IMPORTED_MODULE_6__models_range_value__["a" /* RangeValue */]();
+        this.range = new __WEBPACK_IMPORTED_MODULE_6__models_range_value__["RangeValue"]();
         this.range.minus20 = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.range.plus20 = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.range.rate = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
@@ -368,7 +369,7 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin" interface="popover" (ngModelChange)="populateCoinValues(selCoin)">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{range.rate.formatted}}\n\n    </ion-item>\n\n    <ion-item>\n\n      <ion-range [min]="range.minus20.no" [max]="range.plus20.no" [(ngModel)]="range.rate.no" (ionChange)="rangeChanged()">\n\n        <ion-label range-left>{{range.minus20.formatted}}</ion-label>\n\n        <ion-label range-right>{{range.plus20.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount in Rs</ion-label>\n\n      <ion-input type="number" placeholder="Rate" clearInput="true" [(ngModel)]="amount" (ngModelChange)="calcQuantity()"></ion-input>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="Quantity" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
+            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin" interface="popover" (ngModelChange)="populateCoinValues(selCoin)">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{selCoin.range.rate.formatted}}\n\n    </ion-item>\n\n    <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="0.25" snaps="true" [(ngModel)]="selCoin.range.rate.no"\n\n        (ionChange)="rangeChanged()">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="Quantity" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */]])
     ], QuantityCalcPage);
@@ -740,6 +741,9 @@ var MyApp = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(258);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__ = __webpack_require__(684);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -749,6 +753,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -803,18 +809,17 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.getKoinexData = function () {
         // console.log("GET - koinex data");
         // console.log(this.apiUrls.exchange.koinex);
-        if (this.LOCAL) {
-            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX_DATA */]));
-        }
-        if (this.koinexData.lock != true) {
-            this.koinexData.lock = true;
-            setTimeout(this.releaseExhangeLock(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]), 10000);
-            return this.http.get(this.apiUrls.exchange.koinex);
-        }
-        else {
-            console.log("Koinex Data call LOCKED");
-            return this.koinexData;
-        }
+        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX_DATA */]));
+        // else
+        //   if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+        //     this.koinexData.lock = true;
+        //     // setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
+        //     return this.http.get(this.apiUrls.exchange.koinex);
+        //   }
+        //   else {
+        //     console.log("Koinex Data call LOCKED");
+        //     return this.koinexData;
+        //   }
     };
     ApiDataProvider.prototype.releaseExhangeLock = function (exchange) {
         switch (exchange) {
@@ -883,68 +888,82 @@ var ApiDataProvider = (function () {
     };
     // TO BE TESTED
     ApiDataProvider.prototype.koinexProcessor = function (exchangeData, coinMarketCapData, coinDeskData) {
-        var processedKoinexData = [];
-        var coinList = exchangeData.stats;
-        // console.log(coinMarketCapData, "coinmarket cap data- processor");
-        // console.log(coinList, "before");
-        if (coinMarketCapData != undefined) {
-            if (coinMarketCapData.length == 1) {
-                var singleCoin = {};
-                // console.log(coinMarketCapData);
-                // console.log(coinList[coinMarketCapData[0].symbol]);
-                singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
-                coinList = singleCoin;
-                // console.log(coinList, "after");
-            }
-        }
-        for (var coin in coinList) {
-            var processedCoin = {};
-            processedCoin = this.processedCoinInitializer(processedCoin);
-            processedCoin.coinName = this.getCoinName(coin);
-            processedCoin.coinCode = coin;
-            processedCoin.market.no = +coinList[coin].last_traded_price;
-            processedCoin.buy.no = +coinList[coin].lowest_ask;
-            processedCoin.sell.no = +coinList[coin].highest_bid;
-            processedCoin.min.no = +coinList[coin].min_24hrs;
-            processedCoin.max.no = +coinList[coin].max_24hrs;
-            processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-            processedCoin = this.plusMinus20Percent(processedCoin, processedCoin.market.no);
-            // console.log(coinMarketCapData, "coin market data null check");
+        try {
+            var processedKoinexData = [];
+            var coinList = exchangeData.stats;
+            // console.log(coinMarketCapData, "coinmarket cap data- processor");
+            // console.log(coinList, "before");
             if (coinMarketCapData != undefined) {
-                processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+                if (coinMarketCapData.length == 1) {
+                    var singleCoin = {};
+                    // console.log(coinMarketCapData);
+                    // console.log(coinList[coinMarketCapData[0].symbol]);
+                    singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
+                    coinList = singleCoin;
+                    // console.log(coinList, "after");
+                }
             }
-            processedCoin = this.coinDetailFormatter(processedCoin);
-            // console.log(processedCoin);
-            processedKoinexData.push(processedCoin);
+            for (var coin in coinList) {
+                // var processedCoin: any = {};
+                var processedCoin = new __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__["a" /* CoinDetail */]();
+                processedCoin.coinName = this.getCoinName(coin);
+                processedCoin.coinCode = coin;
+                processedCoin.market.no = +coinList[coin].last_traded_price;
+                processedCoin.buy.no = +coinList[coin].lowest_ask;
+                processedCoin.sell.no = +coinList[coin].highest_bid;
+                processedCoin.min.no = +coinList[coin].min_24hrs;
+                processedCoin.max.no = +coinList[coin].max_24hrs;
+                processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+                // console.log(coinMarketCapData, "coin market data null check");
+                if (coinMarketCapData != undefined) {
+                    processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+                    processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
+                }
+                processedCoin = this.coinDetailFormatter(processedCoin);
+                // console.log(processedCoin);
+                processedKoinexData.push(processedCoin);
+            }
+            return processedKoinexData;
         }
-        return processedKoinexData;
+        catch (e) {
+            console.log(e);
+        }
     };
     ApiDataProvider.prototype.coinDetailFormatter = function (processedCoin) {
-        processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-        processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-        processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
-        if (processedCoin.min.no != undefined) {
-            processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-            processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+        try {
+            processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
+            processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
+            processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+            if (processedCoin.min.no != undefined) {
+                processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
+                processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+            }
+            if (processedCoin.global.INR.no != undefined) {
+                processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
+                processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+                processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
+            }
+            return processedCoin;
         }
-        if (processedCoin.globalINR.no != undefined) {
-            processedCoin.globalINR.formatted = this.numberFormatter(processedCoin.globalINR.no);
-            processedCoin.globalUSD.formatted = this.numberFormatter(processedCoin.globalUSD.no, 'en-US', 'USD');
+        catch (e) {
+            console.log(e);
         }
-        return processedCoin;
     };
-    ApiDataProvider.prototype.plusMinus20Percent = function (ObjectTarget, market) {
-        var marketPrice = +market;
-        var percent20 = (marketPrice * 0.2);
-        var plus20 = marketPrice + percent20;
-        var minus20 = marketPrice - percent20;
-        ObjectTarget.plus20 = {};
-        ObjectTarget.minus20 = {};
-        ObjectTarget.plus20.no = plus20;
-        ObjectTarget.minus20.no = minus20;
-        ObjectTarget.plus20.formatted = this.numberFormatter(ObjectTarget.plus20.no);
-        ObjectTarget.minus20.formatted = this.numberFormatter(ObjectTarget.minus20.no);
-        return ObjectTarget;
+    ApiDataProvider.prototype.plusMinusPercent = function (ObjectTarget, market, percent) {
+        try {
+            var marketPrice = +market;
+            var percentValue = (marketPrice * percent);
+            var plusPercent = marketPrice + percentValue;
+            var minusPercent = marketPrice - percentValue;
+            ObjectTarget.range.plusPercent.no = plusPercent;
+            ObjectTarget.range.minusPercent.no = minusPercent;
+            ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
+            ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
+            return ObjectTarget;
+        }
+        catch (e) {
+            console.log(e);
+        }
     };
     ApiDataProvider.prototype.numberFormatter = function (number, locale, currency) {
         if (locale === void 0) { locale = 'hi-IN'; }
@@ -953,26 +972,33 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.rangeStepCalculator = function (min, max) {
         var diff = max - min;
-        var step = diff / 50;
+        var step = diff / 10;
         // console.log("Steps ", step);
         return step;
     };
     // TO BE TESTED
     ApiDataProvider.prototype.getCoinGlobalStats = function (coinSymbol, coinMarketCapData, coinDeskData) {
-        var coinGlobalStats = {};
-        for (var coin in coinMarketCapData) {
-            if (coinMarketCapData[coin].symbol == coinSymbol) {
-                coinGlobalStats.change = coinMarketCapData[coin].percent_change_24h;
-                if (coinMarketCapData[coin].symbol == "BTC") {
-                    coinGlobalStats.globalINR = coinDeskData.bpi.INR.rate_float;
-                    coinGlobalStats.globalUSD = coinDeskData.bpi.USD.rate_float;
+        try {
+            var coinGlobalStats = {};
+            for (var coin in coinMarketCapData) {
+                if (coinMarketCapData[coin].symbol == coinSymbol) {
+                    coinGlobalStats.changeHour = coinMarketCapData[coin].percent_change_1h;
+                    coinGlobalStats.changeDay = coinMarketCapData[coin].percent_change_24h;
+                    coinGlobalStats.changeWeek = coinMarketCapData[coin].percent_change_7d;
+                    if (coinMarketCapData[coin].symbol == "BTC") {
+                        coinGlobalStats.globalINR = coinDeskData.bpi.INR.rate_float;
+                        coinGlobalStats.globalUSD = coinDeskData.bpi.USD.rate_float;
+                    }
+                    else {
+                        coinGlobalStats.globalINR = coinMarketCapData[coin].price_inr;
+                        coinGlobalStats.globalUSD = coinMarketCapData[coin].price_usd;
+                    }
+                    return coinGlobalStats;
                 }
-                else {
-                    coinGlobalStats.globalINR = coinMarketCapData[coin].price_inr;
-                    coinGlobalStats.globalUSD = coinMarketCapData[coin].price_usd;
-                }
-                return coinGlobalStats;
             }
+        }
+        catch (e) {
+            console.log(e);
         }
     };
     // TO BE TESTED
@@ -996,8 +1022,7 @@ var ApiDataProvider = (function () {
         var processedZebpayData = [];
         var coin = "BTC";
         var zebpayData = exchangeData;
-        var processedCoin = {};
-        processedCoin = this.processedCoinInitializer(processedCoin);
+        var processedCoin = new __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__["a" /* CoinDetail */]();
         processedCoin.coinName = this.getCoinName(coin);
         processedCoin.coinCode = coin;
         processedCoin.market.no = +zebpayData.market;
@@ -1014,22 +1039,19 @@ var ApiDataProvider = (function () {
         processedZebpayData.push(processedCoin);
         return processedZebpayData;
     };
-    ApiDataProvider.prototype.processedCoinInitializer = function (processedCoin) {
-        processedCoin.market = {};
-        processedCoin.buy = {};
-        processedCoin.sell = {};
-        processedCoin.min = {};
-        processedCoin.max = {};
-        processedCoin.globalINR = {};
-        processedCoin.globalUSD = {};
-        return processedCoin;
-    };
     ApiDataProvider.prototype.injectGlobalStats = function (coin, processedCoin, coinMarketCapData, coinDeskData) {
-        var coinGlobalStats = this.getCoinGlobalStats(coin, coinMarketCapData, coinDeskData);
-        processedCoin.globalINR.no = +coinGlobalStats.globalINR;
-        processedCoin.globalUSD.no = +coinGlobalStats.globalUSD;
-        processedCoin.change = +coinGlobalStats.change;
-        return processedCoin;
+        try {
+            var coinGlobalStats = this.getCoinGlobalStats(coin, coinMarketCapData, coinDeskData);
+            processedCoin.global.INR.no = +coinGlobalStats.globalINR;
+            processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
+            processedCoin.change.hour = +coinGlobalStats.changeHour;
+            processedCoin.change.day = +coinGlobalStats.changeDay;
+            processedCoin.change.week = +coinGlobalStats.changeWeek;
+            return processedCoin;
+        }
+        catch (e) {
+            console.log(e);
+        }
     };
     ApiDataProvider.prototype.getPriceIndexZebpay = function (buy, sell) {
         var diff = buy - sell;
@@ -1074,23 +1096,33 @@ var ApiDataProvider = (function () {
     // TO BE TESTED
     ApiDataProvider.prototype.processExchangeData = function (exchange, exchangeData, coinMarketCapData, coinDeskData) {
         // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
-        switch (exchange) {
-            case "koinex":
-                {
-                    // console.log("switch case koinex");
-                    return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
-                }
-            case "zebpay":
-                {
-                    // console.log("switch case zebpay");
-                    return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
-                }
+        try {
+            switch (exchange) {
+                case "koinex":
+                    {
+                        // console.log("switch case koinex");
+                        return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
+                    }
+                case "zebpay":
+                    {
+                        // console.log("switch case zebpay");
+                        return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
+                    }
+            }
+        }
+        catch (e) {
+            console.log(e);
         }
     };
     // TO BE TESTED
     ApiDataProvider.prototype.getMarketOverviewData = function (sel, coin, data) {
         if (data === void 0) { data = true; }
-        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].forkJoin([this.getExchangeData(sel, data), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+        try {
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].forkJoin([this.getExchangeData(sel, data), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+        }
+        catch (e) {
+            console.log(e);
+        }
     };
     ApiDataProvider.prototype.setExchangeData = function (exchange, exchangeData) {
         switch (exchange) {
@@ -1149,17 +1181,9 @@ var ValueDetail = (function () {
 /***/ }),
 
 /***/ 686:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RangeValue; });
-var RangeValue = (function () {
-    function RangeValue() {
-    }
-    return RangeValue;
-}());
-
-//# sourceMappingURL=range-value.js.map
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\Users\\i342664\\Documents\\private\\dev\\coin-assist\\src\\models\\range-value.ts'\n    at Error (native)");
 
 /***/ }),
 

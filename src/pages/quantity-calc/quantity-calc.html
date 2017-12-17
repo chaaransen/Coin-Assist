@@ -31,23 +31,24 @@
 
     <ion-item>
       <ion-label fixed>Coin Rate</ion-label>
-      <ion-input type="number" placeholder="Rate" [(ngModel)]="range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>
+      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>
     </ion-item>
     <ion-item>
-      {{range.rate.formatted}}
+      {{selCoin.range.rate.formatted}}
     </ion-item>
     <ion-item>
-      <ion-range [min]="range.minus20.no" [max]="range.plus20.no" [(ngModel)]="range.rate.no" (ionChange)="rangeChanged()">
-        <ion-label range-left>{{range.minus20.formatted}}</ion-label>
-        <ion-label range-right>{{range.plus20.formatted}}</ion-label>
+      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="0.25" snaps="true" [(ngModel)]="selCoin.range.rate.no"
+        (ionChange)="rangeChanged()">
+        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>
+        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>
       </ion-range>
     </ion-item>
 
     <ion-item>
-      <ion-label fixed>Amount in Rs</ion-label>
-      <ion-input type="number" placeholder="Rate" clearInput="true" [(ngModel)]="amount" (ngModelChange)="calcQuantity()"></ion-input>
+      <ion-label fixed>Amount &#8377;</ion-label>
+      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
     </ion-item>
-
+    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->
     <ion-item>
       <ion-label fixed>Quantity</ion-label>
       <ion-input type="number" placeholder="Quantity" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>
