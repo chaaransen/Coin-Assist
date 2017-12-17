@@ -33,9 +33,11 @@
       <ion-item>
 
         <h1>{{coinDetail.market.formatted}}</h1>
-        <h2>{{coinDetail.change}}</h2>
+        <h2>{{coinDetail.change.hour}} {{coinDetail.change.day}} {{coinDetail.change.week}}
+        </h2>
 
-        <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>
+        <h2> [ global: {{coinDetail.global.INR.formatted}} ] ( {{coinDetail.global.USD.formatted}} ) </h2>
+        <h3>Global Difference: {{coinDetail.globalDiff.formatted}}</h3>
       </ion-item>
       <ion-item>
         <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
@@ -44,10 +46,10 @@
         Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}
       </ion-item>
       <ion-item>
-        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>
+        <button (click)="gotoCalcQuantityPage()" ion-button>Invest</button>
       </ion-item>
 
-      // Rage for setting price alert
+      <!-- Rage for setting price alert -->
 
       <!-- <ion-item>
         <h2> From : {{rangeRegion.lower}}</h2>
@@ -61,7 +63,7 @@
         </ion-range>
       </ion-item> -->
 
-      // Alert Button
+      <!-- Alert Button -->
 
       <!-- <ion-item>
         <button ion-button large>Set Alert</button>

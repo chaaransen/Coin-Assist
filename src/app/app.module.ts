@@ -16,6 +16,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { IonicStorageModule } from '@ionic/storage';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { NewsPage } from '../pages/news/news';
+import { Utilities } from '../providers/utilities/utilities';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { NewsPage } from '../pages/news/news';
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ApiDataProvider,
+    Utilities,
   ]
 })
 export class AppModule { }

@@ -77,6 +77,8 @@ export class CoinDetailPage {
   }
 
   public gotoCalcQuantityPage() {
+    console.log("Quantity button clicked");
+
     this.navCtrl.push(QuantityCalcPage, { "coin": this.coinDetail.coinName, "exchange": this.exchange });
   }
 }

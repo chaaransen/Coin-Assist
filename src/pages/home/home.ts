@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
-import 'rxjs/Rx';
 import { ApiUrls } from '../../models/api-urls';
 import { Storage } from '@ionic/storage';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import * as Constants from '../../constants/api-constants';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { CoinDetailPage } from '../coin-detail/coin-detail';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-home',

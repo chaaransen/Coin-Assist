@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
 import { ApiUrls } from '../../models/api-urls';
 import * as Constants from '../../constants/api-constants'
-import { forkJoin } from "rxjs/observable/forkJoin";
+import 'rxjs/add/observable/forkJoin';
+import { CoinDetail } from '../../models/coin-detail';
 
 @Injectable()
 export class ApiDataProvider {
@@ -14,7 +15,7 @@ export class ApiDataProvider {
   apiUrlStore = "apiUrls";
   koinexData: any = {};
   zebpayData: any = {};
-  LOCAL: boolean = false;
+
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
 
@@ -29,7 +30,9 @@ export class ApiDataProvider {
 
   fetchApiUrl(): any {
     // console.log("GET - api urls");
+
     return this.http.get(this.coinAssistApis);
+
   }
 
   getApiUrlStorage(): any {
@@ -67,20 +70,20 @@ export class ApiDataProvider {
     // console.log("GET - koinex data");
     // console.log(this.apiUrls.exchange.koinex);
 
-    if (this.LOCAL) {
-      return Observable.of(JSON.parse(Constants.KOINEX_DATA));
-    }
 
-    if (this.koinexData.lock != true) {
-      this.koinexData.lock = true;
-      setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
-      return this.http.get(this.apiUrls.exchange.koinex);
-    }
-    else {
-      console.log("Koinex Data call LOCKED");
+    return Observable.of(JSON.parse(Constants.KOINEX_DATA));
 
-      return this.koinexData;
-    }
+    // else
+    //   if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+    //     this.koinexData.lock = true;
+    //     // setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
+    //     return this.http.get(this.apiUrls.exchange.koinex);
+    //   }
+    //   else {
+    //     console.log("Koinex Data call LOCKED");
+
+    //     return this.koinexData;
+    //   }
 
 
   }
@@ -165,86 +168,102 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
-    var processedKoinexData = [];
-    var coinList = exchangeData.stats;
+    try {
+      var processedKoinexData = [];
+      var coinList = exchangeData.stats;
 
-    // console.log(coinMarketCapData, "coinmarket cap data- processor");
+      // console.log(coinMarketCapData, "coinmarket cap data- processor");
 
-    // console.log(coinList, "before");
-    if (coinMarketCapData != undefined) {
-      if (coinMarketCapData.length == 1) {
-        var singleCoin = {}
-        // console.log(coinMarketCapData);
-
-        // console.log(coinList[coinMarketCapData[0].symbol]);
-
-        singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
-        coinList = singleCoin;
-        // console.log(coinList, "after");
-
-      }
-    }
-    for (let coin in coinList) {
-
-      var processedCoin: any = {};
-
-      processedCoin = this.processedCoinInitializer(processedCoin);
-
-      processedCoin.coinName = this.getCoinName(coin);
-      processedCoin.coinCode = coin;
-
-      processedCoin.market.no = +coinList[coin].last_traded_price;
-      processedCoin.buy.no = +coinList[coin].lowest_ask;
-      processedCoin.sell.no = +coinList[coin].highest_bid;
-      processedCoin.min.no = +coinList[coin].min_24hrs;
-      processedCoin.max.no = +coinList[coin].max_24hrs;
-
-      processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-
-      processedCoin = this.plusMinus20Percent(processedCoin, processedCoin.market.no);
-      // console.log(coinMarketCapData, "coin market data null check");
+      // console.log(coinList, "before");
       if (coinMarketCapData != undefined) {
-        processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
-      }
+        if (coinMarketCapData.length == 1) {
+          var singleCoin = {}
+          // console.log(coinMarketCapData);
 
-      processedCoin = this.coinDetailFormatter(processedCoin);
-      // console.log(processedCoin);
-      processedKoinexData.push(processedCoin);
+          // console.log(coinList[coinMarketCapData[0].symbol]);
+
+          singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
+          coinList = singleCoin;
+          // console.log(coinList, "after");
+
+        }
+      }
+      for (let coin in coinList) {
+
+        // var processedCoin: any = {};
+
+        var processedCoin: CoinDetail = new CoinDetail();
+
+        processedCoin.coinName = this.getCoinName(coin);
+        processedCoin.coinCode = coin;
+
+        processedCoin.market.no = +coinList[coin].last_traded_price;
+        processedCoin.buy.no = +coinList[coin].lowest_ask;
+        processedCoin.sell.no = +coinList[coin].highest_bid;
+        processedCoin.min.no = +coinList[coin].min_24hrs;
+        processedCoin.max.no = +coinList[coin].max_24hrs;
+
+        processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+
+        // console.log(coinMarketCapData, "coin market data null check");
+        if (coinMarketCapData != undefined) {
+          processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+          processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
+        }
+
+        processedCoin = this.coinDetailFormatter(processedCoin);
+        // console.log(processedCoin);
+        processedKoinexData.push(processedCoin);
+      }
+      return processedKoinexData;
     }
-    return processedKoinexData;
+    catch (e) {
+      console.log(e);
+
+    }
   }
 
   coinDetailFormatter(processedCoin: any) {
-    processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-    processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-    processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
-    if (processedCoin.min.no != undefined) {
-      processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-      processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+    try {
+      processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
+      processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
+      processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+      if (processedCoin.min.no != undefined) {
+        processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
+        processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+      }
+      if (processedCoin.global.INR.no != undefined) {
+        processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
+        processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+        processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
+      }
+      return processedCoin;
     }
-    if (processedCoin.globalINR.no != undefined) {
-      processedCoin.globalINR.formatted = this.numberFormatter(processedCoin.globalINR.no);
-      processedCoin.globalUSD.formatted = this.numberFormatter(processedCoin.globalUSD.no, 'en-US', 'USD');
+    catch (e) {
+      console.log(e);
+
     }
-    return processedCoin;
   }
 
-  plusMinus20Percent(ObjectTarget, market): any {
-    let marketPrice = +market;
-    let percent20 = (marketPrice * 0.2);
-    let plus20 = marketPrice + percent20;
-    let minus20 = marketPrice - percent20;
+  plusMinusPercent(ObjectTarget, market, percent: number): any {
+    try {
+      let marketPrice = +market;
+      let percentValue = (marketPrice * percent);
+      let plusPercent = marketPrice + percentValue;
+      let minusPercent = marketPrice - percentValue;
 
-    ObjectTarget.plus20 = {};
-    ObjectTarget.minus20 = {};
+      ObjectTarget.range.plusPercent.no = plusPercent;
+      ObjectTarget.range.minusPercent.no = minusPercent;
 
-    ObjectTarget.plus20.no = plus20;
-    ObjectTarget.minus20.no = minus20;
+      ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
+      ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
 
-    ObjectTarget.plus20.formatted = this.numberFormatter(ObjectTarget.plus20.no);
-    ObjectTarget.minus20.formatted = this.numberFormatter(ObjectTarget.minus20.no);
+      return ObjectTarget;
+    }
+    catch (e) {
+      console.log(e);
 
-    return ObjectTarget;
+    }
   }
 
   numberFormatter(number: any, locale: any = 'hi-IN', currency: any = 'INR'): any {
@@ -253,7 +272,7 @@ export class ApiDataProvider {
 
   rangeStepCalculator(min, max): any {
     let diff = max - min;
-    let step = diff / 50;
+    let step = diff / 10;
     // console.log("Steps ", step);
 
     return step;
@@ -261,20 +280,30 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   getCoinGlobalStats(coinSymbol, coinMarketCapData, coinDeskData): any {
-    var coinGlobalStats: any = {};
+    try {
+      var coinGlobalStats: any = {};
 
-    for (let coin in coinMarketCapData) {
-      if (coinMarketCapData[coin].symbol == coinSymbol) {
-        coinGlobalStats.change = coinMarketCapData[coin].percent_change_24h;
-        if (coinMarketCapData[coin].symbol == "BTC") {
-          coinGlobalStats.globalINR = coinDeskData.bpi.INR.rate_float;
-          coinGlobalStats.globalUSD = coinDeskData.bpi.USD.rate_float;
-        } else {
-          coinGlobalStats.globalINR = coinMarketCapData[coin].price_inr;
-          coinGlobalStats.globalUSD = coinMarketCapData[coin].price_usd;
+      for (let coin in coinMarketCapData) {
+        if (coinMarketCapData[coin].symbol == coinSymbol) {
+
+          coinGlobalStats.changeHour = coinMarketCapData[coin].percent_change_1h;
+          coinGlobalStats.changeDay = coinMarketCapData[coin].percent_change_24h;
+          coinGlobalStats.changeWeek = coinMarketCapData[coin].percent_change_7d;
+
+          if (coinMarketCapData[coin].symbol == "BTC") {
+            coinGlobalStats.globalINR = coinDeskData.bpi.INR.rate_float;
+            coinGlobalStats.globalUSD = coinDeskData.bpi.USD.rate_float;
+          } else {
+            coinGlobalStats.globalINR = coinMarketCapData[coin].price_inr;
+            coinGlobalStats.globalUSD = coinMarketCapData[coin].price_usd;
+          }
+          return coinGlobalStats;
         }
-        return coinGlobalStats;
       }
+    }
+    catch (e) {
+      console.log(e);
+
     }
   }
 
@@ -302,8 +331,7 @@ export class ApiDataProvider {
     let coin = "BTC";
     let zebpayData = exchangeData;
 
-    var processedCoin: any = {};
-    processedCoin = this.processedCoinInitializer(processedCoin);
+    var processedCoin: CoinDetail = new CoinDetail();
 
     processedCoin.coinName = this.getCoinName(coin);
     processedCoin.coinCode = coin;
@@ -324,23 +352,22 @@ export class ApiDataProvider {
     return processedZebpayData;
   }
 
-  processedCoinInitializer(processedCoin) {
-    processedCoin.market = {};
-    processedCoin.buy = {};
-    processedCoin.sell = {};
-    processedCoin.min = {};
-    processedCoin.max = {};
-    processedCoin.globalINR = {};
-    processedCoin.globalUSD = {};
-    return processedCoin;
-  }
+  injectGlobalStats(coin, processedCoin: CoinDetail, coinMarketCapData, coinDeskData): any {
+    try {
+      let coinGlobalStats = this.getCoinGlobalStats(coin, coinMarketCapData, coinDeskData);
 
-  injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData): any {
-    let coinGlobalStats = this.getCoinGlobalStats(coin, coinMarketCapData, coinDeskData);
-    processedCoin.globalINR.no = +coinGlobalStats.globalINR;
-    processedCoin.globalUSD.no = +coinGlobalStats.globalUSD;
-    processedCoin.change = +coinGlobalStats.change;
-    return processedCoin;
+      processedCoin.global.INR.no = +coinGlobalStats.globalINR;
+      processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
+
+      processedCoin.change.hour = +coinGlobalStats.changeHour;
+      processedCoin.change.day = +coinGlobalStats.changeDay;
+      processedCoin.change.week = +coinGlobalStats.changeWeek;
+      return processedCoin;
+    }
+    catch (e) {
+      console.log(e);
+
+    }
   }
 
   getPriceIndexZebpay(buy, sell) {
@@ -387,26 +414,36 @@ export class ApiDataProvider {
   // TO BE TESTED
   processExchangeData(exchange: any, exchangeData: any, coinMarketCapData?: any, coinDeskData?: any): any {
     // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
+    try {
+      switch (exchange) {
+        case "koinex":
+          {
+            // console.log("switch case koinex");
 
-    switch (exchange) {
-      case "koinex":
-        {
-          // console.log("switch case koinex");
+            return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
+          }
+        case "zebpay":
+          {
+            // console.log("switch case zebpay");
+            return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
+          }
+      }
+    }
+    catch (e) {
+      console.log(e);
 
-          return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
-        }
-      case "zebpay":
-        {
-          // console.log("switch case zebpay");
-          return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
-        }
     }
   }
 
   // TO BE TESTED
-  getMarketOverviewData(sel: string, coin: string, data: boolean = true): any {
+  getMarketOverviewData(sel: string, coin: string, data: boolean = true): Observable<any> {
+    try {
+      return Observable.forkJoin([this.getExchangeData(sel, data), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+    }
+    catch (e) {
+      console.log(e);
 
-    return Observable.forkJoin([this.getExchangeData(sel, data), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+    }
 
   }
 
