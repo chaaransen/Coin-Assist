@@ -10,5 +10,7 @@ export const BCH: string = "Bitcoin Cash";
 export const INR: string = "INR";
 export const USD: string = "USD";
 export const ALL: string = "ALL";
+export const ZEBPAY: string = "zebpay";
+export const KOINEX: string = "koinex";
 
 
