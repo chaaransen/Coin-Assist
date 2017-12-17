@@ -65,7 +65,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var HomePage = /** @class */ (function () {
+var HomePage = (function () {
     function HomePage(navCtrl, api, storage, navParam) {
         this.navCtrl = navCtrl;
         this.api = api;
@@ -188,7 +188,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var CoinDetailPage = /** @class */ (function () {
+var CoinDetailPage = (function () {
     function CoinDetailPage(navCtrl, navParam, api) {
         this.navCtrl = navCtrl;
         this.navParam = navParam;
@@ -284,7 +284,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var QuantityCalcPage = /** @class */ (function () {
+var QuantityCalcPage = (function () {
     function QuantityCalcPage(navCtrl, navParam, api) {
         // console.log("qty constructor called");
         this.navCtrl = navCtrl;
@@ -393,7 +393,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var FavouritesPage = /** @class */ (function () {
+var FavouritesPage = (function () {
     function FavouritesPage(navCtrl) {
         this.navCtrl = navCtrl;
     }
@@ -428,7 +428,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var RemindersPage = /** @class */ (function () {
+var RemindersPage = (function () {
     function RemindersPage(navCtrl) {
         this.navCtrl = navCtrl;
     }
@@ -463,7 +463,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var ProfitCalcPage = /** @class */ (function () {
+var ProfitCalcPage = (function () {
     function ProfitCalcPage(navCtrl) {
         this.navCtrl = navCtrl;
     }
@@ -498,7 +498,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var NewsPage = /** @class */ (function () {
+var NewsPage = (function () {
     function NewsPage(navCtrl) {
         this.navCtrl = navCtrl;
     }
@@ -576,7 +576,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var AppModule = /** @class */ (function () {
+var AppModule = (function () {
     function AppModule() {
     }
     AppModule = __decorate([
@@ -664,7 +664,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var MyApp = /** @class */ (function () {
+var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, api) {
         this.platform = platform;
         this.statusBar = statusBar;
@@ -751,7 +751,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ApiDataProvider = /** @class */ (function () {
+var ApiDataProvider = (function () {
     // private coinAssistApis = "http://localhost:3000/apis";
     function ApiDataProvider(http, storage) {
         this.http = http;
@@ -1085,9 +1085,10 @@ var ApiDataProvider = /** @class */ (function () {
     };
     ApiDataProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */]) === "function" && _b || Object])
     ], ApiDataProvider);
     return ApiDataProvider;
+    var _a, _b;
 }());
 
 //# sourceMappingURL=api-data.js.map
@@ -1099,7 +1100,7 @@ var ApiDataProvider = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CoinDetail; });
-var CoinDetail = /** @class */ (function () {
+var CoinDetail = (function () {
     function CoinDetail() {
     }
     return CoinDetail;
@@ -1114,7 +1115,7 @@ var CoinDetail = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValueDetail; });
-var ValueDetail = /** @class */ (function () {
+var ValueDetail = (function () {
     function ValueDetail() {
     }
     return ValueDetail;
@@ -1129,7 +1130,7 @@ var ValueDetail = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RangeValue; });
-var RangeValue = /** @class */ (function () {
+var RangeValue = (function () {
     function RangeValue() {
     }
     return RangeValue;
@@ -1157,7 +1158,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var BuySellPage = /** @class */ (function () {
+var BuySellPage = (function () {
     function BuySellPage(navCtrl) {
         this.navCtrl = navCtrl;
     }
