@@ -139,16 +139,18 @@ var HomePage = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return API_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return KOINEX_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return KOINEX_DATA; });
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return XRP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ETH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return LTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BCH; });
 /* unused harmony export INR */
 /* unused harmony export USD */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ALL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return KOINEX; });
 var API_URL = "{\r\n  \"exchange\": {\r\n    \"koinex\": \"https:\/\/koinex.in\/api\/ticker\",\r\n    \"zebpay\": \"https:\/\/www.zebapi.com\/api\/v1\/market\/ticker\/btc\/inr\"\r\n  },\r\n  \"global\": {\r\n    \"coindesk\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice.json\",\r\n        \"INR\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice\/inr.json\"\r\n      }\r\n    },\r\n    \"coinmarketcap\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?limit=6\",\r\n        \"INR\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?convert=INR&limit=6\"\r\n      },\r\n      \"coin\": {\r\n        \"bitcoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin\",\r\n        \"ether\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ethereum\",\r\n        \"ripple\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ripple\",\r\n        \"btc-cash\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin-cash\",\r\n        \"litecoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/litecoin\"\r\n      }\r\n    }\r\n  },\r\n  \"version\": \"1.0.0\"\r\n}";
 var KOINEX_DATA = "{\"prices\":{\"BTC\":\"795000.0\",\"ETH\":\"34700.0\",\"BCH\":\"107499.0\",\"XRP\":\"19.25\",\"LTC\":\"6889.0\",\"MIOTA\":79.55,\"OMG\":547.62,\"GNT\":18.09},\"stats\":{\"ETH\":{\"last_traded_price\":\"34700.0\",\"lowest_ask\":\"34700.0\",\"highest_bid\":\"34601.0\",\"min_24hrs\":\"29800.0\",\"max_24hrs\":\"39000.0\",\"vol_24hrs\":\"3276.286\"},\"BTC\":{\"last_traded_price\":\"795000.0\",\"lowest_ask\":\"794990.0\",\"highest_bid\":\"792102.0\",\"min_24hrs\":\"700000.0\",\"max_24hrs\":\"932503.0\",\"vol_24hrs\":\"358.3514\"},\"LTC\":{\"last_traded_price\":\"6889.0\",\"lowest_ask\":\"6889.0\",\"highest_bid\":\"6888.0\",\"min_24hrs\":\"5998.0\",\"max_24hrs\":\"7678.0\",\"vol_24hrs\":\"8476.121\"},\"XRP\":{\"last_traded_price\":\"19.25\",\"lowest_ask\":\"19.35\",\"highest_bid\":\"19.25\",\"min_24hrs\":\"17.0\",\"max_24hrs\":\"21.05\",\"vol_24hrs\":\"2025861.7\"},\"BCH\":{\"last_traded_price\":\"107499.0\",\"lowest_ask\":\"107499.0\",\"highest_bid\":\"106800.0\",\"min_24hrs\":\"90000.0\",\"max_24hrs\":\"119900.0\",\"vol_24hrs\":\"650.083\"}}}";
 var COIN_LIST_TEMPLATE = "{\r\n  \"coin\": \"bitcoin\",\r\n  \"market\": \"5000\",\r\n  \"buy\": \"6000\",\r\n  \"sell\": \"4000\",\r\n  \"price_index\": \"high\",\r\n  \"change\": \"7\"\r\n}";
@@ -160,6 +162,8 @@ var BCH = "Bitcoin Cash";
 var INR = "INR";
 var USD = "USD";
 var ALL = "ALL";
+var ZEBPAY = "zebpay";
+var KOINEX = "koinex";
 //# sourceMappingURL=api-constants.js.map
 
 /***/ }),
@@ -245,7 +249,7 @@ var CoinDetailPage = (function () {
     };
     CoinDetailPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-item>\n\n        <ion-grid>\n\n          <ion-row>\n\n            {{exchange}}\n\n            <ion-col col-5>\n\n              <ion-thumbnail item-start>\n\n                <img src="assets/imgs/{{coinDetail.coinCode}}.png">\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-7>\n\n              <h1>{{coinDetail.coinName}} ( {{coinDetail.coinCode}} )</h1>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n      </ion-item>\n\n      <ion-item>\n\n\n\n        <h1>{{coinDetail.market.formatted}}</h1>\n\n        <h2>{{coinDetail.change}}</h2>\n\n\n\n        <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}\n\n      </ion-item>\n\n      <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n      <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item>\n\n\n\n    </ion-card>\n\n\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
+            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-list>\n\n    <ion-card>\n\n      <ion-item>\n\n        <ion-grid>\n\n          <ion-row>\n\n            {{exchange}}\n\n            <ion-col col-5>\n\n              <ion-thumbnail item-start>\n\n                <img src="assets/imgs/{{coinDetail.coinCode}}.png">\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-7>\n\n              <h1>{{coinDetail.coinName}} ( {{coinDetail.coinCode}} )</h1>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n      </ion-item>\n\n      <ion-item>\n\n\n\n        <h1>{{coinDetail.market.formatted}}</h1>\n\n        <h2>{{coinDetail.change}}</h2>\n\n\n\n        <h2> [ global: {{coinDetail.globalINR.formatted}} ] ( {{coinDetail.globalUSD.formatted}} ) </h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n      <ion-item>\n\n        Buy: {{coinDetail.buy.formatted}} Sell: {{coinDetail.sell.formatted}}\n\n      </ion-item>\n\n      <ion-item>\n\n        <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>\n\n      </ion-item>\n\n\n\n      // Rage for setting price alert\n\n\n\n      <!-- <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item> -->\n\n\n\n      // Alert Button\n\n\n\n      <!-- <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item> -->\n\n\n\n    </ion-card>\n\n\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_3__providers_api_data_api_data__["a" /* ApiDataProvider */]])
     ], CoinDetailPage);
@@ -760,7 +764,7 @@ var ApiDataProvider = (function () {
         this.apiUrlStore = "apiUrls";
         this.koinexData = {};
         this.zebpayData = {};
-        this.LOCAL = false;
+        this.LOCAL = true;
         // ******************************************************************************
         this.coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
     }
@@ -800,9 +804,28 @@ var ApiDataProvider = (function () {
         // console.log("GET - koinex data");
         // console.log(this.apiUrls.exchange.koinex);
         if (this.LOCAL) {
-            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX_DATA */]));
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX_DATA */]));
         }
-        return this.http.get(this.apiUrls.exchange.koinex);
+        if (this.koinexData.lock != true) {
+            this.koinexData.lock = true;
+            setTimeout(this.releaseExhangeLock(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]), 10000);
+            return this.http.get(this.apiUrls.exchange.koinex);
+        }
+        else {
+            console.log("Koinex Data call LOCKED");
+            return this.koinexData;
+        }
+    };
+    ApiDataProvider.prototype.releaseExhangeLock = function (exchange) {
+        switch (exchange) {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */]:
+                this.koinexData.lock = false;
+                console.log(this.koinexData.lock, " LOCK released");
+                break;
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]:
+                this.zebpayData.lock = false;
+                break;
+        }
     };
     // TO BE TESTED
     ApiDataProvider.prototype.getZebpayData = function () {
@@ -851,11 +874,11 @@ var ApiDataProvider = (function () {
             case "ETH":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["e" /* ETH */];
             case "XRP":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* XRP */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */];
             case "BCH":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */];
             case "LTC":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* LTC */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */];
         }
     };
     // TO BE TESTED
@@ -1036,10 +1059,10 @@ var ApiDataProvider = (function () {
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.BCH);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* LTC */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.LTC);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* XRP */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.XPR);
             }
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["a" /* ALL */]: {
