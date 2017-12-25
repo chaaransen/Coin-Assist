@@ -16,8 +16,8 @@
 
   <ion-item>
     <ion-label>Exchange:</ion-label>
-    <ion-select [(ngModel)]="selExchange" *ngIf="exchanges" interface="popover" (ngModelChange)="selectedExchange(selExchange)">
-      <ion-option *ngFor="let exchange of exchanges ">{{exchange}}</ion-option>
+    <ion-select [(ngModel)]="selExchange" interface="popover" (ngModelChange)="selectedExchange(selExchange)">
+      <ion-option *ngFor="let exchange of exchanges">{{exchange}}</ion-option>
     </ion-select>
   </ion-item>
 

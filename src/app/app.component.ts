@@ -17,7 +17,7 @@ import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  // rootPage: any = HomePage;
   tab1Root = HomePage;
   tab2Root = QuantityCalcPage;
   tab3Root = RemindersPage;

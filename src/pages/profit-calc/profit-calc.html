@@ -12,25 +12,27 @@
 
     <ion-item>
       <ion-label fixed>Quantity</ion-label>
-      <ion-input type="number" [disabled]="" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="calcProfitLoss('qty')"></ion-input>
+      <ion-input type="number" [readonly]="!toggle" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="calcProfitLoss('qty')"></ion-input>
     </ion-item>
 
+    OR
 
     <ion-item>
       <ion-label fixed>Amount &#8377;</ion-label>
-      <ion-input type="number" [disabled]="" placeholder="3000" [(ngModel)]="amount" clearInput="true" (ngModelChange)="calcProfitLoss('amt')"></ion-input>
+      <ion-input (click)="toggleDisabled()" type="number" [readonly]="toggle" placeholder="3000" [(ngModel)]="amount" clearInput="true"
+        (ngModelChange)="calcProfitLoss('amt')"></ion-input>
     </ion-item>
 
 
 
     <ion-item>
-      <ion-label fixed>From &#8377;</ion-label>
+      <ion-label fixed>Buy Price &#8377;</ion-label>
       <ion-input type="number" placeholder="1000" [(ngModel)]="fromValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
     </ion-item>
 
 
     <ion-item>
-      <ion-label fixed>To &#8377;</ion-label>
+      <ion-label fixed>Sell Price &#8377;</ion-label>
       <ion-input type="number" placeholder="2000" [(ngModel)]="toValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
     </ion-item>
 

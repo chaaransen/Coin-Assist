@@ -9,25 +9,28 @@ export class ProfitCalcPage {
 
   public quantity: number;
   public amount: number;
+  public toggle: boolean;
   public fromValue: number;
   public toValue: number;
   public profitLoss: number;
   public finalValue: number;
-
+  public changePercent: number;
   constructor(public navCtrl: NavController) {
-    this.quantity = 0;
-    this.fromValue = 0;
-    this.toValue = 0;
-    this.profitLoss = 0;
   }
 
   ngOnInit() {
+    console.log("profit calc page ng oninit");
 
   }
 
   calcProfitLoss(type?: string) {
-    console.log(type);
+    switch (type) {
+      case 'amt':
+        break;
+
+      case 'qty':
+        break;
+    }
 
   }
-
 }

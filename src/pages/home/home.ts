@@ -19,7 +19,7 @@ import { Observable } from 'rxjs/Observable';
 export class HomePage {
 
   exchanges: any;
-  coins: string;
+  coins: any;
   apiUrls: any;
   selExchange: any;
   alive: boolean;
@@ -30,6 +30,7 @@ export class HomePage {
 
   ngOnInit() {
     console.log("Home component ngOninit Called");
+
 
     this.api.getApiUrlStorage().then(res => {
       if (res != null) {
@@ -46,11 +47,11 @@ export class HomePage {
 
       this.api.setApiUrl(this.apiUrls);
       this.populateView();
-      // var refresher = IntervalObservable.create(25000);
-      // refresher.takeWhile(() => this.alive) // only fires when component is alive
-      //   .subscribe(() => {
-      //     this.populateView();
-      //   });
+      var refresher = IntervalObservable.create(20000);
+      refresher.takeWhile(() => this.alive) // only fires when component is alive
+        .subscribe(() => {
+          this.populateView();
+        });
     });
   }
 
