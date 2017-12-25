@@ -1,40 +1,158 @@
 webpackJsonp([0],{
 
-/***/ 103:
+/***/ 107:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return API_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return KOINEX_DATA; });
-/* unused harmony export COIN_LIST_TEMPLATE */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return XRP; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ETH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return LTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BCH; });
-/* unused harmony export INR */
-/* unused harmony export USD */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ALL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return ZEBPAY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return KOINEX; });
-var API_URL = "{\r\n  \"exchange\": {\r\n    \"koinex\": \"https:\/\/koinex.in\/api\/ticker\",\r\n    \"zebpay\": \"https:\/\/www.zebapi.com\/api\/v1\/market\/ticker\/btc\/inr\"\r\n  },\r\n  \"global\": {\r\n    \"coindesk\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice.json\",\r\n        \"INR\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice\/inr.json\"\r\n      }\r\n    },\r\n    \"coinmarketcap\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?limit=6\",\r\n        \"INR\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?convert=INR&limit=6\"\r\n      },\r\n      \"coin\": {\r\n        \"bitcoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin\",\r\n        \"ether\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ethereum\",\r\n        \"ripple\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ripple\",\r\n        \"btc-cash\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin-cash\",\r\n        \"litecoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/litecoin\"\r\n      }\r\n    }\r\n  },\r\n  \"version\": \"1.0.0\"\r\n}";
-var KOINEX_DATA = "{\"prices\":{\"BTC\":\"795000.0\",\"ETH\":\"34700.0\",\"BCH\":\"107499.0\",\"XRP\":\"19.25\",\"LTC\":\"6889.0\",\"MIOTA\":79.55,\"OMG\":547.62,\"GNT\":18.09},\"stats\":{\"ETH\":{\"last_traded_price\":\"34700.0\",\"lowest_ask\":\"34700.0\",\"highest_bid\":\"34601.0\",\"min_24hrs\":\"29800.0\",\"max_24hrs\":\"39000.0\",\"vol_24hrs\":\"3276.286\"},\"BTC\":{\"last_traded_price\":\"795000.0\",\"lowest_ask\":\"794990.0\",\"highest_bid\":\"792102.0\",\"min_24hrs\":\"700000.0\",\"max_24hrs\":\"932503.0\",\"vol_24hrs\":\"358.3514\"},\"LTC\":{\"last_traded_price\":\"6889.0\",\"lowest_ask\":\"6889.0\",\"highest_bid\":\"6888.0\",\"min_24hrs\":\"5998.0\",\"max_24hrs\":\"7678.0\",\"vol_24hrs\":\"8476.121\"},\"XRP\":{\"last_traded_price\":\"19.25\",\"lowest_ask\":\"19.35\",\"highest_bid\":\"19.25\",\"min_24hrs\":\"17.0\",\"max_24hrs\":\"21.05\",\"vol_24hrs\":\"2025861.7\"},\"BCH\":{\"last_traded_price\":\"107499.0\",\"lowest_ask\":\"107499.0\",\"highest_bid\":\"106800.0\",\"min_24hrs\":\"90000.0\",\"max_24hrs\":\"119900.0\",\"vol_24hrs\":\"650.083\"}}}";
-var COIN_LIST_TEMPLATE = "{\r\n  \"coin\": \"bitcoin\",\r\n  \"market\": \"5000\",\r\n  \"buy\": \"6000\",\r\n  \"sell\": \"4000\",\r\n  \"price_index\": \"high\",\r\n  \"change\": \"7\"\r\n}";
-var BTC = "Bitcoin";
-var XRP = "Ripple";
-var ETH = "Ethereum";
-var LTC = "Litecoin";
-var BCH = "Bitcoin Cash";
-var INR = "INR";
-var USD = "USD";
-var ALL = "ALL";
-var ZEBPAY = "zebpay";
-var KOINEX = "koinex";
-//# sourceMappingURL=api-constants.js.map
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuantityCalcPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__ = __webpack_require__(205);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__ = __webpack_require__(207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__ = __webpack_require__(53);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+var QuantityCalcPage = (function () {
+    function QuantityCalcPage(navCtrl, navParam, api, util) {
+        this.navCtrl = navCtrl;
+        this.navParam = navParam;
+        this.api = api;
+        this.util = util;
+        this.selCoin = new __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__["a" /* CoinDetail */]();
+        this.apis = {};
+        this.amount = undefined;
+        this.amountFlag = false;
+        this.percent = 0.05;
+        // console.log("1 qty constructor called");
+        this.selExchange = navParam.get("exchange");
+        this.selCoin.coinName = navParam.get("coin");
+        console.log(this.selCoin, " sel coin qty");
+        console.log(this.selExchange, " sel Exchange qty");
+        this.apis = this.api.apiUrls.exchange;
+        this.exchanges = Object.keys(this.apis);
+        // console.log(this.apis, "api list fetched back");
+    }
+    ;
+    QuantityCalcPage.prototype.ngOnInit = function () {
+        // console.log("2 ng oninit called");
+        if (this.selExchange == undefined) {
+            this.selExchange = __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["f" /* KOINEX */];
+        }
+        if (this.selCoin.coinName == undefined) {
+            this.selCoin.coinName = __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["d" /* BTC */];
+        }
+        this.populateView();
+    };
+    QuantityCalcPage.prototype.doRefresh = function (refresher) {
+        // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
+        this.populateView();
+        setTimeout(function () {
+            refresher.complete();
+        }, 800);
+    };
+    QuantityCalcPage.prototype.populateView = function () {
+        // console.log("3 populate view called");
+        this.populateCoins(this.selExchange);
+    };
+    QuantityCalcPage.prototype.populateCoins = function (exchange) {
+        var _this = this;
+        // console.log("4 populate coins");
+        this.api.getExchangeData(exchange, true).subscribe(function (res) {
+            _this.coins = _this.api.processExchangeData(exchange, res, undefined, undefined);
+            // console.log(this.coins, "coins in qty");
+            _this.populateCoinValues(_this.selCoin.coinName);
+        });
+    };
+    QuantityCalcPage.prototype.populateCoinValues = function (selCoin) {
+        var _this = this;
+        // console.log("5 populate coin values called");
+        // console.log(this.selCoin.coinName, "sel Coin Name - Refresh Populate");
+        this.selCoin = this.coins.find(function (coin) { return _this.selCoin.coinName == coin.coinName; });
+        // console.log(this.selCoin, "selected coin - QTY");
+        this.updateRange(this.selCoin.market.no);
+        // console.log(this.selCoin, " coin selected");
+        // console.log(this.coins, "all coins");
+    };
+    QuantityCalcPage.prototype.updateRange = function (rate) {
+        this.selCoin.range.rate.no = rate;
+        // console.log(this.selCoin.range.rate.no);
+        this.formateRate();
+        this.selCoin = this.api.plusMinusPercent(this.selCoin, this.selCoin.range.rate.no, this.percent);
+        // console.log("8 plus minus percent called");
+        this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
+        // console.log("9 Range step called");
+        console.log(this.selCoin);
+        // console.log(this.selCoin);
+    };
+    QuantityCalcPage.prototype.formateRate = function () {
+        // console.log("7 format rate");
+        // console.log(this.range.rate.no, 'nubmer');
+        this.selCoin.range.rate.formatted = this.api.numberFormatter(+this.selCoin.range.rate.no);
+        // console.log(this.range.rate.formatted);
+    };
+    QuantityCalcPage.prototype.calcQuantity = function () {
+        // console.log("quantity calculated");
+        if (this.amount != undefined) {
+            var qty = this.amount / this.selCoin.range.rate.no;
+            // console.log(qty);
+            this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
+            // console.log(this.quantity);
+        }
+    };
+    QuantityCalcPage.prototype.rangeChanged = function (rangePointer) {
+        this.selCoin.range.rate.no = rangePointer;
+        this.formateRate();
+        this.calcQuantity();
+    };
+    QuantityCalcPage.prototype.calcAmount = function () {
+        this.amount = this.quantity * this.selCoin.range.rate.no;
+    };
+    QuantityCalcPage.prototype.amountChanged = function (amount) {
+        // console.log(this.amountFlag);
+        this.amount = amount.length > 9 ? this.trimAmount(amount) : this.clearAmountFlag(amount);
+        // console.log("new amount value", this.amount);
+        this.calcQuantity();
+    };
+    QuantityCalcPage.prototype.clearAmountFlag = function (amount) {
+        // console.log("flag cleared");
+        this.amountFlag = false;
+        return amount;
+    };
+    QuantityCalcPage.prototype.trimAmount = function (amount) {
+        // console.log("flag set");
+        this.amountFlag = true;
+        return amount = amount.substring(0, 9);
+    };
+    QuantityCalcPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin" interface="popover" (ngModelChange)="populateCoinValues(selCoin)">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{selCoin.range.rate.formatted}}\n\n    </ion-item>\n\n    <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"\n\n        (ionChange)="rangeChanged($event)">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__["a" /* Utilities */]])
+    ], QuantityCalcPage);
+    return QuantityCalcPage;
+}());
+
+//# sourceMappingURL=quantity-calc.js.map
 
 /***/ }),
 
-/***/ 115:
+/***/ 116:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -47,11 +165,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 115;
+webpackEmptyAsyncContext.id = 116;
 
 /***/ }),
 
-/***/ 157:
+/***/ 158:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -64,11 +182,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 157;
+webpackEmptyAsyncContext.id = 158;
 
 /***/ }),
 
-/***/ 201:
+/***/ 202:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76,12 +194,14 @@ webpackEmptyAsyncContext.id = 157;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_storage__ = __webpack_require__(102);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_storage__ = __webpack_require__(106);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__coin_detail_coin_detail__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__ = __webpack_require__(294);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__coin_detail_coin_detail__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__ = __webpack_require__(308);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile__ = __webpack_require__(309);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -99,16 +219,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var HomePage = (function () {
     function HomePage(navCtrl, api, storage, navParam) {
         this.navCtrl = navCtrl;
         this.api = api;
         this.storage = storage;
         this.navParam = navParam;
+        this.alive = true;
     }
     HomePage.prototype.ngOnInit = function () {
-        // console.log("Home component - get urls");
         var _this = this;
+        console.log("Home component ngOninit Called");
         this.api.getApiUrlStorage().then(function (res) {
             if (res != null) {
                 _this.apiUrls = res;
@@ -121,7 +243,15 @@ var HomePage = (function () {
             // console.log(this.apiUrls);
             _this.api.setApiUrl(_this.apiUrls);
             _this.populateView();
+            // var refresher = IntervalObservable.create(25000);
+            // refresher.takeWhile(() => this.alive) // only fires when component is alive
+            //   .subscribe(() => {
+            //     this.populateView();
+            //   });
         });
+    };
+    HomePage.prototype.ngOnDestroy = function () {
+        this.alive = false;
     };
     HomePage.prototype.doRefresh = function (refresher) {
         this.populateView();
@@ -138,13 +268,11 @@ var HomePage = (function () {
     HomePage.prototype.selectedExchange = function (sel) {
         var _this = this;
         this.api.getMarketOverviewData(sel, __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["a" /* ALL */]).subscribe(function (res) {
-            // console.log("first data - exchange data");
-            // console.log(res[0]);
+            // console.log("first data - exchange data", res[0]);
             // console.log("second data - coin market Cap data");
             // console.log(res[1]);
             // console.log("third data - coindesk data");
             // console.log(res[2]);
-            _this.api.setExchangeData(sel, res[0]);
             _this.coins = _this.api.processExchangeData(sel, res[0], res[1], res[2]);
             // console.log("processed exchange data");
             // console.log(this.coins);
@@ -168,7 +296,7 @@ var HomePage = (function () {
 
 /***/ }),
 
-/***/ 204:
+/***/ 205:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -176,7 +304,7 @@ var HomePage = (function () {
 /* unused harmony export Change */
 /* unused harmony export Global */
 /* unused harmony export RangeValue */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__value_detail__ = __webpack_require__(293);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__value_detail__ = __webpack_require__(307);
 
 var CoinDetail = (function () {
     function CoinDetail() {
@@ -220,7 +348,7 @@ var RangeValue = (function () {
 
 /***/ }),
 
-/***/ 205:
+/***/ 206:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -229,7 +357,7 @@ var RangeValue = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quantity_calc_quantity_calc__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quantity_calc_quantity_calc__ = __webpack_require__(107);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -313,155 +441,13 @@ var CoinDetailPage = (function () {
 
 /***/ }),
 
-/***/ 206:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuantityCalcPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__ = __webpack_require__(204);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__ = __webpack_require__(207);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var QuantityCalcPage = (function () {
-    function QuantityCalcPage(navCtrl, navParam, api, util) {
-        this.navCtrl = navCtrl;
-        this.navParam = navParam;
-        this.api = api;
-        this.util = util;
-        this.selCoin = new __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__["a" /* CoinDetail */]();
-        this.apis = {};
-        this.amount = undefined;
-        this.amountFlag = false;
-        this.percent = 0.05;
-        console.log("1 qty constructor called");
-        this.selExchange = navParam.get("exchange");
-        this.selCoin.coinName = navParam.get("coin");
-        // console.log(this.selCoin, " sel coin qty");
-        // console.log(this.selExchange, " sel Exchange qty");
-        this.apis = this.api.apiUrls.exchange;
-        this.exchanges = Object.keys(this.apis);
-    }
-    ;
-    QuantityCalcPage.prototype.ngOnInit = function () {
-        console.log("2 ng oninit called");
-        this.populateView();
-    };
-    QuantityCalcPage.prototype.doRefresh = function (refresher) {
-        console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
-        this.populateView();
-        setTimeout(function () {
-            refresher.complete();
-        }, 800);
-    };
-    QuantityCalcPage.prototype.populateView = function () {
-        console.log("3 populate view called");
-        this.populateCoins(this.selExchange);
-    };
-    QuantityCalcPage.prototype.populateCoins = function (exchange) {
-        var _this = this;
-        console.log("4 populate coins");
-        this.api.getExchangeData(exchange, true).subscribe(function (res) {
-            _this.coins = _this.api.processExchangeData(exchange, res, undefined, undefined);
-            // console.log(this.coins, "coins in qty");
-            _this.populateCoinValues(_this.selCoin.coinName);
-        });
-    };
-    QuantityCalcPage.prototype.populateCoinValues = function (selCoin) {
-        var _this = this;
-        console.log("5 populate coin values called");
-        // console.log(this.selCoin.coinName, "sel Coin Name - Refresh Populate");
-        this.selCoin = this.coins.find(function (coin) { return _this.selCoin.coinName == coin.coinName; });
-        // console.log(this.selCoin, "selected coin - QTY");
-        this.updateRange(this.selCoin.market.no);
-        // console.log(this.selCoin, " coin selected");
-        // console.log(this.coins, "all coins");
-    };
-    QuantityCalcPage.prototype.updateRange = function (rate) {
-        console.log("6 update range");
-        this.selCoin.range.rate.no = rate;
-        // console.log(this.selCoin.range.rate.no);
-        this.formateRate();
-        this.selCoin = this.api.plusMinusPercent(this.selCoin, this.selCoin.range.rate.no, this.percent);
-        console.log("8 plus minus percent called");
-        this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
-        console.log("9 Range step called");
-        // console.log(this.selCoin);
-    };
-    QuantityCalcPage.prototype.formateRate = function () {
-        console.log("7 format rate");
-        // console.log(this.range.rate.no, 'nubmer');
-        this.selCoin.range.rate.formatted = this.api.numberFormatter(+this.selCoin.range.rate.no);
-        // console.log(this.range.rate.formatted);
-    };
-    QuantityCalcPage.prototype.calcQuantity = function () {
-        // console.log("quantity calculated");
-        if (this.amount != undefined) {
-            var qty = this.amount / this.selCoin.range.rate.no;
-            // console.log(qty);
-            this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
-            // console.log(this.quantity);
-        }
-    };
-    QuantityCalcPage.prototype.rangeChanged = function () {
-        this.formateRate();
-        this.calcQuantity();
-    };
-    QuantityCalcPage.prototype.calcAmount = function () {
-        this.amount = this.quantity * this.selCoin.range.rate.no;
-    };
-    QuantityCalcPage.prototype.amountChanged = function (amount) {
-        // console.log(this.amountFlag);
-        this.amount = amount.length > 9 ? this.trimAmount(amount) : this.clearAmountFlag(amount);
-        // console.log("new amount value", this.amount);
-        this.calcQuantity();
-    };
-    QuantityCalcPage.prototype.clearAmountFlag = function (amount) {
-        // console.log("flag cleared");
-        this.amountFlag = false;
-        return amount;
-    };
-    QuantityCalcPage.prototype.trimAmount = function (amount) {
-        // console.log("flag set");
-        this.amountFlag = true;
-        return amount = amount.substring(0, 9);
-    };
-    QuantityCalcPage = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin" interface="popover" (ngModelChange)="populateCoinValues(selCoin)">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{selCoin.range.rate.formatted}}\n\n    </ion-item>\n\n    <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"\n\n        (ionChange)="rangeChanged($event)">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__["a" /* Utilities */]])
-    ], QuantityCalcPage);
-    return QuantityCalcPage;
-}());
-
-//# sourceMappingURL=quantity-calc.js.map
-
-/***/ }),
-
 /***/ 207:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Utilities; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__ = __webpack_require__(53);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -485,10 +471,10 @@ var Utilities = (function () {
             case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["e" /* ETH */]: {
                 return trimmedQty = +quantity.toFixed(3);
             }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["i" /* XRP */]: {
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["h" /* XRP */]: {
                 return trimmedQty = +quantity.toFixed(0);
             }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["h" /* LTC */]: {
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["g" /* LTC */]: {
                 return trimmedQty = +quantity.toFixed(3);
             }
             case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["c" /* BCH */]: {
@@ -508,41 +494,6 @@ var Utilities = (function () {
 /***/ }),
 
 /***/ 208:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FavouritesPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var FavouritesPage = (function () {
-    function FavouritesPage(navCtrl) {
-        this.navCtrl = navCtrl;
-    }
-    FavouritesPage = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-favourites',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\favourites\favourites.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Favourites</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\favourites\favourites.html"*/
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
-    ], FavouritesPage);
-    return FavouritesPage;
-}());
-
-//# sourceMappingURL=favourites.js.map
-
-/***/ }),
-
-/***/ 209:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -577,7 +528,7 @@ var RemindersPage = (function () {
 
 /***/ }),
 
-/***/ 210:
+/***/ 209:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -621,7 +572,7 @@ var ProfitCalcPage = (function () {
 
 /***/ }),
 
-/***/ 211:
+/***/ 210:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -656,13 +607,13 @@ var NewsPage = (function () {
 
 /***/ }),
 
-/***/ 212:
+/***/ 211:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(213);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(233);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -670,29 +621,29 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 234:
+/***/ 233:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(275);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(201);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(295);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(209);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(197);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(274);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(312);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(313);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(201);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(296);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(102);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(210);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__providers_utilities_utilities__ = __webpack_require__(207);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -774,21 +725,21 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 275:
+/***/ 274:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(197);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(200);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(201);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_favourites_favourites__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_reminders_reminders__ = __webpack_require__(209);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_profit_calc_profit_calc__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_news_news__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(201);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_reminders_reminders__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_profit_calc_profit_calc__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_api_data_api_data__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_news_news__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_quantity_calc_quantity_calc__ = __webpack_require__(107);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -816,10 +767,10 @@ var MyApp = (function () {
         this.api = api;
         this.rootPage = __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */];
         this.tab1Root = __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */];
-        this.tab2Root = __WEBPACK_IMPORTED_MODULE_5__pages_favourites_favourites__["a" /* FavouritesPage */];
-        this.tab3Root = __WEBPACK_IMPORTED_MODULE_6__pages_reminders_reminders__["a" /* RemindersPage */];
-        this.tab4Root = __WEBPACK_IMPORTED_MODULE_7__pages_profit_calc_profit_calc__["a" /* ProfitCalcPage */];
-        this.tab5Root = __WEBPACK_IMPORTED_MODULE_9__pages_news_news__["a" /* NewsPage */];
+        this.tab2Root = __WEBPACK_IMPORTED_MODULE_9__pages_quantity_calc_quantity_calc__["a" /* QuantityCalcPage */];
+        this.tab3Root = __WEBPACK_IMPORTED_MODULE_5__pages_reminders_reminders__["a" /* RemindersPage */];
+        this.tab4Root = __WEBPACK_IMPORTED_MODULE_6__pages_profit_calc_profit_calc__["a" /* ProfitCalcPage */];
+        this.tab5Root = __WEBPACK_IMPORTED_MODULE_8__pages_news_news__["a" /* NewsPage */];
         this.initializeApp();
         // used for an example of ngFor and navigation
         this.pages = [
@@ -856,9 +807,9 @@ var MyApp = (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/'<ion-menu [content]="content">\n\n  <ion-header>\n\n    <ion-toolbar>\n\n      <ion-title>Settings</ion-title>\n\n    </ion-toolbar>\n\n  </ion-header>\n\n\n\n  <ion-content>\n\n    <ion-list>\n\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n\n        {{p.title}}\n\n      </button>\n\n    </ion-list>\n\n  </ion-content>\n\n\n\n</ion-menu>\n\n<ion-content>\n\n  <ion-tabs>\n\n    <ion-tab [root]="tab1Root" tabTitle="Market View" tabIcon="logo-bitcoin"></ion-tab>\n\n    <ion-tab [root]="tab2Root" tabTitle="Quantity Calc" tabIcon="bookmark"></ion-tab>\n\n    <!-- <ion-tab [root]="tab3Root" tabTitle="Reminders" tabIcon="megaphone"></ion-tab> -->\n\n    <ion-tab [root]="tab4Root" tabTitle="Profit Calc" tabIcon="logo-usd"></ion-tab>\n\n    <!-- <ion-tab [root]="tab5Root" tabTitle="News" tabIcon="paper"></ion-tab> -->\n\n  </ion-tabs>\n\n</ion-content>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/'<ion-menu [content]="content">\n\n  <ion-header>\n\n    <ion-toolbar>\n\n      <ion-title>Settings</ion-title>\n\n    </ion-toolbar>\n\n  </ion-header>\n\n\n\n  <ion-content>\n\n    <ion-list>\n\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n\n        {{p.title}}\n\n      </button>\n\n    </ion-list>\n\n  </ion-content>\n\n\n\n</ion-menu>\n\n<ion-content>\n\n  <ion-tabs>\n\n    <ion-tab [root]="tab1Root" tabTitle="Market View" tabIcon="logo-bitcoin"></ion-tab>\n\n    <ion-tab [root]="tab2Root" tabTitle="Quantity Calc" tabIcon="bookmark"></ion-tab>\n\n    <ion-tab [root]="tab4Root" tabTitle="Profit Calc" tabIcon="logo-usd"></ion-tab>\n\n  </ion-tabs>\n\n</ion-content>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_8__providers_api_data_api_data__["a" /* ApiDataProvider */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_7__providers_api_data_api_data__["a" /* ApiDataProvider */]])
     ], MyApp);
     return MyApp;
 }());
@@ -867,7 +818,7 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 293:
+/***/ 307:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -884,7 +835,7 @@ var ValueDetail = (function () {
 
 /***/ }),
 
-/***/ 295:
+/***/ 312:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -919,22 +870,13 @@ var BuySellPage = (function () {
 
 /***/ }),
 
-/***/ 41:
+/***/ 313:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiDataProvider; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(288);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(102);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(292);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__ = __webpack_require__(204);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FavouritesPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -944,6 +886,59 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
+var FavouritesPage = (function () {
+    function FavouritesPage(navCtrl) {
+        this.navCtrl = navCtrl;
+    }
+    FavouritesPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-favourites',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\favourites\favourites.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Favourites</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\favourites\favourites.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
+    ], FavouritesPage);
+    return FavouritesPage;
+}());
+
+//# sourceMappingURL=favourites.js.map
+
+/***/ }),
+
+/***/ 41:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiDataProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(287);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(291);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(292);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(302);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(304);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__ = __webpack_require__(205);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 
 
@@ -1000,26 +995,44 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.getKoinexData = function () {
         // console.log("GET - koinex data");
         // console.log(this.apiUrls.exchange.koinex);
-        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX_DATA */]));
-        // else
-        //   if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-        //     this.koinexData.lock = true;
-        //     // setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
-        //     return this.http.get(this.apiUrls.exchange.koinex);
-        //   }
-        //   else {
-        //     console.log("Koinex Data call LOCKED");
-        //     return this.koinexData;
-        //   }
+        // console.log(this.koinexData, "before");
+        var _this = this;
+        if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+            this.koinexData.lock = true;
+            console.log("FETCHING - koinex data");
+            return this.http.get(this.apiUrls.exchange.koinex).map(function (res) {
+                console.log(res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */], res);
+                return res;
+            }).catch(function (error) {
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]);
+                return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.koinexData);
+            });
+        }
+        else if (this.koinexData.lock == true) {
+            console.log("STATIC - koinex data", this.koinexData);
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData);
+        }
     };
-    ApiDataProvider.prototype.releaseExhangeLock = function (exchange) {
+    ApiDataProvider.prototype.updateRecentExchangeData = function (exchange, exchangeData) {
+        if (exchangeData != undefined) {
+            this.setExchangeData(exchange, exchangeData);
+        }
+        this.lockExchange(exchange);
+    };
+    ApiDataProvider.prototype.lockExchange = function (exchange) {
+        var _this = this;
         switch (exchange) {
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */]:
-                this.koinexData.lock = false;
-                console.log(this.koinexData.lock, " LOCK released");
-                break;
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]:
-                this.zebpayData.lock = false;
+                this.koinexData.lock = true;
+                // console.log("LOCK SET", this.koinexData);
+                var releaseLock = __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].timer(15000);
+                releaseLock.subscribe(function (res) {
+                    _this.koinexData.lock = false;
+                    console.log("LOCK RELEASED", _this.koinexData);
+                });
+                break;
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* ZEBPAY */]:
                 break;
         }
     };
@@ -1029,6 +1042,7 @@ var ApiDataProvider = (function () {
         return this.http.get(this.apiUrls.exchange.zebpay);
     };
     ApiDataProvider.prototype.getExchangeData = function (exchange, data) {
+        if (data === void 0) { data = true; }
         switch (exchange) {
             case "koinex":
                 {
@@ -1070,75 +1084,65 @@ var ApiDataProvider = (function () {
             case "ETH":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["e" /* ETH */];
             case "XRP":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* XRP */];
             case "BCH":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */];
             case "LTC":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* LTC */];
         }
     };
     // TO BE TESTED
     ApiDataProvider.prototype.koinexProcessor = function (exchangeData, coinMarketCapData, coinDeskData) {
-        try {
-            var processedKoinexData = [];
-            var coinList = exchangeData.stats;
-            // console.log(coinMarketCapData, "coinmarket cap data- processor");
-            // console.log(coinList, "before");
+        var processedKoinexData = [];
+        var coinList = exchangeData.stats;
+        // console.log(coinMarketCapData, "coinmarket cap data- processor");
+        // console.log(coinList, "before");
+        if (coinMarketCapData != undefined) {
+            if (coinMarketCapData.length == 1) {
+                var singleCoin = {};
+                // console.log(coinMarketCapData);
+                // console.log(coinList[coinMarketCapData[0].symbol]);
+                singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
+                coinList = singleCoin;
+                // console.log(coinList, "after");
+            }
+        }
+        for (var coin in coinList) {
+            // var processedCoin: any = {};
+            var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
+            processedCoin.coinName = this.getCoinName(coin);
+            processedCoin.coinCode = coin;
+            processedCoin.market.no = +coinList[coin].last_traded_price;
+            processedCoin.buy.no = +coinList[coin].lowest_ask;
+            processedCoin.sell.no = +coinList[coin].highest_bid;
+            processedCoin.min.no = +coinList[coin].min_24hrs;
+            processedCoin.max.no = +coinList[coin].max_24hrs;
+            processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+            // console.log(coinMarketCapData, "coin market data null check");
             if (coinMarketCapData != undefined) {
-                if (coinMarketCapData.length == 1) {
-                    var singleCoin = {};
-                    // console.log(coinMarketCapData);
-                    // console.log(coinList[coinMarketCapData[0].symbol]);
-                    singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
-                    coinList = singleCoin;
-                    // console.log(coinList, "after");
-                }
+                processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+                processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
             }
-            for (var coin in coinList) {
-                // var processedCoin: any = {};
-                var processedCoin = new __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__["a" /* CoinDetail */]();
-                processedCoin.coinName = this.getCoinName(coin);
-                processedCoin.coinCode = coin;
-                processedCoin.market.no = +coinList[coin].last_traded_price;
-                processedCoin.buy.no = +coinList[coin].lowest_ask;
-                processedCoin.sell.no = +coinList[coin].highest_bid;
-                processedCoin.min.no = +coinList[coin].min_24hrs;
-                processedCoin.max.no = +coinList[coin].max_24hrs;
-                processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-                // console.log(coinMarketCapData, "coin market data null check");
-                if (coinMarketCapData != undefined) {
-                    processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
-                    processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
-                }
-                processedCoin = this.coinDetailFormatter(processedCoin);
-                // console.log(processedCoin);
-                processedKoinexData.push(processedCoin);
-            }
-            return processedKoinexData;
+            processedCoin = this.coinDetailFormatter(processedCoin);
+            // console.log(processedCoin);
+            processedKoinexData.push(processedCoin);
         }
-        catch (e) {
-            console.log(e);
-        }
+        return processedKoinexData;
     };
     ApiDataProvider.prototype.coinDetailFormatter = function (processedCoin) {
-        try {
-            processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-            processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-            processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
-            if (processedCoin.min.no != undefined) {
-                processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-                processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
-            }
-            if (processedCoin.global.INR.no != undefined) {
-                processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
-                processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-                processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
-            }
-            return processedCoin;
+        processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
+        processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
+        processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+        if (processedCoin.min.no != undefined) {
+            processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
+            processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
         }
-        catch (e) {
-            console.log(e);
+        if (processedCoin.global.INR.no != undefined) {
+            processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
+            processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+            processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
         }
+        return processedCoin;
     };
     ApiDataProvider.prototype.plusMinusPercent = function (ObjectTarget, market, percent) {
         try {
@@ -1213,7 +1217,7 @@ var ApiDataProvider = (function () {
         var processedZebpayData = [];
         var coin = "BTC";
         var zebpayData = exchangeData;
-        var processedCoin = new __WEBPACK_IMPORTED_MODULE_7__models_coin_detail__["a" /* CoinDetail */]();
+        var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
         processedCoin.coinName = this.getCoinName(coin);
         processedCoin.coinCode = coin;
         processedCoin.market.no = +zebpayData.market;
@@ -1272,10 +1276,10 @@ var ApiDataProvider = (function () {
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.BCH);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* LTC */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.LTC);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* XRP */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.XPR);
             }
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["a" /* ALL */]: {
@@ -1289,12 +1293,12 @@ var ApiDataProvider = (function () {
         // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
         try {
             switch (exchange) {
-                case "koinex":
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]:
                     {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
                     }
-                case "zebpay":
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* ZEBPAY */]:
                     {
                         // console.log("switch case zebpay");
                         return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -1319,13 +1323,13 @@ var ApiDataProvider = (function () {
         switch (exchange) {
             case "koinex":
                 {
-                    // console.log("SET - koinex exchange data");
-                    return this.koinexData = exchangeData;
+                    this.koinexData = exchangeData;
+                    // console.log("SET - koinex exchange data", this.koinexData);
                 }
             case "zebpay":
                 {
                     // console.log("SET - zebpay exchange data");
-                    return this.zebpayData = exchangeData;
+                    this.zebpayData = exchangeData;
                 }
         }
     };
@@ -1338,7 +1342,41 @@ var ApiDataProvider = (function () {
 
 //# sourceMappingURL=api-data.js.map
 
+/***/ }),
+
+/***/ 53:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return API_URL; });
+/* unused harmony export KOINEX_DATA */
+/* unused harmony export COIN_LIST_TEMPLATE */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return BTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ETH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return LTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BCH; });
+/* unused harmony export INR */
+/* unused harmony export USD */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ALL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return KOINEX; });
+var API_URL = "{\r\n  \"exchange\": {\r\n    \"koinex\": \"https:\/\/koinex.in\/api\/ticker\",\r\n    \"zebpay\": \"https:\/\/www.zebapi.com\/api\/v1\/market\/ticker\/btc\/inr\"\r\n  },\r\n  \"global\": {\r\n    \"coindesk\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice.json\",\r\n        \"INR\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice\/inr.json\"\r\n      }\r\n    },\r\n    \"coinmarketcap\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?limit=6\",\r\n        \"INR\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?convert=INR&limit=6\"\r\n      },\r\n      \"coin\": {\r\n        \"bitcoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin\",\r\n        \"ether\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ethereum\",\r\n        \"ripple\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ripple\",\r\n        \"btc-cash\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin-cash\",\r\n        \"litecoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/litecoin\"\r\n      }\r\n    }\r\n  },\r\n  \"version\": \"1.0.0\"\r\n}";
+var KOINEX_DATA = "{\"prices\":{\"BTC\":\"795000.0\",\"ETH\":\"34700.0\",\"BCH\":\"107499.0\",\"XRP\":\"19.25\",\"LTC\":\"6889.0\",\"MIOTA\":79.55,\"OMG\":547.62,\"GNT\":18.09},\"stats\":{\"ETH\":{\"last_traded_price\":\"34700.0\",\"lowest_ask\":\"34700.0\",\"highest_bid\":\"34601.0\",\"min_24hrs\":\"29800.0\",\"max_24hrs\":\"39000.0\",\"vol_24hrs\":\"3276.286\"},\"BTC\":{\"last_traded_price\":\"795000.0\",\"lowest_ask\":\"794990.0\",\"highest_bid\":\"792102.0\",\"min_24hrs\":\"700000.0\",\"max_24hrs\":\"932503.0\",\"vol_24hrs\":\"358.3514\"},\"LTC\":{\"last_traded_price\":\"6889.0\",\"lowest_ask\":\"6889.0\",\"highest_bid\":\"6888.0\",\"min_24hrs\":\"5998.0\",\"max_24hrs\":\"7678.0\",\"vol_24hrs\":\"8476.121\"},\"XRP\":{\"last_traded_price\":\"19.25\",\"lowest_ask\":\"19.35\",\"highest_bid\":\"19.25\",\"min_24hrs\":\"17.0\",\"max_24hrs\":\"21.05\",\"vol_24hrs\":\"2025861.7\"},\"BCH\":{\"last_traded_price\":\"107499.0\",\"lowest_ask\":\"107499.0\",\"highest_bid\":\"106800.0\",\"min_24hrs\":\"90000.0\",\"max_24hrs\":\"119900.0\",\"vol_24hrs\":\"650.083\"}}}";
+var COIN_LIST_TEMPLATE = "{\r\n  \"coin\": \"bitcoin\",\r\n  \"market\": \"5000\",\r\n  \"buy\": \"6000\",\r\n  \"sell\": \"4000\",\r\n  \"price_index\": \"high\",\r\n  \"change\": \"7\"\r\n}";
+var BTC = "Bitcoin";
+var XRP = "Ripple";
+var ETH = "Ethereum";
+var LTC = "Litecoin";
+var BCH = "Bitcoin Cash";
+var INR = "INR";
+var USD = "USD";
+var ALL = "ALL";
+var ZEBPAY = "zebpay";
+var KOINEX = "koinex";
+//# sourceMappingURL=api-constants.js.map
+
 /***/ })
 
-},[212]);
+},[211]);
 //# sourceMappingURL=main.js.map
