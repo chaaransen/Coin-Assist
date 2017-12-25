@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
+    <button type="button" ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Market View</ion-title>
@@ -17,7 +17,7 @@
   <ion-item>
     <ion-label>Exchange:</ion-label>
     <ion-select [(ngModel)]="selExchange" *ngIf="exchanges" interface="popover" (ngModelChange)="selectedExchange(selExchange)">
-      <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
+      <ion-option *ngFor="let exchange of exchanges ">{{exchange}}</ion-option>
     </ion-select>
   </ion-item>
 
@@ -67,7 +67,7 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-        <button ion-button clear item-end>></button>
+        <button type="button" ion-button clear item-end>></button>
       </ion-item>
     </ion-card>
   </ion-list>

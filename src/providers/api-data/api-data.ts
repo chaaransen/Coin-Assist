@@ -6,6 +6,9 @@ import { Storage } from '@ionic/storage';
 import { ApiUrls } from '../../models/api-urls';
 import * as Constants from '../../constants/api-constants'
 import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/observable/empty';
+import 'rxjs/add/operator/catch';
 import { CoinDetail } from '../../models/coin-detail';
 
 @Injectable()
@@ -69,37 +72,55 @@ export class ApiDataProvider {
   getKoinexData(): any {
     // console.log("GET - koinex data");
     // console.log(this.apiUrls.exchange.koinex);
+    // console.log(this.koinexData, "before");
 
+    if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+      this.koinexData.lock = true;
+      console.log("FETCHING - koinex data");
 
-    return Observable.of(JSON.parse(Constants.KOINEX_DATA));
+      return this.http.get(this.apiUrls.exchange.koinex).map(res => {
+        console.log(res);
 
-    // else
-    //   if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-    //     this.koinexData.lock = true;
-    //     // setTimeout(this.releaseExhangeLock(Constants.KOINEX), 10000);
-    //     return this.http.get(this.apiUrls.exchange.koinex);
-    //   }
-    //   else {
-    //     console.log("Koinex Data call LOCKED");
+        this.updateRecentExchangeData(Constants.KOINEX, res);
+        return res;
+      }).catch(error => {
+        this.updateRecentExchangeData(Constants.KOINEX);
+        return Observable.of(this.koinexData)
+      });
 
-    //     return this.koinexData;
-    //   }
-
-
+    } else if (this.koinexData.lock == true) {
+      console.log("STATIC - koinex data", this.koinexData);
+      return Observable.of(this.koinexData);
+    }
   }
 
-  releaseExhangeLock(exchange: any) {
-    switch (exchange) {
-      case Constants.ZEBPAY:
-        this.koinexData.lock = false;
-        console.log(this.koinexData.lock, " LOCK released");
+  updateRecentExchangeData(exchange: string, exchangeData?: any) {
+    if (exchangeData != undefined) {
+      this.setExchangeData(exchange, exchangeData);
+    }
+    this.lockExchange(exchange);
+  }
 
-        break;
+  lockExchange(exchange: string): any {
+
+    switch (exchange) {
       case Constants.KOINEX:
-        this.zebpayData.lock = false;
+        this.koinexData.lock = true;
+        // console.log("LOCK SET", this.koinexData);
+
+        var releaseLock = Observable.timer(15000);
+        releaseLock.subscribe(res => {
+          this.koinexData.lock = false;
+          console.log("LOCK RELEASED", this.koinexData);
+        });
+        break;
+
+      case Constants.ZEBPAY:
         break;
     }
   }
+
+
 
   // TO BE TESTED
   getZebpayData(): any {
@@ -107,7 +128,7 @@ export class ApiDataProvider {
     return this.http.get(this.apiUrls.exchange.zebpay);
   }
 
-  getExchangeData(exchange: string, data: boolean): any {
+  getExchangeData(exchange: string, data: boolean = true): any {
 
     switch (exchange) {
       case "koinex":
@@ -168,81 +189,70 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
-    try {
-      var processedKoinexData = [];
-      var coinList = exchangeData.stats;
 
-      // console.log(coinMarketCapData, "coinmarket cap data- processor");
+    var processedKoinexData = [];
+    var coinList = exchangeData.stats;
 
-      // console.log(coinList, "before");
+    // console.log(coinMarketCapData, "coinmarket cap data- processor");
+
+    // console.log(coinList, "before");
+    if (coinMarketCapData != undefined) {
+      if (coinMarketCapData.length == 1) {
+        var singleCoin = {}
+        // console.log(coinMarketCapData);
+
+        // console.log(coinList[coinMarketCapData[0].symbol]);
+
+        singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
+        coinList = singleCoin;
+        // console.log(coinList, "after");
+
+      }
+    }
+    for (let coin in coinList) {
+
+      // var processedCoin: any = {};
+
+      var processedCoin: CoinDetail = new CoinDetail();
+
+      processedCoin.coinName = this.getCoinName(coin);
+      processedCoin.coinCode = coin;
+
+      processedCoin.market.no = +coinList[coin].last_traded_price;
+      processedCoin.buy.no = +coinList[coin].lowest_ask;
+      processedCoin.sell.no = +coinList[coin].highest_bid;
+      processedCoin.min.no = +coinList[coin].min_24hrs;
+      processedCoin.max.no = +coinList[coin].max_24hrs;
+
+      processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+
+      // console.log(coinMarketCapData, "coin market data null check");
       if (coinMarketCapData != undefined) {
-        if (coinMarketCapData.length == 1) {
-          var singleCoin = {}
-          // console.log(coinMarketCapData);
-
-          // console.log(coinList[coinMarketCapData[0].symbol]);
-
-          singleCoin[coinMarketCapData[0].symbol] = coinList[coinMarketCapData[0].symbol];
-          coinList = singleCoin;
-          // console.log(coinList, "after");
-
-        }
+        processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+        processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
       }
-      for (let coin in coinList) {
 
-        // var processedCoin: any = {};
-
-        var processedCoin: CoinDetail = new CoinDetail();
-
-        processedCoin.coinName = this.getCoinName(coin);
-        processedCoin.coinCode = coin;
-
-        processedCoin.market.no = +coinList[coin].last_traded_price;
-        processedCoin.buy.no = +coinList[coin].lowest_ask;
-        processedCoin.sell.no = +coinList[coin].highest_bid;
-        processedCoin.min.no = +coinList[coin].min_24hrs;
-        processedCoin.max.no = +coinList[coin].max_24hrs;
-
-        processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-
-        // console.log(coinMarketCapData, "coin market data null check");
-        if (coinMarketCapData != undefined) {
-          processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
-          processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
-        }
-
-        processedCoin = this.coinDetailFormatter(processedCoin);
-        // console.log(processedCoin);
-        processedKoinexData.push(processedCoin);
-      }
-      return processedKoinexData;
+      processedCoin = this.coinDetailFormatter(processedCoin);
+      // console.log(processedCoin);
+      processedKoinexData.push(processedCoin);
     }
-    catch (e) {
-      console.log(e);
-
-    }
+    return processedKoinexData;
   }
 
   coinDetailFormatter(processedCoin: any) {
-    try {
-      processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-      processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-      processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
-      if (processedCoin.min.no != undefined) {
-        processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-        processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
-      }
-      if (processedCoin.global.INR.no != undefined) {
-        processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
-        processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-        processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
-      }
-      return processedCoin;
+    processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
+    processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
+    processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+    if (processedCoin.min.no != undefined) {
+      processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
+      processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
     }
-    catch (e) {
-      console.log(e);
-
+    if (processedCoin.global.INR.no != undefined) {
+      processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
+      processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+      processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
     }
+    return processedCoin;
   }
 
   plusMinusPercent(ObjectTarget, market, percent: number): any {
@@ -270,7 +280,7 @@ export class ApiDataProvider {
     return number.toLocaleString(locale, { style: 'currency', currency: currency });
   }
 
-  rangeStepCalculator(min, max): any {
+  rangeStepCalculator(min, max): number {
     let diff = max - min;
     let step = diff / 10;
     // console.log("Steps ", step);
@@ -416,13 +426,13 @@ export class ApiDataProvider {
     // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
     try {
       switch (exchange) {
-        case "koinex":
+        case Constants.KOINEX:
           {
             // console.log("switch case koinex");
 
             return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
           }
-        case "zebpay":
+        case Constants.ZEBPAY:
           {
             // console.log("switch case zebpay");
             return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -451,14 +461,13 @@ export class ApiDataProvider {
     switch (exchange) {
       case "koinex":
         {
-          // console.log("SET - koinex exchange data");
-
-          return this.koinexData = exchangeData;
+          this.koinexData = exchangeData;
+          // console.log("SET - koinex exchange data", this.koinexData);
         }
       case "zebpay":
         {
           // console.log("SET - zebpay exchange data");
-          return this.zebpayData = exchangeData;
+          this.zebpayData = exchangeData;
         }
     }
   }
