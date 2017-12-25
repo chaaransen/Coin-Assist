@@ -8,4 +8,41 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+
+    <ion-item>
+      <ion-label fixed>Quantity</ion-label>
+      <ion-input type="number" [disabled]="" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="calcProfitLoss('qty')"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label fixed>Amount &#8377;</ion-label>
+      <ion-input type="number" [disabled]="" placeholder="3000" [(ngModel)]="amount" clearInput="true" (ngModelChange)="calcProfitLoss('amt')"></ion-input>
+    </ion-item>
+
+
+
+    <ion-item>
+      <ion-label fixed>From &#8377;</ion-label>
+      <ion-input type="number" placeholder="1000" [(ngModel)]="fromValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label fixed>To &#8377;</ion-label>
+      <ion-input type="number" placeholder="2000" [(ngModel)]="toValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+    </ion-item>
+
+
+
+    <ion-item>
+      <ion-label fixed>Profit / Loss &#8377;</ion-label>
+      <ion-input type="number" placeholder="3000" [(ngModel)]="profitLoss" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Profit / Loss &#8377;</ion-label> {{finalValue}}
+    </ion-item>
+  </ion-list>
+
 </ion-content>
