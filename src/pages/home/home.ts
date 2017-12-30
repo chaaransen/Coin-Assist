@@ -11,6 +11,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Observable } from 'rxjs/Observable';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -24,12 +25,14 @@ export class HomePage {
   selExchange: any;
   alive: boolean;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams, private toastCtrl: ToastController) {
+    // console.log("Constructor - Home page");
+
     this.alive = true;
   }
 
   ngOnInit() {
-    console.log("Home component ngOninit Called");
+    // console.log("Home component ngOninit Called");
 
 
     this.api.getApiUrlStorage().then(res => {
@@ -37,7 +40,7 @@ export class HomePage {
         this.apiUrls = res;
       }
       else {
-        console.log("constant Api urls called");
+        // console.log("constant Api urls called");
 
         this.apiUrls = this.api.getConstantApiUrl();
       }
@@ -55,8 +58,25 @@ export class HomePage {
     });
   }
 
-  ngOnDestroy() {
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Latest Price Refreshed',
+      duration: 1500,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  ionViewDidLeave() {
+
     this.alive = false;
+    // console.log("Home page - left", this.alive);
+  }
+
+  ionViewWillEnter() {
+    this.alive = true;
+
+    // console.log("Home page -View Entered", this.alive);
   }
 
   doRefresh(refresher) {
@@ -68,20 +88,20 @@ export class HomePage {
 
   populateView() {
     // console.log(this.apiUrls.exchange);
+    // console.log("Populating Home page");
 
     this.exchanges = Object.keys(this.apiUrls.exchange);
     this.selExchange = this.exchanges[0];
     this.selectedExchange(this.selExchange);
+    this.presentToast();
   }
 
   public selectedExchange(sel: any) {
 
     this.api.getMarketOverviewData(sel, Constants.ALL).subscribe(res => {
       // console.log("first data - exchange data", res[0]);
-      // console.log("second data - coin market Cap data");
-      // console.log(res[1]);
-      // console.log("third data - coindesk data");
-      // console.log(res[2]);
+      // console.log("second data - coin market Cap data", res[1]);
+      // console.log("third data - coindesk data", res[2]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
       // console.log("processed exchange data");
       // console.log(this.coins);

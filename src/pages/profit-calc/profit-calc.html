@@ -12,38 +12,37 @@
 
     <ion-item>
       <ion-label fixed>Quantity</ion-label>
-      <ion-input type="number" [readonly]="!toggle" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="calcProfitLoss('qty')"></ion-input>
+      <ion-input type="number" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
     </ion-item>
 
     OR
 
     <ion-item>
-      <ion-label fixed>Amount &#8377;</ion-label>
-      <ion-input (click)="toggleDisabled()" type="number" [readonly]="toggle" placeholder="3000" [(ngModel)]="amount" clearInput="true"
-        (ngModelChange)="calcProfitLoss('amt')"></ion-input>
+      <ion-label fixed>Investment &#8377;</ion-label>
+      <ion-input type="number" placeholder="3000" [(ngModel)]="amount" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
     </ion-item>
 
 
 
     <ion-item>
       <ion-label fixed>Buy Price &#8377;</ion-label>
-      <ion-input type="number" placeholder="1000" [(ngModel)]="fromValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+      <ion-input type="number" placeholder="1000" [(ngModel)]="fromValue" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
     </ion-item>
 
 
     <ion-item>
       <ion-label fixed>Sell Price &#8377;</ion-label>
-      <ion-input type="number" placeholder="2000" [(ngModel)]="toValue" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+      <ion-input type="number" placeholder="2000" [(ngModel)]="toValue" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
     </ion-item>
 
 
 
     <ion-item>
       <ion-label fixed>Profit / Loss &#8377;</ion-label>
-      <ion-input type="number" placeholder="3000" [(ngModel)]="profitLoss" clearInput="true" (ngModelChange)="calcProfitLoss()"></ion-input>
+      <ion-input type="number" placeholder="3000" [(ngModel)]="profitLoss" clearInput="true" (ngModelChange)="updateSellPrice()"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label fixed>Profit / Loss &#8377;</ion-label> {{finalValue}}
+      Total Amount = {{finalValue}}
     </ion-item>
   </ion-list>
 

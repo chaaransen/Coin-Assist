@@ -24,8 +24,8 @@
 
     <ion-item>
       <ion-label fixed>Crypto-Coin</ion-label>
-      <ion-select [(ngModel)]="selCoin" interface="popover" (ngModelChange)="populateCoinValues(selCoin)">
-        <ion-option *ngFor=" let coin of coins" [value]="coin">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
+      <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">
+        <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
       </ion-select>
     </ion-item>
 
@@ -52,6 +52,9 @@
     <ion-item>
       <ion-label fixed>Quantity</ion-label>
       <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>
+    </ion-item>
+    <ion-item>
+      {{buyerFees}} + {{actualAmount}}
     </ion-item>
   </ion-list>
 </ion-content>

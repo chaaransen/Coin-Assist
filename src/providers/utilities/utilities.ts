@@ -7,7 +7,7 @@ export class Utilities {
 
     }
 
-    public trimQuantity(coinName: string, quantity: number): number {
+    public trimQuantity(coinName: string = "default", quantity: number): number {
         var trimmedQty: number;
 
         switch (coinName) {
@@ -26,6 +26,13 @@ export class Utilities {
             case Constants.BCH: {
                 return trimmedQty = +quantity.toFixed(3);
             }
+            default: {
+                return trimmedQty = +quantity.toFixed(2);
+            }
         }
+    }
+
+    public trimToDecimal(value: number, decimal: number) {
+        return +value.toFixed(decimal);
     }
 }

@@ -6,6 +6,7 @@ import { CoinDetail } from '../../models/coin-detail';
 import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants'
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -14,23 +15,26 @@ import * as Constants from '../../constants/api-constants'
 export class QuantityCalcPage {
 
   exchanges: any;
-  coins: CoinDetail[];;
+  exchange: any;
+  coins: CoinDetail[];
   selExchange: any;
   public selCoin: CoinDetail = new CoinDetail();
   apis: any = {};
   amount: number = undefined;
+  actualAmount: number;
+  buyerFees: number;
   amountFlag: boolean = false;
   public quantity: number;
   percent: number = 0.05;
 
   rangeValue: number;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController) {
     // console.log("1 qty constructor called");
     this.selExchange = navParam.get("exchange");
     this.selCoin.coinName = navParam.get("coin");
-    console.log(this.selCoin, " sel coin qty");
-    console.log(this.selExchange, " sel Exchange qty");
+    // console.log(this.selCoin, " sel coin qty");
+    // console.log(this.selExchange, " sel Exchange qty");
     this.apis = this.api.apiUrls.exchange;
     this.exchanges = Object.keys(this.apis);
     // console.log(this.apis, "api list fetched back");
@@ -48,10 +52,21 @@ export class QuantityCalcPage {
     this.populateView();
   }
 
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Latest Price Refreshed',
+      duration: 1500,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+
   doRefresh(refresher) {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.populateView();
     setTimeout(() => {
+      this.presentToast();
       refresher.complete();
     }, 800);
   }
@@ -75,20 +90,23 @@ export class QuantityCalcPage {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh Populate");
     this.selCoin = this.coins.find(coin => this.selCoin.coinName == coin.coinName);
     // console.log(this.selCoin, "selected coin - QTY");
-    this.updateRange(this.selCoin.market.no);
+    this.selCoin.range.rate.no = this.selCoin.market.no;
+
+    this.updateRange();
     // console.log(this.selCoin, " coin selected");
     // console.log(this.coins, "all coins");
   }
 
-  public updateRange(rate: number) {
-    this.selCoin.range.rate.no = rate;
+  public updateRange() {
+
     // console.log(this.selCoin.range.rate.no);
     this.formateRate();
     this.selCoin = this.api.plusMinusPercent(this.selCoin, this.selCoin.range.rate.no, this.percent);
     // console.log("8 plus minus percent called");
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
-    console.log(this.selCoin);
+    // console.log(this.selCoin);
+    this.calcQuantity();
     // console.log(this.selCoin);
 
   }
@@ -103,7 +121,16 @@ export class QuantityCalcPage {
   public calcQuantity() {
     // console.log("quantity calculated");
     if (this.amount != undefined) {
-      let qty = this.amount / this.selCoin.range.rate.no;
+      this.exchange = this.apis[this.selExchange];
+      // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
+
+      this.buyerFees = this.util.trimToDecimal(this.amount * this.exchange.fees.buy, 2);
+      // console.log("Buyers fees", this.buyerFees);
+
+      this.actualAmount = this.util.trimToDecimal(this.amount - this.buyerFees, 2);
+      // console.log("Actual Amount", this.actualAmount);
+
+      let qty = this.actualAmount / this.selCoin.range.rate.no;
       // console.log(qty);
       this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
       // console.log(this.quantity);

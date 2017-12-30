@@ -74,12 +74,15 @@ export class ApiDataProvider {
     // console.log(this.apiUrls.exchange.koinex);
     // console.log(this.koinexData, "before");
 
+
+    // return Observable.of(this.koinexData = JSON.parse(Constants.KOINEX_DATA));
+
     if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
       this.koinexData.lock = true;
-      console.log("FETCHING - koinex data");
+      // console.log("FETCHING - koinex data");
 
-      return this.http.get(this.apiUrls.exchange.koinex).map(res => {
-        console.log(res);
+      return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+        // console.log(res);
 
         this.updateRecentExchangeData(Constants.KOINEX, res);
         return res;
@@ -89,7 +92,7 @@ export class ApiDataProvider {
       });
 
     } else if (this.koinexData.lock == true) {
-      console.log("STATIC - koinex data", this.koinexData);
+      // console.log("STATIC - koinex data", this.koinexData);
       return Observable.of(this.koinexData);
     }
   }
@@ -111,7 +114,7 @@ export class ApiDataProvider {
         var releaseLock = Observable.timer(15000);
         releaseLock.subscribe(res => {
           this.koinexData.lock = false;
-          console.log("LOCK RELEASED", this.koinexData);
+          // console.log("LOCK RELEASED", this.koinexData);
         });
         break;
 
@@ -125,7 +128,7 @@ export class ApiDataProvider {
   // TO BE TESTED
   getZebpayData(): any {
     // console.log("GET - zebpay data");
-    return this.http.get(this.apiUrls.exchange.zebpay);
+    return this.http.get(this.apiUrls.exchange.zebpay.api);
   }
 
   getExchangeData(exchange: string, data: boolean = true): any {
