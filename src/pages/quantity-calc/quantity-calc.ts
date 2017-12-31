@@ -121,13 +121,7 @@ export class QuantityCalcPage {
   public calcQuantity() {
     // console.log("quantity calculated");
     if (this.amount != undefined) {
-      this.exchange = this.apis[this.selExchange];
-      // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
-
-      this.buyerFees = this.util.trimToDecimal(this.amount * this.exchange.fees.buy, 2);
-      // console.log("Buyers fees", this.buyerFees);
-
-      this.actualAmount = this.util.trimToDecimal(this.amount - this.buyerFees, 2);
+      this.calcFeesAmount();
       // console.log("Actual Amount", this.actualAmount);
 
       let qty = this.actualAmount / this.selCoin.range.rate.no;
@@ -135,6 +129,16 @@ export class QuantityCalcPage {
       this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
       // console.log(this.quantity);
     }
+  }
+
+  public calcFeesAmount() {
+    this.exchange = this.apis[this.selExchange];
+    // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
+
+    this.buyerFees = this.util.trimToDecimal(this.amount * this.exchange.fees.buy, 2);
+    // console.log("Buyers fees", this.buyerFees);
+
+    this.actualAmount = this.util.trimToDecimal(this.amount - this.buyerFees, 2);
   }
 
   public rangeChanged(rangePointer: number) {
@@ -145,6 +149,7 @@ export class QuantityCalcPage {
 
   public calcAmount() {
     this.amount = this.quantity * this.selCoin.range.rate.no;
+    this.calcFeesAmount();
   }
 
   public amountChanged(amount: string) {

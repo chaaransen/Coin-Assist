@@ -86,12 +86,13 @@ export class CoinDetailPage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
+      this.presentToast();
       refresher.complete();
     }, 800);
   }
 
   populateView() {
-    console.log("Detail Populating");
+    // console.log("Detail Populating");
 
     this.selectedExchange(this.exchange);
   }
@@ -111,7 +112,6 @@ export class CoinDetailPage {
       this.coinDetail = coinArray[0];
       this.initRange(this.coinDetail);
       // console.log(this.coinDetail, "coinDetail Processed Detail");
-      this.presentToast();
     },
       err => {
         console.log(err);

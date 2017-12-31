@@ -79,10 +79,9 @@ export class ApiDataProvider {
 
     if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
       this.koinexData.lock = true;
-      // console.log("FETCHING - koinex data");
-
       return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
         // console.log(res);
+        // console.log("FETCHED - koinex data", res);
 
         this.updateRecentExchangeData(Constants.KOINEX, res);
         return res;
@@ -100,26 +99,36 @@ export class ApiDataProvider {
   updateRecentExchangeData(exchange: string, exchangeData?: any) {
     if (exchangeData != undefined) {
       this.setExchangeData(exchange, exchangeData);
+      this.lockExchange(exchange);
     }
-    this.lockExchange(exchange);
   }
 
   lockExchange(exchange: string): any {
 
     switch (exchange) {
-      case Constants.KOINEX:
+      case Constants.KOINEX: {
         this.koinexData.lock = true;
         // console.log("LOCK SET", this.koinexData);
 
-        var releaseLock = Observable.timer(15000);
-        releaseLock.subscribe(res => {
+        var releaseLockKoinex = Observable.timer(15000);
+        releaseLockKoinex.subscribe(res => {
           this.koinexData.lock = false;
           // console.log("LOCK RELEASED", this.koinexData);
         });
         break;
-
+      }
       case Constants.ZEBPAY:
-        break;
+        {
+          this.zebpayData.lock = true;
+          // console.log("LOCK SET", this.zebpayData);
+
+          var releaseLockZebpay = Observable.timer(15000);
+          releaseLockZebpay.subscribe(res => {
+            this.zebpayData.lock = false;
+            // console.log("LOCK RELEASED", this.zebpayData);
+          });
+          break;
+        }
     }
   }
 
@@ -127,8 +136,26 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   getZebpayData(): any {
-    // console.log("GET - zebpay data");
-    return this.http.get(this.apiUrls.exchange.zebpay.api);
+    // console.log("GET - zebpay data", this.zebpayData);
+
+    if (this.zebpayData.lock == false || this.zebpayData.lock == undefined) {
+      this.zebpayData.lock = true;
+
+
+      return this.http.get(this.apiUrls.exchange.zebpay.api).map(res => {
+        // console.log(res);
+        // console.log("FETCHED - zebpay data", res);
+        this.updateRecentExchangeData(Constants.ZEBPAY, res);
+        return res;
+      }).catch(error => {
+        this.updateRecentExchangeData(Constants.ZEBPAY);
+        return Observable.of(this.zebpayData)
+      });
+
+    } else if (this.zebpayData.lock == true) {
+      // console.log("STATIC - zebpay data", this.zebpayData);
+      return Observable.of(this.zebpayData);
+    }
   }
 
   getExchangeData(exchange: string, data: boolean = true): any {
@@ -141,7 +168,6 @@ export class ApiDataProvider {
             return this.getKoinexData();
           }
           return this.getKoinexTemplate();
-
         }
       case "zebpay":
         {
@@ -348,6 +374,7 @@ export class ApiDataProvider {
 
     processedCoin.coinName = this.getCoinName(coin);
     processedCoin.coinCode = coin;
+
     processedCoin.market.no = +zebpayData.market;
     processedCoin.buy.no = +zebpayData.buy;
     processedCoin.sell.no = +zebpayData.sell;
@@ -358,6 +385,7 @@ export class ApiDataProvider {
 
     if (coinMarketCapData != undefined) {
       processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
+      processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
     }
     processedCoin = this.coinDetailFormatter(processedCoin);
     // console.log(processedCoin);
@@ -466,11 +494,13 @@ export class ApiDataProvider {
         {
           this.koinexData = exchangeData;
           // console.log("SET - koinex exchange data", this.koinexData);
+          break;
         }
       case "zebpay":
         {
           // console.log("SET - zebpay exchange data");
           this.zebpayData = exchangeData;
+          break;
         }
     }
   }

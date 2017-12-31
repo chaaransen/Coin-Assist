@@ -33,6 +33,8 @@ export class Utilities {
     }
 
     public trimToDecimal(value: number, decimal: number) {
-        return +value.toFixed(decimal);
+        // console.log(value, "decimal value", decimal);
+        let numbericValue = +value;
+        return +numbericValue.toFixed(decimal);
     }
 }

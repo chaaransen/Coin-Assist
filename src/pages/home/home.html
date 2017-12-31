@@ -9,8 +9,8 @@
 
 <ion-content padding>
 
-  <ion-refresher (ionRefresh)="doRefresh($event)" padding>
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content padding pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
   <ion-item>
@@ -60,7 +60,7 @@
               Low: {{coin.min.formatted}}
             </ion-col>
           </ion-row>
-          <ion-row>
+          <ion-row *ngIf="coin.max.no">
             <ion-col col-12>
               High: {{coin.max.formatted}}
             </ion-col>

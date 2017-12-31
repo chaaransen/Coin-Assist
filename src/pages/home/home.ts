@@ -82,6 +82,7 @@ export class HomePage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
+      this.presentToast();
       refresher.complete();
     }, 800);
   }
@@ -89,11 +90,11 @@ export class HomePage {
   populateView() {
     // console.log(this.apiUrls.exchange);
     // console.log("Populating Home page");
-
-    this.exchanges = Object.keys(this.apiUrls.exchange);
-    this.selExchange = this.exchanges[0];
+    if (this.selExchange == undefined) {
+      this.exchanges = Object.keys(this.apiUrls.exchange);
+      this.selExchange = this.exchanges[0];
+    }
     this.selectedExchange(this.selExchange);
-    this.presentToast();
   }
 
   public selectedExchange(sel: any) {
