@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -16,4 +14,47 @@
 // automatically applied to the <body> element in the app.
 .scroll-content {
     overflow-y: auto !important;
- }
+}
+
+.increasePercent {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #009b2c;
+}
+
+.decreasePercent {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #b95516;
+}
+
+.incArrow {
+    font-size: 1.8rem;
+    color: #009b2c;
+    font-weight: 700;
+}
+
+.decArrow {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #b95516;
+}
+
+.riseFallSymbol {
+    font-size: 1.9rem;
+}
+
+.Medium {
+    color: darkolivegreen;
+    font-weight: 500;
+}
+
+.High {
+    color: #b95516;
+    font-weight: 500;
+}
+
+.Low {
+    color: #009b2c;
+    font-weight: 500;
+}

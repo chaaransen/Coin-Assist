@@ -25682,6 +25682,49 @@ ion-navbar.toolbar {
   overflow-y: auto !important;
 }
 
+.increasePercent {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #009b2c;
+}
+
+.decreasePercent {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #b95516;
+}
+
+.incArrow {
+  font-size: 1.8rem;
+  color: #009b2c;
+  font-weight: 700;
+}
+
+.decArrow {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #b95516;
+}
+
+.riseFallSymbol {
+  font-size: 1.9rem;
+}
+
+.Medium {
+  color: darkolivegreen;
+  font-weight: 500;
+}
+
+.High {
+  color: #b95516;
+  font-weight: 500;
+}
+
+.Low {
+  color: #009b2c;
+  font-weight: 500;
+}
+
 page-home .item-md ion-thumbnail ion-img,
 page-home .item-md ion-thumbnail img {
   width: 5rem;
@@ -25696,9 +25739,50 @@ page-home .item-md ion-thumbnail[item-start] {
 }
 
 page-home * {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
+  font-weight: 400;
 }
 
 page-home .text-center {
   text-align: center;
+}
+
+page-home ion-label,
+page-home ion-select {
+  font-size: 1.8rem;
+}
+
+page-home button-inner {
+  font-size: 2.8rem;
+}
+
+page-home .price {
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: #909090;
+}
+
+page-home .scroll-content {
+  padding: 1rem !important;
+}
+
+page-home .marginRight {
+  margin-right: 1.5rem;
+}
+
+page-home .item-md ion-thumbnail ion-img,
+page-home .item-md ion-thumbnail img {
+  width: 6.8rem;
+  height: 6.8rem;
+}
+
+page-home .coinName {
+  margin-top: 0.8rem;
+  color: black;
+  font-size: 1.8rem;
+}
+
+page-home .nextButton {
+  color: black;
+  padding: 0px !important;
 }

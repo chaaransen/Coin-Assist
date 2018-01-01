@@ -11,9 +11,42 @@ page-home {
         margin: 8px 0px 8px 0;
     }
     * {
-        font-size: 1.3rem;
+        font-size: 1.6rem;
+        font-weight: 400;
     }
     .text-center {
         text-align: center;
+    }
+    ion-label,
+    ion-select {
+        font-size: 1.8rem;
+    }
+    button-inner {
+        font-size: 2.8rem;
+    }
+    .price {
+        font-size: 2.1rem;
+        font-weight: 500;
+        color: #909090;
+    }
+    .scroll-content {
+        padding: 1rem !important;
+    }
+    .marginRight {
+        margin-right: 1.5rem;
+    }
+    .item-md ion-thumbnail ion-img,
+    .item-md ion-thumbnail img {
+        width: 6.8rem;
+        height: 6.8rem;
+    }
+    .coinName {
+        margin-top: 0.8rem;
+        color: black;
+        font-size: 1.8rem;
+    }
+    .nextButton {
+        color: black;
+        padding: 0px !important;
     }
 }

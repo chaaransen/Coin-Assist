@@ -14,6 +14,7 @@ export class CoinDetail {
     change: Change;
     step: number;
     globalDiff: ValueDetail;
+    volatility: number;
 
     constructor() {
         this.market = new ValueDetail();

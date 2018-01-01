@@ -10,6 +10,7 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/catch';
 import { CoinDetail } from '../../models/coin-detail';
+import { Utilities } from '../utilities/utilities';
 
 @Injectable()
 export class ApiDataProvider {
@@ -24,7 +25,7 @@ export class ApiDataProvider {
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities) {
   }
 
   setApiUrl(apiUrl: any): any {
@@ -99,8 +100,8 @@ export class ApiDataProvider {
   updateRecentExchangeData(exchange: string, exchangeData?: any) {
     if (exchangeData != undefined) {
       this.setExchangeData(exchange, exchangeData);
-      this.lockExchange(exchange);
     }
+    this.lockExchange(exchange);
   }
 
   lockExchange(exchange: string): any {
@@ -250,6 +251,9 @@ export class ApiDataProvider {
       processedCoin.sell.no = +coinList[coin].highest_bid;
       processedCoin.min.no = +coinList[coin].min_24hrs;
       processedCoin.max.no = +coinList[coin].max_24hrs;
+      let diff = processedCoin.max.no - processedCoin.min.no;
+      let average = diff / 2;
+      processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
 
       processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
 
@@ -284,7 +288,7 @@ export class ApiDataProvider {
 
   plusMinusPercent(ObjectTarget = undefined, market, percent: number): any {
     let marketPrice = +market;
-    var percentage;
+    var percentage: any = {};
     percentage.percentValue = (marketPrice * percent);
     percentage.plusPercent = marketPrice + percentage.percentValue;
     percentage.minusPercent = marketPrice - percentage.percentValue;
@@ -359,11 +363,11 @@ export class ApiDataProvider {
     let mediumRegionHigh = (min + (2 * diff));
 
     if (current <= lowRegionHigh && current > min) {
-      return "LOW"
+      return "Low"
     } else if (current <= mediumRegionHigh && current > lowRegionHigh) {
-      return "MEDIUM";
+      return "Medium";
     } else if (current <= max && current > mediumRegionHigh) {
-      return "HIGH";
+      return "High";
     }
 
   }
