@@ -132,8 +132,6 @@ export class ApiDataProvider {
     }
   }
 
-
-
   // TO BE TESTED
   getZebpayData(): any {
     // console.log("GET - zebpay data", this.zebpayData);
@@ -284,24 +282,30 @@ export class ApiDataProvider {
     return processedCoin;
   }
 
-  plusMinusPercent(ObjectTarget, market, percent: number): any {
-    try {
-      let marketPrice = +market;
-      let percentValue = (marketPrice * percent);
-      let plusPercent = marketPrice + percentValue;
-      let minusPercent = marketPrice - percentValue;
+  plusMinusPercent(ObjectTarget = undefined, market, percent: number): any {
+    let marketPrice = +market;
+    var percentage;
+    percentage.percentValue = (marketPrice * percent);
+    percentage.plusPercent = marketPrice + percentage.percentValue;
+    percentage.minusPercent = marketPrice - percentage.percentValue;
 
-      ObjectTarget.range.plusPercent.no = plusPercent;
-      ObjectTarget.range.minusPercent.no = minusPercent;
+    if (ObjectTarget != undefined) {
+      try {
+        ObjectTarget.range.plusPercent.no = percentage.plusPercent;
+        ObjectTarget.range.minusPercent.no = percentage.minusPercent;
 
-      ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
-      ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
+        ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
+        ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
 
-      return ObjectTarget;
+        return ObjectTarget;
+      }
+      catch (e) {
+        console.log(e);
+
+      }
     }
-    catch (e) {
-      console.log(e);
-
+    else {
+      return percentage;
     }
   }
 

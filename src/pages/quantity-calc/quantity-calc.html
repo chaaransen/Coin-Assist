@@ -31,7 +31,7 @@
 
     <ion-item>
       <ion-label fixed>Coin Rate</ion-label>
-      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="updateRange($event)"></ion-input>
+      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>
     </ion-item>
     <ion-item>
       {{selCoin.range.rate.formatted}}
@@ -55,6 +55,9 @@
     </ion-item>
     <ion-item>
       {{buyerFees}} + {{actualAmount}}
+    </ion-item>
+    <ion-item>
+      {{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}}
     </ion-item>
   </ion-list>
 </ion-content>

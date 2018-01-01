@@ -111,6 +111,11 @@ export class QuantityCalcPage {
 
   }
 
+
+  public coinRateChanged() {
+    this.updateRange();
+  }
+
   formateRate() {
     // console.log("7 format rate");
     // console.log(this.range.rate.no, 'nubmer');
