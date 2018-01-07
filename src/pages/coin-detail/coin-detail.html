@@ -37,7 +37,7 @@
         </h2>
 
         <h2> [ global: {{coinDetail.global.INR.formatted}} ] ( {{coinDetail.global.USD.formatted}} ) </h2>
-        <h3>Global Difference: {{coinDetail.globalDiff.formatted}}</h3>
+        <h3>Global Difference: {{coinDetail.globalDiff.val.formatted}} {{coinDetail.globalDiff.percent}}%</h3>
       </ion-item>
       <ion-item>
         <button (click)="gotoCalcQuantityPage()" ion-button>Calculate Quantity / Amount</button>

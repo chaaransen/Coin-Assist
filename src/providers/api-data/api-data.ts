@@ -76,25 +76,25 @@ export class ApiDataProvider {
     // console.log(this.koinexData, "before");
 
 
-    // return Observable.of(this.koinexData = JSON.parse(Constants.KOINEX_DATA));
+    return Observable.of(this.koinexData = JSON.parse(Constants.KOINEX_DATA));
 
-    if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-      this.koinexData.lock = true;
-      return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
-        // console.log(res);
-        // console.log("FETCHED - koinex data", res);
+    // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+    //   this.koinexData.lock = true;
+    //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+    //     // console.log(res);
+    //     // console.log("FETCHED - koinex data", res);
 
-        this.updateRecentExchangeData(Constants.KOINEX, res);
-        return res;
-      }).catch(error => {
-        this.updateRecentExchangeData(Constants.KOINEX);
-        return Observable.of(this.koinexData)
-      });
+    //     this.updateRecentExchangeData(Constants.KOINEX, res);
+    //     return res;
+    //   }).catch(error => {
+    //     this.updateRecentExchangeData(Constants.KOINEX);
+    //     return Observable.of(this.koinexData)
+    //   });
 
-    } else if (this.koinexData.lock == true) {
-      // console.log("STATIC - koinex data", this.koinexData);
-      return Observable.of(this.koinexData);
-    }
+    // } else if (this.koinexData.lock == true) {
+    //   // console.log("STATIC - koinex data", this.koinexData);
+    //   return Observable.of(this.koinexData);
+    // }
   }
 
   updateRecentExchangeData(exchange: string, exchangeData?: any) {
@@ -260,7 +260,6 @@ export class ApiDataProvider {
       // console.log(coinMarketCapData, "coin market data null check");
       if (coinMarketCapData != undefined) {
         processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
-        processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
       }
 
       processedCoin = this.coinDetailFormatter(processedCoin);
@@ -281,7 +280,7 @@ export class ApiDataProvider {
     if (processedCoin.global.INR.no != undefined) {
       processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
       processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-      processedCoin.globalDiff.formatted = this.numberFormatter(processedCoin.globalDiff.no);
+      processedCoin.globalDiff.val.formatted = this.numberFormatter(processedCoin.globalDiff.val.no);
     }
     return processedCoin;
   }
@@ -362,11 +361,11 @@ export class ApiDataProvider {
     let lowRegionHigh = min + diff
     let mediumRegionHigh = (min + (2 * diff));
 
-    if (current <= lowRegionHigh && current > min) {
+    if (current <= lowRegionHigh && current > min || current < min) {
       return "Low"
     } else if (current <= mediumRegionHigh && current > lowRegionHigh) {
       return "Medium";
-    } else if (current <= max && current > mediumRegionHigh) {
+    } else if (current <= max && current > mediumRegionHigh || current > max) {
       return "High";
     }
 
@@ -393,7 +392,6 @@ export class ApiDataProvider {
 
     if (coinMarketCapData != undefined) {
       processedCoin = this.injectGlobalStats(coin, processedCoin, coinMarketCapData, coinDeskData);
-      processedCoin.globalDiff.no = processedCoin.market.no - processedCoin.global.INR.no;
     }
     processedCoin = this.coinDetailFormatter(processedCoin);
     // console.log(processedCoin);
@@ -411,6 +409,10 @@ export class ApiDataProvider {
       processedCoin.change.hour = +coinGlobalStats.changeHour;
       processedCoin.change.day = +coinGlobalStats.changeDay;
       processedCoin.change.week = +coinGlobalStats.changeWeek;
+      processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
+      processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
+      // console.log(processedCoin.globalDiff.percent);
+
       return processedCoin;
     }
     catch (e) {

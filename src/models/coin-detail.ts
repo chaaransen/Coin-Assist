@@ -13,8 +13,8 @@ export class CoinDetail {
     range: RangeValue;
     change: Change;
     step: number;
-    globalDiff: ValueDetail;
     volatility: number;
+    globalDiff: GlobalDiff;
 
     constructor() {
         this.market = new ValueDetail();
@@ -25,7 +25,14 @@ export class CoinDetail {
         this.global = new Global();
         this.range = new RangeValue();
         this.change = new Change();
-        this.globalDiff = new ValueDetail();
+        this.globalDiff = new GlobalDiff();
+    }
+}
+export class GlobalDiff {
+    val: ValueDetail;
+    percent: number;
+    constructor() {
+        this.val = new ValueDetail();
     }
 }
 
