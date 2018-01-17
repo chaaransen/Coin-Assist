@@ -55,18 +55,16 @@
                   </ion-row>
                 </ion-col>
                 <ion-col col-4 class="boldTextValue">
-                  <div *ngIf="coin.change.day >= 0" class="increasePercent">
-                    <span class="riseFallSymbol">&#9650;</span>+{{coin.change.day}}%
+                  <div *ngIf="coin.change.day >= 0" class="greenColor weight500">
+                    <span class="size1rem7">&#9650;</span>+{{coin.change.day}}%
                   </div>
-                  <div *ngIf="coin.change.day < 0" class="decreasePercent">
-                    <span class="riseFallSymbol">&#9660;</span>{{coin.change.day}}%
+                  <div *ngIf="coin.change.day < 0" class="redColor weight500">
+                    <span class="size1rem7">&#9660;</span>{{coin.change.day}}%
                   </div>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col col-6 *ngIf="coin.volatility">
-                  <!-- <span class="incArrow">&#8639;</span> -->
-                  <!-- <span class="decArrow">&#8642;</span> -->
                   <span class="riseFallSymbol weight500">&#8645;</span>
                   <span class="weight500"> {{coin.volatility}}% </span>
                 </ion-col>
@@ -78,24 +76,24 @@
               <ion-row *ngIf="coin.min.no">
                 <ion-col col-12>
                   <span>Low: </span>
-                  <span class="decreasePercent">{{coin.min.formatted}}</span>
+                  <span class="redColor weight500">{{coin.min.formatted}}</span>
                 </ion-col>
               </ion-row>
               <ion-row *ngIf="coin.max.no">
                 <ion-col col-12>
                   <span>High: </span>
-                  <span class="increasePercent">{{coin.max.formatted}}</span>
+                  <span class="greenColor weight500">{{coin.max.formatted}}</span>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col col-12>
                   <div *ngIf="coin.globalDiff.percent >= 0">
                     Global.Diff(%):
-                    <span class="increasePercent">{{coin.globalDiff.percent}}%</span>
+                    <span class="greenColor weight500">{{coin.globalDiff.percent}}%</span>
                   </div>
                   <div *ngIf="coin.globalDiff.percent < 0">
                     Global.Diff(%):
-                    <span class="decreasePercent">{{coin.globalDiff.percent}}%</span>
+                    <span class="redColor weight500">{{coin.globalDiff.percent}}%</span>
                   </div>
                 </ion-col>
               </ion-row>

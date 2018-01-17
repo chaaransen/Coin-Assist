@@ -12,34 +12,34 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+* {
+    text-transform: none;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
 .scroll-content {
     overflow-y: auto !important;
 }
 
-.increasePercent {
-    font-weight: 500;
-    color: #009b2c;
-}
-
-.decreasePercent {
-    font-weight: 500;
+.redColor {
     color: #b95516;
 }
 
-.incArrow {
-    font-size: 1.5rem;
+.greenColor {
     color: #009b2c;
-    font-weight: 700;
 }
 
-.decArrow {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #b95516;
-}
-
-.riseFallSymbol {
+.size1rem7 {
     font-size: 1.7rem;
+}
+
+.size1rem4 {
+    font-size: 1.4rem;
+}
+
+.size1rem9 {
+    font-size: 1.9rem;
 }
 
 .Medium {
@@ -48,12 +48,12 @@
 }
 
 .High {
-    color: #b95516;
+    color: #009b2c;
     font-weight: 500;
 }
 
 .Low {
-    color: #009b2c;
+    color: #b95516;
     font-weight: 500;
 }
 
@@ -65,8 +65,28 @@
 .weight500 {
     font-weight: 500;
 }
-.font
 
-.row {
+.font .row {
     align-items: center;
+}
+
+.vertical-align-content>* {
+    display: flex!important;
+    align-content: center!important;
+    align-items: center!important;
+    white-space: normal;
+}
+
+.marginTop1rem5 {
+    margin-top: 1.5rem;
+}
+
+.greyColor {
+    color: grey;
+}
+
+.price {
+    font-size: 1.9rem;
+    font-weight: 500;
+    color: #909090;
 }

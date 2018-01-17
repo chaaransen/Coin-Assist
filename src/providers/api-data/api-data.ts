@@ -76,25 +76,25 @@ export class ApiDataProvider {
     // console.log(this.koinexData, "before");
 
 
-    return Observable.of(this.koinexData = JSON.parse(Constants.KOINEX_DATA));
+    // return Observable.of(this.koinexData = JSON.parse(Constants.KOINEX_DATA));
 
-    // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-    //   this.koinexData.lock = true;
-    //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
-    //     // console.log(res);
-    //     // console.log("FETCHED - koinex data", res);
+    if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+      this.koinexData.lock = true;
+      return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+        // console.log(res);
+        // console.log("FETCHED - koinex data", res);
 
-    //     this.updateRecentExchangeData(Constants.KOINEX, res);
-    //     return res;
-    //   }).catch(error => {
-    //     this.updateRecentExchangeData(Constants.KOINEX);
-    //     return Observable.of(this.koinexData)
-    //   });
+        this.updateRecentExchangeData(Constants.KOINEX, res);
+        return res;
+      }).catch(error => {
+        this.updateRecentExchangeData(Constants.KOINEX);
+        return Observable.of(this.koinexData)
+      });
 
-    // } else if (this.koinexData.lock == true) {
-    //   // console.log("STATIC - koinex data", this.koinexData);
-    //   return Observable.of(this.koinexData);
-    // }
+    } else if (this.koinexData.lock == true) {
+      // console.log("STATIC - koinex data", this.koinexData);
+      return Observable.of(this.koinexData);
+    }
   }
 
   updateRecentExchangeData(exchange: string, exchangeData?: any) {
