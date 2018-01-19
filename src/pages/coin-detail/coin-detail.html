@@ -31,6 +31,10 @@
         </ion-col>
       </ion-row>
       <ion-row>
+        <ion-card-header class="size1rem4">Exchange price:
+        </ion-card-header>
+      </ion-row>
+      <ion-row>
         <ion-col col-8 class="price">
           {{coinDetail.market.formatted}}
         </ion-col>
@@ -55,6 +59,7 @@
       <ion-row>
         <ion-col col-4>
           (1h):
+          <br>
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.hour}}%
@@ -66,6 +71,7 @@
         </ion-col>
         <ion-col col-4>
           (24h):
+          <br>
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
@@ -77,6 +83,7 @@
         </ion-col>
         <ion-col col-4>
           (1w):
+          <br>
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.week >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.week}}%
@@ -87,24 +94,58 @@
           </span>
         </ion-col>
       </ion-row>
-      <ion-item-divider>
-        <ion-row>
-          <ion-col col-6>Low: {{coinDetail.min.formatted}}</ion-col>
-          <ion-col col-6>High: {{coinDetail.max.formatted}}</ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col col-6>Volatility: {{coinDetail.volatility}}</ion-col>
-          <ion-col col-6>Price Index: {{coinDetail.price_index}}</ion-col>
-        </ion-row>
-      </ion-item-divider>
 
       <ion-row>
-        [ global: {{coinDetail.global.INR.formatted}} ] ( {{coinDetail.global.USD.formatted}} )
+        <ion-col col-6>
+          <span>Low: </span>
+          <span class="redColor weight500">{{coinDetail.min.formatted}}</span>
+        </ion-col>
+        <ion-col col-6>
+          <span>High: </span>
+          <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-6 *ngIf="coinDetail.volatility">
+          Volatility
+          <span class="riseFallSymbol weight500"> &#8645;</span>
+          <span class="weight500"> {{coinDetail.volatility}}% </span>
+        </ion-col>
+        <ion-col col-6>
+          Price Index:
+          <span [ngClass]="coinDetail.price_index">{{coinDetail.price_index}}</span>
+        </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col col-6>Global Difference: {{coinDetail.globalDiff.val.formatted}}</ion-col>
-        <ion-col col-6>Global.Diff(%): {{coinDetail.globalDiff.percent}}%</ion-col>
+        <ion-card-header class="size1rem4">Global price:
+        </ion-card-header>
+      </ion-row>
+      <ion-row>
+        <span class="price">{{coinDetail.global.INR.formatted}} </span>
+        <span class="price">({{coinDetail.global.USD.formatted}})</span>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <div *ngIf="coinDetail.globalDiff.percent >= 0">
+            Global.Diff(%):
+            <span class="greenColor weight500">{{coinDetail.globalDiff.percent}}%</span>
+          </div>
+          <div *ngIf="coinDetail.globalDiff.percent < 0">
+            Global.Diff(%):
+            <span class="redColor weight500">{{coinDetail.globalDiff.percent}}%</span>
+          </div>
+        </ion-col>
+        <ion-col col-12>
+          <div *ngIf="coinDetail.globalDiff.val.no >= 0">
+            Global.Diff(%):
+            <span class="greenColor weight500">{{coinDetail.globalDiff.val.formatted}}%</span>
+          </div>
+          <div *ngIf="coinDetail.globalDiff.val.no < 0">
+            Global.Diff(%):
+            <span class="redColor weight500">{{coinDetail.globalDiff.val.formatted}}%</span>
+          </div>
+        </ion-col>
       </ion-row>
       <ion-row>
         <ion-col col-12>
