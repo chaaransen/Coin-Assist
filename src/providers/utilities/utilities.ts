@@ -34,7 +34,11 @@ export class Utilities {
 
     public trimToDecimal(value: number, decimal: number) {
         // console.log(value, "decimal value", decimal);
-        let numbericValue = +value;
-        return +numbericValue.toFixed(decimal);
+        let numericValue = +value;
+        let finalValue = +numericValue.toFixed(decimal);
+        // console.log(finalValue, "final value");
+
+        return finalValue;
+        // return +numericValue.toFixed(decimal);
     }
 }

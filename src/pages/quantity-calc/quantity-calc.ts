@@ -139,11 +139,21 @@ export class QuantityCalcPage {
   public calcFeesAmount() {
     this.exchange = this.apis[this.selExchange];
     // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
+    let feesPercent = +this.exchange.fees.buy;
+    console.log(feesPercent, "fees percent");
 
-    this.buyerFees = this.util.trimToDecimal(this.amount * this.exchange.fees.buy, 2);
-    // console.log("Buyers fees", this.buyerFees);
+    console.log(this.amount, "Amount");
 
-    this.actualAmount = this.util.trimToDecimal(this.amount - this.buyerFees, 2);
+    this.actualAmount = (this.amount / (1 + feesPercent));
+
+    console.log(this.actualAmount, "Actual Amount");
+
+    this.buyerFees = this.amount - this.actualAmount;
+
+    this.buyerFees = this.util.trimToDecimal(this.buyerFees, 2);
+    console.log("Buyers fees", this.buyerFees);
+
+    this.actualAmount = this.util.trimToDecimal(this.actualAmount, 2);
   }
 
   public rangeChanged(rangePointer: number) {
