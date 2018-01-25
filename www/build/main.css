@@ -25774,6 +25774,24 @@ page-coin-detail ion-thumbnail img {
   width: 8rem;
 }
 
+page-coin-detail .center {
+  text-align: center;
+}
+
+page-coin-detail ion-col [col-6] {
+  text-align: center;
+}
+
+page-coin-detail img {
+  height: 8rem;
+  width: 8rem;
+  float: right;
+}
+
+page-coin-detail .rem3 {
+  font-size: 3rem;
+}
+
 page-home .item-md ion-thumbnail ion-img,
 page-home .item-md ion-thumbnail img {
   width: 3rem;

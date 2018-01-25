@@ -15,19 +15,19 @@
   </ion-refresher>
 
   <ion-card>
-    <ion-card-header class="size1rem4">Exchange -
+    <ion-card-header class="size1rem4 center">Exchange -
       <span class="weight500 size1rem9">{{exchange}}</span>
     </ion-card-header>
     <ion-grid>
       <ion-row>
         <ion-col col-5>
-          <ion-thumbnail>
+          
             <img src="assets/imgs/{{coinDetail.coinCode}}.png">
-          </ion-thumbnail>
+          
         </ion-col>
-        <ion-col col-7 class="vertical-align-content marginTop1rem5">
-          <h1>{{coinDetail.coinName}}
-            <br>({{coinDetail.coinCode}})</h1>
+        <ion-col col-7 class="vertical-align-content rem3">
+          <div>{{coinDetail.coinName}}
+            <br>({{coinDetail.coinCode}})</div>
         </ion-col>
       </ion-row>
       <ion-row>
