@@ -4,28 +4,23 @@ page-coin-detail {
     //     font-size: 1.4rem;
     //     font-weight: 400;
     // }
-    
     ion-avatar img,
     ion-thumbnail img {
         height: 8rem;
         width: 8rem;
     }
-
-    .center{
-        text-align: center;
-    }
-    
-    ion-col [col-6]{ 
-        text-align: center;
-    }
-    img{
-        height: 8rem;
-        width: 8rem;
+    img {
+        height: 7.5rem;
+        width: 7.5rem;
         float: right;
     }
-
-    .rem3
-    {
-        font-size: 3rem;
+    .priceDetail {
+        font-size: 2.5rem;
+        font-weight: 500;
+        color: #909090;
     }
+    ion-row {
+        margin-bottom: 0.2rem;
+    }
+    
 }

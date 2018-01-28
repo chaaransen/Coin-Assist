@@ -4834,7 +4834,7 @@ figure {
   margin: 1em 40px;
 }
 
-hr {
+hr, .hrBottomMargin {
   height: 1px;
   border-width: 0;
   -webkit-box-sizing: content-box;
@@ -8542,7 +8542,7 @@ ion-app [no-margin] .scroll-content {
   background: #efeff4;
 }
 
-.content-ios hr {
+.content-ios hr, .content-ios .hrBottomMargin {
   height: 0.55px;
   background-color: rgba(0, 0, 0, 0.12);
 }
@@ -8751,7 +8751,7 @@ ion-app.ios [margin-horizontal] .scroll-content {
   background-color: #fff;
 }
 
-.content-md hr {
+.content-md hr, .content-md .hrBottomMargin {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -8922,7 +8922,7 @@ ion-app.md [margin-horizontal] .scroll-content {
   background-color: #fff;
 }
 
-.content-wp hr {
+.content-wp hr, .content-wp .hrBottomMargin {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -25700,12 +25700,24 @@ ion-navbar.toolbar {
   font-size: 1.7rem;
 }
 
+.size1rem6 {
+  font-size: 1.7rem;
+}
+
 .size1rem4 {
   font-size: 1.4rem;
 }
 
 .size1rem9 {
   font-size: 1.9rem;
+}
+
+.size3rem {
+  font-size: 3rem;
+}
+
+.size2rem {
+  font-size: 2rem;
 }
 
 .Medium {
@@ -25758,6 +25770,10 @@ ion-navbar.toolbar {
   margin-top: 1.5rem;
 }
 
+.margin1rem {
+  margin: 1rem;
+}
+
 .greyColor {
   color: grey;
 }
@@ -25768,28 +25784,78 @@ ion-navbar.toolbar {
   color: #909090;
 }
 
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.padding0 {
+  padding: 0px;
+}
+
+.padding1 {
+  padding: 1px;
+}
+
+.paddingBottom0 {
+  padding-bottom: 0px;
+}
+
+.leftPadding1rem {
+  padding-left: 1rem;
+}
+
+.padding1rem {
+  padding: 1rem;
+}
+
+hr, .hrBottomMargin {
+  margin-top: 0px;
+}
+
+.hrBottomMargin {
+  margin-bottom: 2rem;
+}
+
+.marginBotton0rem5 {
+  margin-bottom: 0.5rem;
+}
+
+.marginBottom0 {
+  margin-bottom: 0px;
+}
+
+.width100 {
+  width: 100%;
+}
+
 page-coin-detail ion-avatar img,
 page-coin-detail ion-thumbnail img {
   height: 8rem;
   width: 8rem;
 }
 
-page-coin-detail .center {
-  text-align: center;
-}
-
-page-coin-detail ion-col [col-6] {
-  text-align: center;
-}
-
 page-coin-detail img {
-  height: 8rem;
-  width: 8rem;
+  height: 7.5rem;
+  width: 7.5rem;
   float: right;
 }
 
-page-coin-detail .rem3 {
-  font-size: 3rem;
+page-coin-detail .priceDetail {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #909090;
+}
+
+page-coin-detail ion-row {
+  margin-bottom: 0.2rem;
 }
 
 page-home .item-md ion-thumbnail ion-img,

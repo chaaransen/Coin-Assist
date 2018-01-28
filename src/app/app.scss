@@ -30,7 +30,12 @@
     color: #009b2c;
 }
 
+// Font sizes
 .size1rem7 {
+    font-size: 1.7rem;
+}
+
+.size1rem6 {
     font-size: 1.7rem;
 }
 
@@ -40,6 +45,14 @@
 
 .size1rem9 {
     font-size: 1.9rem;
+}
+
+.size3rem {
+    font-size: 3rem;
+}
+
+.size2rem {
+    font-size: 2rem;
 }
 
 .Medium {
@@ -77,8 +90,13 @@
     white-space: normal;
 }
 
+// Margins
 .marginTop1rem5 {
     margin-top: 1.5rem;
+}
+
+.margin1rem {
+    margin: 1rem;
 }
 
 .greyColor {
@@ -89,4 +107,57 @@
     font-size: 1.9rem;
     font-weight: 500;
     color: #909090;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.padding0 {
+    padding: 0px;
+}
+
+.padding1{
+    padding:1px;
+}
+
+.paddingBottom0 {
+    padding-bottom: 0px;
+}
+
+.leftPadding1rem {
+    padding-left: 1rem;
+}
+
+.padding1rem {
+    padding: 1rem;
+}
+
+hr {
+    margin-top: 0px;
+}
+
+.hrBottomMargin {
+    @extend hr;
+    margin-bottom: 2rem;
+}
+
+.marginBotton0rem5 {
+    margin-bottom: 0.5rem;
+}
+
+.marginBottom0 {
+    margin-bottom: 0px;
+}
+
+.width100 {
+    width: 100%;
 }

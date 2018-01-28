@@ -15,30 +15,29 @@
   </ion-refresher>
 
   <ion-card>
-    <ion-card-header class="size1rem4 center">Exchange -
-      <span class="weight500 size1rem9">{{exchange}}</span>
+    <ion-card-header class="size1rem7 weight500">
+      <span class="greyColor size1rem7">Exchange -</span>
+      {{exchange}}
     </ion-card-header>
+    <hr class="hrBottomMargin">
     <ion-grid>
       <ion-row>
-        <ion-col col-5>
-          
-            <img src="assets/imgs/{{coinDetail.coinCode}}.png">
-          
+        <ion-col col-6>
+
+          <img src="assets/imgs/{{coinDetail.coinCode}}.png">
+
         </ion-col>
-        <ion-col col-7 class="vertical-align-content rem3">
-          <div>{{coinDetail.coinName}}
+        <ion-col col-6 class="vertical-align-content">
+
+          <div class=" weight500 size2rem">{{coinDetail.coinName}}
             <br>({{coinDetail.coinCode}})</div>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-card-header class="size1rem4">Exchange price:
-        </ion-card-header>
-      </ion-row>
-      <ion-row>
-        <ion-col col-8 class="price">
+        <ion-col col-8 class="priceDetail center">
           {{coinDetail.market.formatted}}
         </ion-col>
-        <ion-col col-4 class="boldTextValue">
+        <ion-col col-4 class="boldTextValue left size1rem6 center">
           <div *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
             <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
           </div>
@@ -47,19 +46,30 @@
           </div>
         </ion-col>
       </ion-row>
-      span.boldTextValue
-      <ion-row>
-        <ion-col col-6>Buy:
-          <span class="boldTextValue">{{coinDetail.buy.formatted}}</span>
+      <ion-row class="marginBotton0rem5">
+        <ion-col col-6 class="center">Buy:
+          <span class="boldTextValue price">{{coinDetail.buy.formatted}}</span>
         </ion-col>
-        <ion-col col-6>Sell:
-          <span class="boldTextValue">{{coinDetail.sell.formatted}}</span>
+        <ion-col col-6 class="center">Sell:
+          <span class="boldTextValue price">{{coinDetail.sell.formatted}}</span>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col col-4>
+      <ion-row class="marginBottom0">
+        <hr>
+        <ion-col col-4 class="center marginBottom0 padding1">
           (1h):
-          <br>
+        </ion-col>
+        <ion-col col-4 class="center marginBottom0 padding1">
+          (24h):
+        </ion-col>
+        <ion-col col-4 class="center marginBottom0 padding1">
+          (1w):
+        </ion-col>
+        <hr>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-4 class="center padding0">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.hour}}%
@@ -69,9 +79,7 @@
             </span>
           </span>
         </ion-col>
-        <ion-col col-4>
-          (24h):
-          <br>
+        <ion-col col-4 class="center padding0 marginBotton0rem5">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
@@ -81,9 +89,7 @@
             </span>
           </span>
         </ion-col>
-        <ion-col col-4>
-          (1w):
-          <br>
+        <ion-col col-4 class="center padding0">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.week >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.week}}%
@@ -96,63 +102,75 @@
       </ion-row>
 
       <ion-row>
-        <ion-col col-6>
+        <ion-col col-6 class="center paddingBottom0">
           <span>Low: </span>
           <span class="redColor weight500">{{coinDetail.min.formatted}}</span>
         </ion-col>
-        <ion-col col-6>
-          <span>High: </span>
-          <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>
-        </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col col-6 *ngIf="coinDetail.volatility">
-          Volatility
-          <span class="riseFallSymbol weight500"> &#8645;</span>
-          <span class="weight500"> {{coinDetail.volatility}}% </span>
-        </ion-col>
-        <ion-col col-6>
+        <ion-col col-6 class="center">
           Price Index:
           <span [ngClass]="coinDetail.price_index">{{coinDetail.price_index}}</span>
         </ion-col>
       </ion-row>
+
       <ion-row>
-        <ion-card-header class="size1rem4">Global price:
-        </ion-card-header>
+        <ion-col col-6 class="center paddingBottom0">
+          <span>High: </span>
+          <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>
+        </ion-col>
+        <ion-col col-6 *ngIf="coinDetail.volatility" class="center">
+          Volatility:
+          <span class="riseFallSymbol weight500"> &#8645;</span>
+          <span class="weight500"> {{coinDetail.volatility}}% </span>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+    <hr>
+    <ion-grid>
+      <ion-card-header class="size1rem7 greyColor padding1rem">Global price -
+      </ion-card-header>
+
+      <ion-row>
+        <ion-col col-6 class="right">
+          <span class="price">{{coinDetail.global.INR.formatted}} </span>
+        </ion-col>
+
+        <ion-col col-6 class="left">
+          <span class="price">({{coinDetail.global.USD.formatted}})</span>
+        </ion-col>
       </ion-row>
       <ion-row>
-        <span class="price">{{coinDetail.global.INR.formatted}} </span>
-        <span class="price">({{coinDetail.global.USD.formatted}})</span>
-      </ion-row>
-      <ion-row>
-        <ion-col col-12>
+        <ion-col col-6>
+          Global Diff(%):
+        </ion-col>
+        <ion-col col-6>
           <div *ngIf="coinDetail.globalDiff.percent >= 0">
-            Global.Diff(%):
             <span class="greenColor weight500">{{coinDetail.globalDiff.percent}}%</span>
           </div>
           <div *ngIf="coinDetail.globalDiff.percent < 0">
-            Global.Diff(%):
             <span class="redColor weight500">{{coinDetail.globalDiff.percent}}%</span>
-          </div>
-        </ion-col>
-        <ion-col col-12>
-          <div *ngIf="coinDetail.globalDiff.val.no >= 0">
-            Global.Diff(%):
-            <span class="greenColor weight500">{{coinDetail.globalDiff.val.formatted}}%</span>
-          </div>
-          <div *ngIf="coinDetail.globalDiff.val.no < 0">
-            Global.Diff(%):
-            <span class="redColor weight500">{{coinDetail.globalDiff.val.formatted}}%</span>
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col col-12>
-          <button (click)="gotoCalcQuantityPage()" ion-button small class="boldTextValue"> Calculate Quantity</button>
+        <ion-col col-6>
+          Global Price Diff:
         </ion-col>
         <ion-col col-6>
-          <button (click)="openReferralLink()" ion-button small class="boldTextValue">Buy / Sell {{coinDetail.coinName}}</button>
+          <div *ngIf="coinDetail.globalDiff.val.no >= 0">
+            <span class="greenColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>
+          </div>
+          <div *ngIf="coinDetail.globalDiff.val.no < 0">
+            <span class="redColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <button (click)="gotoCalcQuantityPage()" ion-button small class="boldTextValue center width100" color="dark"> Calculate Quantity</button>
+        </ion-col>
+        <ion-col col-6>
+          <button (click)="openReferralLink()" ion-button small class="boldTextValue center width100" color="dark">Buy / Sell</button>
         </ion-col>
       </ion-row>
     </ion-grid>
