@@ -21,47 +21,20 @@ export class ProfitCalcPage {
     });
   }
 
-  public checkRequiredFields(type?: string) {
+  public checkRequiredFields() {
     // console.log("Check Required fields", this.quantity.no.no, this.amount);
-    switch (type) {
-      case "qty": {
-        // console.log("Quantity" + this.profitCalc.quantity.no);
-        if (this.profitCalc.quantity.no != 0) {
-          // console.log("inside quantity");
-          this.profitCalc.quantity.no = this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4);
-          this.calcAmount();
-          if (this.checkMandatoryFields()) {
-            // console.log("Manadatory passed");
-            this.calcProfit();
-          }
-        }
-        this.formatDataValues();
-        break;
-      }
-      case "amt": {
-        // console.log("Amount");
-        if (this.profitCalc.amount.no != 0) {
-          this.profitCalc.amount.no = this.utilities.trimToDecimal(+this.profitCalc.amount.no, 2);
-          this.calcQty();
-          if (this.checkMandatoryFields()) {
-            this.calcProfit();
-          }
-        }
-        this.formatDataValues();
-        break;
-      }
-      default: {
-        if (this.profitCalc.quantity.no != undefined && this.profitCalc.amount.no != undefined) {
-          this.checkRequiredFields("qty");
-        } else
-          if (this.profitCalc.quantity.no != undefined) {
-            this.checkRequiredFields("qty");
-          } else if (this.profitCalc.amount.no != undefined) {
-            this.checkRequiredFields("amt");
-          }
-      }
 
+    // console.log("Quantity" + this.profitCalc.quantity.no);
+    if (this.profitCalc.quantity.no != 0) {
+      // console.log("inside quantity");
+      this.profitCalc.quantity.no = this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4);
+      this.calcAmount();
+      if (this.checkMandatoryFields()) {
+        // console.log("Manadatory passed");
+        this.calcProfit();
+      }
     }
+    this.formatDataValues();
     // console.log("Exited");
   }
 
