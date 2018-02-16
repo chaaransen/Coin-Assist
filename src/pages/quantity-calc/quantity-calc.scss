@@ -1,1 +1,11 @@
-page-quantity-calc {}
+page-quantity-calc {
+    * {
+        font-size: 1.6rem;
+    }
+    ion-select {
+        max-width: 100%;
+    }
+    img {
+        width: 50%
+    }
+}

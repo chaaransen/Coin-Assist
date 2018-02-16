@@ -270,17 +270,17 @@ export class ApiDataProvider {
   }
 
   coinDetailFormatter(processedCoin: any) {
-    processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-    processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-    processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+    processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
+    processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
+    processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
     if (processedCoin.min.no != undefined) {
-      processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-      processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+      processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
+      processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
     }
     if (processedCoin.global.INR.no != undefined) {
-      processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
-      processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-      processedCoin.globalDiff.val.formatted = this.numberFormatter(processedCoin.globalDiff.val.no);
+      processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
+      processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+      processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
     }
     return processedCoin;
   }
@@ -297,8 +297,8 @@ export class ApiDataProvider {
         ObjectTarget.range.plusPercent.no = percentage.plusPercent;
         ObjectTarget.range.minusPercent.no = percentage.minusPercent;
 
-        ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
-        ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
+        ObjectTarget.range.plusPercent.formatted = this.utility.currencyFormatter(ObjectTarget.range.plusPercent.no);
+        ObjectTarget.range.minusPercent.formatted = this.utility.currencyFormatter(ObjectTarget.range.minusPercent.no);
 
         return ObjectTarget;
       }
@@ -310,10 +310,6 @@ export class ApiDataProvider {
     else {
       return percentage;
     }
-  }
-
-  numberFormatter(number: any, locale: any = 'hi-IN', currency: any = 'INR'): any {
-    return number.toLocaleString(locale, { style: 'currency', currency: currency });
   }
 
   rangeStepCalculator(min, max): number {

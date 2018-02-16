@@ -20,13 +20,13 @@ export class QuantityCalcPage {
   selExchange: any;
   public selCoin: CoinDetail = new CoinDetail();
   apis: any = {};
-  amount: number = undefined;
-  actualAmount: number;
-  buyerFees: number;
+  public amount: ValueDetail = new ValueDetail();
+  public actualAmount: ValueDetail = new ValueDetail();
+  public buyerFees: ValueDetail = new ValueDetail();
+  public buyerFeesPercent: number;
   amountFlag: boolean = false;
-  public quantity: number;
+  public quantity: ValueDetail = new ValueDetail();
   percent: number = 0.05;
-
   rangeValue: number;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController) {
@@ -61,7 +61,6 @@ export class QuantityCalcPage {
     toast.present();
   }
 
-
   doRefresh(refresher) {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.populateView();
@@ -74,6 +73,15 @@ export class QuantityCalcPage {
   populateView() {
     // console.log("3 populate view called");
     this.populateCoins(this.selExchange);
+    let feesPercent = +this.apis[this.selExchange].fees.buy;
+    this.buyerFeesPercent = feesPercent * 100;
+  }
+
+  public exchangeChanged(exchange: any) {
+    // console.log("Exchange changed", exchange);
+    this.selExchange = exchange;
+    this.selCoin.coinName = Constants.BTC;
+    this.populateView();
   }
 
   populateCoins(exchange: any) {
@@ -108,9 +116,7 @@ export class QuantityCalcPage {
     // console.log(this.selCoin);
     this.calcQuantity();
     // console.log(this.selCoin);
-
   }
-
 
   public coinRateChanged() {
     this.updateRange();
@@ -118,42 +124,50 @@ export class QuantityCalcPage {
 
   formateRate() {
     // console.log("7 format rate");
-    // console.log(this.range.rate.no, 'nubmer');
-    this.selCoin.range.rate.formatted = this.api.numberFormatter(+this.selCoin.range.rate.no);
+    // console.log(this.selCoin.range.rate.no, 'number');
+    this.selCoin.range.rate.formatted = this.util.currencyFormatter(+this.selCoin.range.rate.no);
     // console.log(this.range.rate.formatted);
   }
 
   public calcQuantity() {
     // console.log("quantity calculated");
-    if (this.amount != undefined) {
+    if (this.amount.no != undefined) {
       this.calcFeesAmount();
       // console.log("Actual Amount", this.actualAmount);
-
-      let qty = this.actualAmount / this.selCoin.range.rate.no;
+      let qty = this.actualAmount.no / this.selCoin.range.rate.no;
       // console.log(qty);
-      this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
+      this.quantity.no = +this.util.trimQuantity(this.selCoin.coinName, qty);
       // console.log(this.quantity);
+      this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
     }
   }
 
-  public calcFeesAmount() {
+  public calcFeesAmount(calcActual: boolean = true) {
     this.exchange = this.apis[this.selExchange];
     // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
     let feesPercent = +this.exchange.fees.buy;
-    console.log(feesPercent, "fees percent");
+    this.buyerFeesPercent = feesPercent * 100;
+    // console.log(feesPercent, "fees percent");
+    // console.log(this.amount.no, "amount.no");
+    if (calcActual) {
+      this.calcActual(feesPercent);
+    }
+    // console.log(this.actualAmount.no, "Actual amount.no");
+    this.buyerFees.no = this.actualAmount.no * feesPercent;
+    this.buyerFees.no = this.util.trimToDecimal(this.buyerFees.no, 2);
+    this.buyerFees.formatted = this.util.currencyFormatter(this.buyerFees.no);
+    // console.log("Buyers fees", this.buyerFees.no);
+    this.actualAmount.no = this.util.trimToDecimal(this.actualAmount.no, 2);
+    this.actualAmount.formatted = this.util.currencyFormatter(this.actualAmount.no);
 
-    console.log(this.amount, "Amount");
+    if (!calcActual) {
+      this.amount.no = this.actualAmount.no + this.buyerFees.no;
+      this.amount.formatted = this.util.currencyFormatter(this.amount.no);
+    }
+  }
 
-    this.actualAmount = (this.amount / (1 + feesPercent));
-
-    console.log(this.actualAmount, "Actual Amount");
-
-    this.buyerFees = this.amount - this.actualAmount;
-
-    this.buyerFees = this.util.trimToDecimal(this.buyerFees, 2);
-    console.log("Buyers fees", this.buyerFees);
-
-    this.actualAmount = this.util.trimToDecimal(this.actualAmount, 2);
+  calcActual(feesPercent: number) {
+    this.actualAmount.no = (this.amount.no / (1 + feesPercent));
   }
 
   public rangeChanged(rangePointer: number) {
@@ -162,27 +176,28 @@ export class QuantityCalcPage {
     this.calcQuantity();
   }
 
-  public calcAmount() {
-    this.amount = this.quantity * this.selCoin.range.rate.no;
-    this.calcFeesAmount();
+  public calcAmount(quantity: string) {
+    this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
+    this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
+    console.log("Formatted quantity", this.quantity.formatted);
+
+    this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
+    this.calcFeesAmount(false);
   }
 
   public amountChanged(amount: string) {
-    // console.log(this.amountFlag);
-    this.amount = amount.length > 9 ? this.trimAmount(amount) : this.clearAmountFlag(amount);
-    // console.log("new amount value", this.amount);
-    this.calcQuantity();
-  }
+    console.log("amount changed ", amount);
+    if (amount != null && amount != "") {
+      this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
+      this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
+      console.log("formatted amount", this.amount.formatted);
+      this.calcQuantity();
+    }
+    // console.log("new amount.no value", this.amount.no);
 
-  public clearAmountFlag(amount) {
-    // console.log("flag cleared");
-    this.amountFlag = false;
-    return amount;
   }
 
   public trimAmount(amount) {
-    // console.log("flag set");
-    this.amountFlag = true;
-    return amount = amount.substring(0, 9);
+    return amount.substring(0, 9);
   }
 }

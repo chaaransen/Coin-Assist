@@ -2,24 +2,16 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Utilities } from '../../providers/utilities/utilities';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { LIGHT, DARK } from '../../constants/api-constants';
+import { ValueDetail } from '../../models/value-detail';
+import { ProfitCalc } from '../../models/profit-calc';
 
 @Component({
   selector: 'page-profit-calc',
   templateUrl: 'profit-calc.html'
 })
 export class ProfitCalcPage {
-
-  public quantity: number;
-  public amount: number;
-
-  public fromValue: number;
-  public toValue: number;
-
-  public changePercent: number;
-
-  public profitLoss: number;
-  public finalValue: number;
-
+  public profitCalc: ProfitCalc = new ProfitCalc();
   private profitCalcForm: FormGroup;
 
   constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder) {
@@ -29,41 +21,42 @@ export class ProfitCalcPage {
     });
   }
 
-  ngOnInit() {
-    // console.log("profit calc page ng oninit");
-
-  }
-
   public checkRequiredFields(type?: string) {
-    // console.log("Check Required fields", this.quantity, this.amount);
+    // console.log("Check Required fields", this.quantity.no.no, this.amount);
     switch (type) {
       case "qty": {
-        // console.log("Quantity");
-        this.quantity = this.utilities.trimToDecimal(+this.quantity, 4);
-        this.calcAmount();
-        if (this.checkMandatoryFields()) {
-          // console.log("Manadatory passed");
-          this.calcProfit();
+        // console.log("Quantity" + this.profitCalc.quantity.no);
+        if (this.profitCalc.quantity.no != 0) {
+          // console.log("inside quantity");
+          this.profitCalc.quantity.no = this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4);
+          this.calcAmount();
+          if (this.checkMandatoryFields()) {
+            // console.log("Manadatory passed");
+            this.calcProfit();
+          }
         }
+        this.formatDataValues();
         break;
       }
       case "amt": {
         // console.log("Amount");
-        this.amount = this.utilities.trimToDecimal(+this.amount, 2);
-        this.calcQty();
-        if (this.checkMandatoryFields()) {
-
-          this.calcProfit();
+        if (this.profitCalc.amount.no != 0) {
+          this.profitCalc.amount.no = this.utilities.trimToDecimal(+this.profitCalc.amount.no, 2);
+          this.calcQty();
+          if (this.checkMandatoryFields()) {
+            this.calcProfit();
+          }
         }
+        this.formatDataValues();
         break;
       }
       default: {
-        if (this.quantity != undefined && this.amount != undefined) {
+        if (this.profitCalc.quantity.no != undefined && this.profitCalc.amount.no != undefined) {
           this.checkRequiredFields("qty");
         } else
-          if (this.quantity != undefined) {
+          if (this.profitCalc.quantity.no != undefined) {
             this.checkRequiredFields("qty");
-          } else if (this.amount != undefined) {
+          } else if (this.profitCalc.amount.no != undefined) {
             this.checkRequiredFields("amt");
           }
       }
@@ -75,31 +68,26 @@ export class ProfitCalcPage {
   public buySellPriceChanged(priceType: string) {
     switch (priceType) {
       case "buy": {
-        this.fromValue = this.utilities.trimToDecimal(+this.fromValue, 2);
+        if (this.profitCalc.fromValue.no != 0) {
+          this.profitCalc.fromValue.no = this.utilities.trimToDecimal(+this.profitCalc.fromValue.no, 2);
+        }
         break;
       }
       case "sell": {
-        this.toValue = this.utilities.trimToDecimal(+this.toValue, 2);
+        if (this.profitCalc.toValue.no != 0) {
+          this.profitCalc.toValue.no = this.utilities.trimToDecimal(+this.profitCalc.toValue.no, 2);
+        }
         break;
       }
     }
     this.checkRequiredFields();
-  }
-
-  public clearAll() {
-    this.quantity = 0;
-    this.amount = 0;
-    this.toValue = 0;
-    this.fromValue = 0;
-    this.profitLoss = 0;
-    this.changePercent = 0;
-    this.finalValue = 0;
+    this.formatDataValues();
   }
 
   checkMandatoryFields() {
-    // console.log(this.fromValue, this.toValue);
+    // console.log(this.fromValue.no, this.toValue.no);
 
-    if (this.fromValue != undefined && this.toValue != undefined) {
+    if (this.profitCalc.fromValue.no != undefined && this.profitCalc.toValue.no != undefined) {
       // console.log("mandatory true");
 
       return true;
@@ -112,57 +100,73 @@ export class ProfitCalcPage {
   }
 
   calcQty() {
-    if (this.fromValue != undefined) {
-      this.quantity = this.amount / this.fromValue;
-      this.quantity = this.utilities.trimToDecimal(this.quantity, 4);
+    if (this.profitCalc.fromValue.no != undefined) {
+      this.profitCalc.quantity.no = this.profitCalc.amount.no / this.profitCalc.fromValue.no;
+      this.profitCalc.quantity.no = this.utilities.trimToDecimal(this.profitCalc.quantity.no, 4);
     }
-    // console.log("Qty calc", this.quantity);
+    // console.log("Qty calc", this.quantity.no);
   }
 
   calcAmount() {
-    if (this.fromValue != undefined) {
-      this.amount = this.quantity * this.fromValue;
-      this.amount = this.utilities.trimToDecimal(this.amount, 2);
+    if (this.profitCalc.fromValue.no != undefined) {
+      this.profitCalc.amount.no = this.profitCalc.quantity.no * this.profitCalc.fromValue.no;
+      this.profitCalc.amount.no = this.utilities.trimToDecimal(this.profitCalc.amount.no, 2);
     }
-    // console.log("Amount calc", this.amount);
+    // console.log("Amount calc", this.amount.no);
   }
 
   calcProfit() {
-    this.calcChangePercent();
-    this.profitLoss = (this.amount * this.changePercent) - this.amount;
-    this.profitLoss = this.utilities.trimToDecimal(+this.profitLoss, 2);
-    // console.log("Profit loss", this.profitLoss);
+    this.profitCalc.profitLoss.no = (this.profitCalc.toValue.no - this.profitCalc.fromValue.no) * this.profitCalc.quantity.no;
+    this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+    // console.log("Profit loss", this.profitLoss.no);
 
     this.calcFinalvalue();
   }
 
-  calcChangePercent() {
-    this.changePercent = this.toValue / this.fromValue;
-    this.changePercent = this.utilities.trimToDecimal(+this.changePercent, 2);
-    // console.log("Change percent", this.changePercent);
-
-  }
-
   calcFinalvalue() {
-    this.finalValue = this.amount + this.profitLoss;
-    if (Number.isNaN(this.finalValue)) {
-      this.finalValue = 0;
+    this.profitCalc.finalValue.no = this.profitCalc.amount.no + this.profitCalc.profitLoss.no;
+    if (Number.isNaN(this.profitCalc.finalValue.no)) {
+      this.profitCalc.finalValue.no = 0;
     } else {
-      this.finalValue = this.utilities.trimToDecimal(+this.finalValue, 2);
+      this.profitCalc.finalValue.no = this.utilities.trimToDecimal(+this.profitCalc.finalValue.no, 2);
     }
-    // console.log("Final value", this.finalValue);
+    // console.log("Final value", this.finalValue.no);
 
   }
 
   updateSellPrice() {
 
-    this.toValue = (this.profitLoss * this.fromValue + this.fromValue * this.fromValue) / this.amount;
-    this.toValue = this.utilities.trimToDecimal(+this.toValue, 2);
-    // console.log("Sell Value" + this.toValue);
-    // console.log("before", this.profitLoss);
-    this.calcFinalvalue();
-    this.profitLoss = this.utilities.trimToDecimal(+this.profitLoss, 2);
-    // console.log("after", this.profitLoss);
+    if (this.profitCalc.profitLoss.no != 0) {
+      this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+      this.profitCalc.toValue.no = (this.profitCalc.profitLoss.no * this.profitCalc.fromValue.no + this.profitCalc.fromValue.no * this.profitCalc.fromValue.no) / this.profitCalc.amount.no;
+      this.profitCalc.toValue.no = this.utilities.trimToDecimal(+this.profitCalc.toValue.no, 2);
+      // console.log("Sell Value" + this.toValue.no.no);
+      // console.log("before", this.profitLoss.no.no);
+      this.calcFinalvalue();
+      this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+      // console.log("after", this.profitLoss.no.no);
+    }
+    this.formatDataValues();
+  }
 
+  formatDataValues() {
+    // console.log("Formatting values");
+
+    this.profitCalc.quantity.formatted = this.utilities.numberFormatter(this.profitCalc.quantity.no);
+    this.profitCalc.amount.formatted = this.utilities.currencyFormatter(this.profitCalc.amount.no);
+    this.profitCalc.fromValue.formatted = this.utilities.currencyFormatter(this.profitCalc.fromValue.no);
+    this.profitCalc.toValue.formatted = this.utilities.currencyFormatter(this.profitCalc.toValue.no);
+    this.profitCalc.profitLoss.formatted = this.utilities.currencyFormatter(this.profitCalc.profitLoss.no);
+    this.profitCalc.finalValue.formatted = this.utilities.currencyFormatter(this.profitCalc.finalValue.no);
+  }
+
+  public clearAll() {
+    this.profitCalc.quantity.no = null;
+    this.profitCalc.amount.no = null;
+    this.profitCalc.fromValue.no = null;
+    this.profitCalc.toValue.no = null;
+    this.profitCalc.profitLoss.no = null;
+    this.profitCalc.finalValue.no = null;
+    this.formatDataValues();
   }
 }

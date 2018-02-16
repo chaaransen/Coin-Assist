@@ -4,14 +4,31 @@ webpackJsonp([0],{
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValueDetail; });
+var ValueDetail = (function () {
+    function ValueDetail() {
+        this.formatted = "--";
+    }
+    return ValueDetail;
+}());
+
+//# sourceMappingURL=value-detail.js.map
+
+/***/ }),
+
+/***/ 109:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuantityCalcPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_value_detail__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_utilities_utilities__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__ = __webpack_require__(42);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -29,6 +46,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var QuantityCalcPage = (function () {
     function QuantityCalcPage(navCtrl, navParam, api, util, toastCtrl) {
         this.navCtrl = navCtrl;
@@ -38,8 +56,11 @@ var QuantityCalcPage = (function () {
         this.toastCtrl = toastCtrl;
         this.selCoin = new __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__["a" /* CoinDetail */]();
         this.apis = {};
-        this.amount = undefined;
+        this.amount = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
+        this.actualAmount = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
+        this.buyerFees = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.amountFlag = false;
+        this.quantity = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.percent = 0.05;
         // console.log("1 qty constructor called");
         this.selExchange = navParam.get("exchange");
@@ -53,10 +74,10 @@ var QuantityCalcPage = (function () {
     QuantityCalcPage.prototype.ngOnInit = function () {
         // console.log("2 ng oninit called");
         if (this.selExchange == undefined) {
-            this.selExchange = __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["f" /* KOINEX */];
+            this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["g" /* KOINEX */];
         }
         if (this.selCoin.coinName == undefined) {
-            this.selCoin.coinName = __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["d" /* BTC */];
+            this.selCoin.coinName = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["d" /* BTC */];
         }
         this.populateView();
     };
@@ -80,6 +101,14 @@ var QuantityCalcPage = (function () {
     QuantityCalcPage.prototype.populateView = function () {
         // console.log("3 populate view called");
         this.populateCoins(this.selExchange);
+        var feesPercent = +this.apis[this.selExchange].fees.buy;
+        this.buyerFeesPercent = feesPercent * 100;
+    };
+    QuantityCalcPage.prototype.exchangeChanged = function (exchange) {
+        // console.log("Exchange changed", exchange);
+        this.selExchange = exchange;
+        this.selCoin.coinName = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["d" /* BTC */];
+        this.populateView();
     };
     QuantityCalcPage.prototype.populateCoins = function (exchange) {
         var _this = this;
@@ -117,64 +146,78 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage.prototype.formateRate = function () {
         // console.log("7 format rate");
-        // console.log(this.range.rate.no, 'nubmer');
-        this.selCoin.range.rate.formatted = this.api.numberFormatter(+this.selCoin.range.rate.no);
+        // console.log(this.selCoin.range.rate.no, 'number');
+        this.selCoin.range.rate.formatted = this.util.currencyFormatter(+this.selCoin.range.rate.no);
         // console.log(this.range.rate.formatted);
     };
     QuantityCalcPage.prototype.calcQuantity = function () {
         // console.log("quantity calculated");
-        if (this.amount != undefined) {
+        if (this.amount.no != undefined) {
             this.calcFeesAmount();
             // console.log("Actual Amount", this.actualAmount);
-            var qty = this.actualAmount / this.selCoin.range.rate.no;
+            var qty = this.actualAmount.no / this.selCoin.range.rate.no;
             // console.log(qty);
-            this.quantity = +this.util.trimQuantity(this.selCoin.coinName, qty);
+            this.quantity.no = +this.util.trimQuantity(this.selCoin.coinName, qty);
             // console.log(this.quantity);
+            this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
         }
     };
-    QuantityCalcPage.prototype.calcFeesAmount = function () {
+    QuantityCalcPage.prototype.calcFeesAmount = function (calcActual) {
+        if (calcActual === void 0) { calcActual = true; }
         this.exchange = this.apis[this.selExchange];
         // console.log("Exchange details", this.exchanges, this.exchange.fees.buy);
         var feesPercent = +this.exchange.fees.buy;
-        console.log(feesPercent, "fees percent");
-        console.log(this.amount, "Amount");
-        this.actualAmount = (this.amount / (1 + feesPercent));
-        console.log(this.actualAmount, "Actual Amount");
-        this.buyerFees = this.amount - this.actualAmount;
-        this.buyerFees = this.util.trimToDecimal(this.buyerFees, 2);
-        console.log("Buyers fees", this.buyerFees);
-        this.actualAmount = this.util.trimToDecimal(this.actualAmount, 2);
+        this.buyerFeesPercent = feesPercent * 100;
+        // console.log(feesPercent, "fees percent");
+        // console.log(this.amount.no, "amount.no");
+        if (calcActual) {
+            this.calcActual(feesPercent);
+        }
+        // console.log(this.actualAmount.no, "Actual amount.no");
+        this.buyerFees.no = this.actualAmount.no * feesPercent;
+        this.buyerFees.no = this.util.trimToDecimal(this.buyerFees.no, 2);
+        this.buyerFees.formatted = this.util.currencyFormatter(this.buyerFees.no);
+        // console.log("Buyers fees", this.buyerFees.no);
+        this.actualAmount.no = this.util.trimToDecimal(this.actualAmount.no, 2);
+        this.actualAmount.formatted = this.util.currencyFormatter(this.actualAmount.no);
+        if (!calcActual) {
+            this.amount.no = this.actualAmount.no + this.buyerFees.no;
+            this.amount.formatted = this.util.currencyFormatter(this.amount.no);
+        }
+    };
+    QuantityCalcPage.prototype.calcActual = function (feesPercent) {
+        this.actualAmount.no = (this.amount.no / (1 + feesPercent));
     };
     QuantityCalcPage.prototype.rangeChanged = function (rangePointer) {
         this.selCoin.range.rate.no = rangePointer;
         this.formateRate();
         this.calcQuantity();
     };
-    QuantityCalcPage.prototype.calcAmount = function () {
-        this.amount = this.quantity * this.selCoin.range.rate.no;
-        this.calcFeesAmount();
+    QuantityCalcPage.prototype.calcAmount = function (quantity) {
+        this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
+        this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
+        console.log("Formatted quantity", this.quantity.formatted);
+        this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
+        this.calcFeesAmount(false);
     };
     QuantityCalcPage.prototype.amountChanged = function (amount) {
-        // console.log(this.amountFlag);
-        this.amount = amount.length > 9 ? this.trimAmount(amount) : this.clearAmountFlag(amount);
-        // console.log("new amount value", this.amount);
-        this.calcQuantity();
-    };
-    QuantityCalcPage.prototype.clearAmountFlag = function (amount) {
-        // console.log("flag cleared");
-        this.amountFlag = false;
-        return amount;
+        console.log("amount changed ", amount);
+        if (amount != null && amount != "") {
+            this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
+            this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
+            console.log("formatted amount", this.amount.formatted);
+            this.calcQuantity();
+        }
+        // console.log("new amount.no value", this.amount.no);
     };
     QuantityCalcPage.prototype.trimAmount = function (amount) {
-        // console.log("flag set");
-        this.amountFlag = true;
-        return amount = amount.substring(0, 9);
+        return amount.substring(0, 9);
     };
     QuantityCalcPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{selCoin.range.rate.formatted}}\n\n    </ion-item>\n\n    <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"\n\n        (ionChange)="rangeChanged($event)">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity" (ngModelChange)="calcAmount()"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      {{buyerFees}} + {{actualAmount}}\n\n    </ion-item>\n\n    <ion-item>\n\n      {{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}}\n\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
+            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-card-header class="weight500 size1rem8">\n\n    Enter Coin Detail\n\n  </ion-card-header>\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Exchange</ion-label>\n\n      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">\n\n        <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Crypto-Coin</ion-label>\n\n      <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">\n\n        <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n      </ion-select>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Coin Rate</ion-label>\n\n      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})\n\n    </ion-item>\n\n    <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"\n\n        (ionChange)="rangeChanged($event)">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Amount &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n    </ion-item>\n\n    <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>\n\n    </ion-item>\n\n  </ion-list>\n\n  <ion-card-header class="weight500 size1rem8">\n\n    Summary\n\n  </ion-card-header>\n\n  <ion-card>\n\n    <ion-grid>\n\n      <ion-row>\n\n        <ion-col col-6 class="center">\n\n          <ion-row>\n\n            <ion-col col-12 class="weight500 size2rem8">\n\n              {{quantity.formatted}}\n\n\n\n            </ion-col>\n\n          </ion-row>\n\n          <ion-row>\n\n            <ion-col col-12>\n\n              {{selCoin.coinName}}(s) ({{selCoin.coinCode}})\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <img class="center" src="assets/imgs/{{selCoin.coinCode}}.png">\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Coin Rate:\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          {{selCoin.range.rate.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Amount:\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          {{actualAmount.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Buy Fees:({{buyerFeesPercent}}%)\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          {{buyerFees.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Total Amount:\n\n        </ion-col>\n\n        <ion-col col-6 class="weight500">\n\n          {{amount.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-grid>\n\n  </ion-card>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_5__providers_utilities_utilities__["a" /* Utilities */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* ToastController */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_6__providers_utilities_utilities__["a" /* Utilities */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* ToastController */]])
     ], QuantityCalcPage);
     return QuantityCalcPage;
 }());
@@ -183,7 +226,7 @@ var QuantityCalcPage = (function () {
 
 /***/ }),
 
-/***/ 117:
+/***/ 118:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -196,11 +239,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 117;
+webpackEmptyAsyncContext.id = 118;
 
 /***/ }),
 
-/***/ 159:
+/***/ 160:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -213,11 +256,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 159;
+webpackEmptyAsyncContext.id = 160;
 
 /***/ }),
 
-/***/ 203:
+/***/ 204:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -227,13 +270,13 @@ webpackEmptyAsyncContext.id = 159;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_storage__ = __webpack_require__(107);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__coin_detail_coin_detail__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__coin_detail_coin_detail__ = __webpack_require__(210);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__ = __webpack_require__(309);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile__ = __webpack_require__(310);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_takeWhile__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_observable_IntervalObservable__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_observable_IntervalObservable__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_observable_IntervalObservable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_observable_IntervalObservable__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -349,7 +392,7 @@ var HomePage = (function () {
 
 /***/ }),
 
-/***/ 208:
+/***/ 209:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -358,7 +401,7 @@ var HomePage = (function () {
 /* unused harmony export Change */
 /* unused harmony export Global */
 /* unused harmony export RangeValue */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__value_detail__ = __webpack_require__(308);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__value_detail__ = __webpack_require__(108);
 
 var CoinDetail = (function () {
     function CoinDetail() {
@@ -409,7 +452,7 @@ var RangeValue = (function () {
 
 /***/ }),
 
-/***/ 209:
+/***/ 210:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -418,8 +461,8 @@ var RangeValue = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quantity_calc_quantity_calc__ = __webpack_require__(108);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_observable_IntervalObservable__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quantity_calc_quantity_calc__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_observable_IntervalObservable__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_observable_IntervalObservable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_observable_IntervalObservable__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -540,7 +583,7 @@ var CoinDetailPage = (function () {
 
 /***/ }),
 
-/***/ 211:
+/***/ 212:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -575,7 +618,7 @@ var RemindersPage = (function () {
 
 /***/ }),
 
-/***/ 212:
+/***/ 213:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -584,6 +627,8 @@ var RemindersPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_utilities_utilities__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_profit_calc__ = __webpack_require__(313);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -597,49 +642,67 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var ProfitCalcPage = (function () {
     function ProfitCalcPage(navCtrl, utilities, formBuilder) {
         this.navCtrl = navCtrl;
         this.utilities = utilities;
         this.formBuilder = formBuilder;
+        this.profitCalc = new __WEBPACK_IMPORTED_MODULE_5__models_profit_calc__["a" /* ProfitCalc */]();
+        this.quantityColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["e" /* DARK */];
+        this.investmentColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["i" /* LIGHT */];
         this.profitCalcForm = this.formBuilder.group({
             title: ['', __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* Validators */].required],
             description: [''],
         });
     }
-    ProfitCalcPage.prototype.ngOnInit = function () {
-        // console.log("profit calc page ng oninit");
-    };
     ProfitCalcPage.prototype.checkRequiredFields = function (type) {
-        // console.log("Check Required fields", this.quantity, this.amount);
+        // console.log("Check Required fields", this.quantity.no.no, this.amount);
         switch (type) {
             case "qty": {
-                // console.log("Quantity");
-                this.quantity = this.utilities.trimToDecimal(+this.quantity, 4);
-                this.calcAmount();
-                if (this.checkMandatoryFields()) {
-                    // console.log("Manadatory passed");
-                    this.calcProfit();
+                console.log("Quantity" + this.profitCalc.quantity.no);
+                if (this.profitCalc.quantity.no != 0) {
+                    // console.log("inside quantity");
+                    this.profitCalc.quantity.no = this.profitCalc.quantity.no + "".length > 9 ? this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4) : +this.profitCalc.quantity.no;
+                    this.calcAmount();
+                    if (this.checkMandatoryFields()) {
+                        // console.log("Manadatory passed");
+                        this.calcProfit();
+                    }
                 }
+                this.formatDataValues();
                 break;
             }
             case "amt": {
-                // console.log("Amount");
-                this.amount = this.utilities.trimToDecimal(+this.amount, 2);
-                this.calcQty();
+                console.log("Amount" + this.profitCalc.amount.no);
+                if (this.profitCalc.amount.no != 0) {
+                    this.profitCalc.amount.no = this.profitCalc.amount.no + "".length > 9 ? this.utilities.trimToDecimal(+this.profitCalc.amount.no, 2) : +this.profitCalc.amount.no;
+                    this.calcQty();
+                    if (this.checkMandatoryFields()) {
+                        this.calcProfit();
+                    }
+                }
+                this.formatDataValues();
+                break;
+            }
+            case "profit": {
                 if (this.checkMandatoryFields()) {
                     this.calcProfit();
                 }
+                this.formatDataValues();
                 break;
             }
             default: {
-                if (this.quantity != undefined && this.amount != undefined) {
+                if (this.profitCalc.quantity.no != null && this.profitCalc.amount.no != null) {
+                    this.checkRequiredFields("profit");
+                }
+                else if (this.profitCalc.quantity.no != null) {
+                    console.log("quantity  not null");
                     this.checkRequiredFields("qty");
                 }
-                else if (this.quantity != undefined) {
-                    this.checkRequiredFields("qty");
-                }
-                else if (this.amount != undefined) {
+                else if (this.profitCalc.amount.no != null) {
+                    console.log("amount  not null");
                     this.checkRequiredFields("amt");
                 }
             }
@@ -649,28 +712,24 @@ var ProfitCalcPage = (function () {
     ProfitCalcPage.prototype.buySellPriceChanged = function (priceType) {
         switch (priceType) {
             case "buy": {
-                this.fromValue = this.utilities.trimToDecimal(+this.fromValue, 2);
+                if (this.profitCalc.fromValue.no != 0) {
+                    this.profitCalc.fromValue.no = this.profitCalc.fromValue.no + "".length > 9 ? this.utilities.trimToDecimal(+this.profitCalc.fromValue.no, 2) : +this.profitCalc.fromValue.no;
+                }
                 break;
             }
             case "sell": {
-                this.toValue = this.utilities.trimToDecimal(+this.toValue, 2);
+                if (this.profitCalc.toValue.no != 0) {
+                    this.profitCalc.toValue.no = this.profitCalc.toValue.no + "".length > 9 ? this.utilities.trimToDecimal(+this.profitCalc.toValue.no, 2) : +this.profitCalc.toValue.no;
+                }
                 break;
             }
         }
         this.checkRequiredFields();
-    };
-    ProfitCalcPage.prototype.clearAll = function () {
-        this.quantity = 0;
-        this.amount = 0;
-        this.toValue = 0;
-        this.fromValue = 0;
-        this.profitLoss = 0;
-        this.changePercent = 0;
-        this.finalValue = 0;
+        this.formatDataValues();
     };
     ProfitCalcPage.prototype.checkMandatoryFields = function () {
-        // console.log(this.fromValue, this.toValue);
-        if (this.fromValue != undefined && this.toValue != undefined) {
+        // console.log(this.fromValue.no, this.toValue.no);
+        if (this.profitCalc.fromValue.no != null && this.profitCalc.toValue.no != null) {
             // console.log("mandatory true");
             return true;
         }
@@ -680,53 +739,83 @@ var ProfitCalcPage = (function () {
         }
     };
     ProfitCalcPage.prototype.calcQty = function () {
-        if (this.fromValue != undefined) {
-            this.quantity = this.amount / this.fromValue;
-            this.quantity = this.utilities.trimToDecimal(this.quantity, 4);
+        if (this.profitCalc.fromValue.no != null) {
+            this.profitCalc.quantity.no = this.profitCalc.amount.no / this.profitCalc.fromValue.no;
+            this.profitCalc.quantity.no = this.utilities.trimToDecimal(this.profitCalc.quantity.no, 4);
         }
-        // console.log("Qty calc", this.quantity);
+        // console.log("Qty calc", this.quantity.no);
     };
     ProfitCalcPage.prototype.calcAmount = function () {
-        if (this.fromValue != undefined) {
-            this.amount = this.quantity * this.fromValue;
-            this.amount = this.utilities.trimToDecimal(this.amount, 2);
+        if (this.profitCalc.fromValue.no != null) {
+            this.profitCalc.amount.no = this.profitCalc.quantity.no * this.profitCalc.fromValue.no;
+            this.profitCalc.amount.no = this.utilities.trimToDecimal(this.profitCalc.amount.no, 2);
         }
-        // console.log("Amount calc", this.amount);
+        // console.log("Amount calc", this.amount.no);
     };
     ProfitCalcPage.prototype.calcProfit = function () {
-        this.calcChangePercent();
-        this.profitLoss = (this.amount * this.changePercent) - this.amount;
-        this.profitLoss = this.utilities.trimToDecimal(+this.profitLoss, 2);
-        // console.log("Profit loss", this.profitLoss);
+        this.profitCalc.profitLoss.no = (this.profitCalc.toValue.no - this.profitCalc.fromValue.no) * this.profitCalc.quantity.no;
+        this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+        console.log("Profit loss", this.profitCalc.profitLoss.no);
         this.calcFinalvalue();
-    };
-    ProfitCalcPage.prototype.calcChangePercent = function () {
-        this.changePercent = this.toValue / this.fromValue;
-        this.changePercent = this.utilities.trimToDecimal(+this.changePercent, 2);
-        // console.log("Change percent", this.changePercent);
     };
     ProfitCalcPage.prototype.calcFinalvalue = function () {
-        this.finalValue = this.amount + this.profitLoss;
-        if (Number.isNaN(this.finalValue)) {
-            this.finalValue = 0;
+        this.profitCalc.finalValue.no = this.profitCalc.amount.no + this.profitCalc.profitLoss.no;
+        if (Number.isNaN(this.profitCalc.finalValue.no)) {
+            this.profitCalc.finalValue.no = 0;
         }
         else {
-            this.finalValue = this.utilities.trimToDecimal(+this.finalValue, 2);
+            this.profitCalc.finalValue.no = this.utilities.trimToDecimal(+this.profitCalc.finalValue.no, 2);
         }
-        // console.log("Final value", this.finalValue);
+        // console.log("Final value", this.finalValue.no);
     };
     ProfitCalcPage.prototype.updateSellPrice = function () {
-        this.toValue = (this.profitLoss * this.fromValue + this.fromValue * this.fromValue) / this.amount;
-        this.toValue = this.utilities.trimToDecimal(+this.toValue, 2);
-        // console.log("Sell Value" + this.toValue);
-        // console.log("before", this.profitLoss);
-        this.calcFinalvalue();
-        this.profitLoss = this.utilities.trimToDecimal(+this.profitLoss, 2);
-        // console.log("after", this.profitLoss);
+        if (this.profitCalc.profitLoss.no != 0) {
+            this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+            this.profitCalc.toValue.no = (this.profitCalc.profitLoss.no * this.profitCalc.fromValue.no + this.profitCalc.fromValue.no * this.profitCalc.fromValue.no) / this.profitCalc.amount.no;
+            this.profitCalc.toValue.no = this.utilities.trimToDecimal(+this.profitCalc.toValue.no, 2);
+            // console.log("Sell Value" + this.toValue.no.no);
+            // console.log("before", this.profitLoss.no.no);
+            this.calcFinalvalue();
+            this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
+            // console.log("after", this.profitLoss.no.no);
+        }
+        this.formatDataValues();
+    };
+    ProfitCalcPage.prototype.quantityClick = function () {
+        // console.log("quantity clicked");
+        if (this.quantityColor == __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["i" /* LIGHT */]) {
+            this.quantityColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["e" /* DARK */];
+            this.investmentColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["i" /* LIGHT */];
+        }
+    };
+    ProfitCalcPage.prototype.investmentClick = function () {
+        // console.log("investment clicked");
+        if (this.investmentColor == __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["i" /* LIGHT */]) {
+            this.investmentColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["e" /* DARK */];
+            this.quantityColor = __WEBPACK_IMPORTED_MODULE_4__constants_api_constants__["i" /* LIGHT */];
+        }
+    };
+    ProfitCalcPage.prototype.formatDataValues = function () {
+        // console.log("Formatting values");
+        this.profitCalc.quantity.formatted = this.utilities.numberFormatter(this.profitCalc.quantity.no);
+        this.profitCalc.amount.formatted = this.utilities.currencyFormatter(this.profitCalc.amount.no);
+        this.profitCalc.fromValue.formatted = this.utilities.currencyFormatter(this.profitCalc.fromValue.no);
+        this.profitCalc.toValue.formatted = this.utilities.currencyFormatter(this.profitCalc.toValue.no);
+        this.profitCalc.profitLoss.formatted = this.utilities.currencyFormatter(this.profitCalc.profitLoss.no);
+        this.profitCalc.finalValue.formatted = this.utilities.currencyFormatter(this.profitCalc.finalValue.no);
+    };
+    ProfitCalcPage.prototype.clearAll = function () {
+        this.profitCalc.quantity.no = null;
+        this.profitCalc.amount.no = null;
+        this.profitCalc.fromValue.no = null;
+        this.profitCalc.toValue.no = null;
+        this.profitCalc.profitLoss.no = null;
+        this.profitCalc.finalValue.no = null;
+        this.formatDataValues();
     };
     ProfitCalcPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-profit-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\profit-calc\profit-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Profit Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0123" [(ngModel)]="quantity" clearInput="true" (ngModelChange)="checkRequiredFields(\'qty\')"></ion-input>\n\n    </ion-item>\n\n\n\n    OR\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Investment &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="3000" [(ngModel)]="amount" clearInput="true" (ngModelChange)="checkRequiredFields(\'amt\')"></ion-input>\n\n    </ion-item>\n\n\n\n\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Buy Price &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" [(ngModel)]="fromValue" clearInput="true" (ngModelChange)="buySellPriceChanged(\'buy\')"></ion-input>\n\n    </ion-item>\n\n\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Sell Price &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="2000" [(ngModel)]="toValue" clearInput="true" (ngModelChange)="buySellPriceChanged(\'sell\')"></ion-input>\n\n    </ion-item>\n\n\n\n\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Profit / Loss &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="3000" [(ngModel)]="profitLoss" clearInput="true" (ngModelChange)="updateSellPrice()"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      Total Amount = {{finalValue}}\n\n\n\n      <button (click)="clearAll()" ion-button>Clear All</button>\n\n    </ion-item>\n\n\n\n  </ion-list>\n\n\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\profit-calc\profit-calc.html"*/
+            selector: 'page-profit-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\profit-calc\profit-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Profit / Loss Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-card-header class="weight500 size1rem8">\n\n    Enter Buy/Sell Detail:\n\n  </ion-card-header>\n\n  <ion-list>\n\n    <ion-item>\n\n      <ion-label fixed>Quantity</ion-label>\n\n      <ion-input type="number" placeholder="0.0123" [(ngModel)]="profitCalc.quantity.no" clearInput="true" (ngModelChange)="checkRequiredFields(\'qty\')"></ion-input>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Buy Price &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="1000" [(ngModel)]="profitCalc.fromValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged(\'buy\')"></ion-input>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Sell Price &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="2000" [(ngModel)]="profitCalc.toValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged(\'sell\')"></ion-input>\n\n    </ion-item>\n\n\n\n    <ion-item>\n\n      <ion-label fixed>Profit / Loss &#8377;</ion-label>\n\n      <ion-input type="number" placeholder="3000" [(ngModel)]="profitCalc.profitLoss.no" clearInput="true" (ngModelChange)="updateSellPrice()"></ion-input>\n\n    </ion-item>\n\n    <ion-item>\n\n      <button class="padding2rem" (click)="clearAll()" ion-button color="light">Clear All</button>\n\n    </ion-item>\n\n  </ion-list>\n\n  <ion-card-header class="weight500 size1rem8">\n\n    Summary\n\n  </ion-card-header>\n\n  <ion-card>\n\n    <ion-grid>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Quantity:\n\n        </ion-col>\n\n        <ion-col col-7>\n\n          {{this.profitCalc.quantity.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Investment:\n\n        </ion-col>\n\n        <ion-col col-7 class="weight500 blueColor">\n\n          {{this.profitCalc.amount.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Buy Price:\n\n        </ion-col>\n\n        <ion-col col-7>\n\n          {{this.profitCalc.fromValue.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Sell Price:\n\n        </ion-col>\n\n        <ion-col col-7>\n\n          {{this.profitCalc.toValue.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Profit / Loss:\n\n        </ion-col>\n\n        <ion-col col-7 class="weight500" [ngClass]="{\'greenColor\': this.profitCalc.profitLoss.no>0, \'redColor\': this.profitCalc.profitLoss.no<0}">\n\n          {{this.profitCalc.profitLoss.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n          Net Amount:\n\n        </ion-col>\n\n        <ion-col col-7 class="weight500 size2rem" [ngClass]="{\'greenColor\': this.profitCalc.profitLoss.no>0, \'redColor\': this.profitCalc.profitLoss.no<0}">\n\n          {{this.profitCalc.finalValue.formatted}}\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row class="alignCenter" *ngIf="this.profitCalc.profitLoss.no != 0 && this.profitCalc.profitLoss.no">\n\n        <ion-col col-12>\n\n          <span>\n\n            [{{this.profitCalc.amount.formatted}}\n\n            <span *ngIf="this.profitCalc.profitLoss.no > 0"> + </span>\n\n            <span [ngClass]="{\'greenColor\': this.profitCalc.profitLoss.no>0, \'redColor\': this.profitCalc.profitLoss.no<0}" class="weight500">{{this.profitCalc.profitLoss.formatted}}</span>]\n\n          </span>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-grid>\n\n  </ion-card>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\profit-calc\profit-calc.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__providers_utilities_utilities__["a" /* Utilities */], __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormBuilder */]])
     ], ProfitCalcPage);
@@ -737,7 +826,7 @@ var ProfitCalcPage = (function () {
 
 /***/ }),
 
-/***/ 213:
+/***/ 214:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -772,13 +861,13 @@ var NewsPage = (function () {
 
 /***/ }),
 
-/***/ 214:
+/***/ 215:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(216);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(237);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -786,7 +875,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 236:
+/***/ 237:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -794,21 +883,21 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(277);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(203);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(209);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(313);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(314);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(211);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(212);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(199);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(315);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(315);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(316);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(108);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(214);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__providers_utilities_utilities__ = __webpack_require__(54);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -890,21 +979,21 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 277:
+/***/ 278:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(199);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(203);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_reminders_reminders__ = __webpack_require__(211);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_profit_calc_profit_calc__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_reminders_reminders__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_profit_calc_profit_calc__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_api_data_api_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_news_news__ = __webpack_require__(213);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_quantity_calc_quantity_calc__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_news_news__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_quantity_calc_quantity_calc__ = __webpack_require__(109);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -983,24 +1072,30 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 308:
+/***/ 313:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValueDetail; });
-var ValueDetail = (function () {
-    function ValueDetail() {
-        this.no = 0;
-        this.formatted = "";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfitCalc; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__value_detail__ = __webpack_require__(108);
+
+var ProfitCalc = (function () {
+    function ProfitCalc() {
+        this.quantity = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
+        this.amount = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
+        this.fromValue = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
+        this.toValue = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
+        this.profitLoss = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
+        this.finalValue = new __WEBPACK_IMPORTED_MODULE_0__value_detail__["a" /* ValueDetail */]();
     }
-    return ValueDetail;
+    return ProfitCalc;
 }());
 
-//# sourceMappingURL=value-detail.js.map
+//# sourceMappingURL=profit-calc.js.map
 
 /***/ }),
 
-/***/ 313:
+/***/ 314:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1035,7 +1130,7 @@ var BuySellPage = (function () {
 
 /***/ }),
 
-/***/ 314:
+/***/ 315:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1075,23 +1170,23 @@ var FavouritesPage = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiDataProvider; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(290);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(291);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(294);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(295);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(295);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(296);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(303);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(304);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(305);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__ = __webpack_require__(209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__ = __webpack_require__(54);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1164,7 +1259,7 @@ var ApiDataProvider = (function () {
         // console.log("GET - koinex data");
         // console.log(this.apiUrls.exchange.koinex);
         // console.log(this.koinexData, "before");
-        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData = JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX_DATA */]));
+        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData = JSON.parse(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* KOINEX_DATA */]));
         // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
         //   this.koinexData.lock = true;
         //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
@@ -1190,7 +1285,7 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.lockExchange = function (exchange) {
         var _this = this;
         switch (exchange) {
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX */]: {
                 this.koinexData.lock = true;
                 // console.log("LOCK SET", this.koinexData);
                 var releaseLockKoinex = __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].timer(15000);
@@ -1200,7 +1295,7 @@ var ApiDataProvider = (function () {
                 });
                 break;
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* ZEBPAY */]:
                 {
                     this.zebpayData.lock = true;
                     // console.log("LOCK SET", this.zebpayData);
@@ -1222,10 +1317,10 @@ var ApiDataProvider = (function () {
             return this.http.get(this.apiUrls.exchange.zebpay.api).map(function (res) {
                 // console.log(res);
                 // console.log("FETCHED - zebpay data", res);
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */], res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* ZEBPAY */], res);
                 return res;
             }).catch(function (error) {
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */]);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* ZEBPAY */]);
                 return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.zebpayData);
             });
         }
@@ -1275,13 +1370,13 @@ var ApiDataProvider = (function () {
             case "BTC":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["d" /* BTC */];
             case "ETH":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["e" /* ETH */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* ETH */];
             case "XRP":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* XRP */];
             case "BCH":
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */];
             case "LTC":
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* LTC */];
         }
     };
     // TO BE TESTED
@@ -1325,17 +1420,17 @@ var ApiDataProvider = (function () {
         return processedKoinexData;
     };
     ApiDataProvider.prototype.coinDetailFormatter = function (processedCoin) {
-        processedCoin.market.formatted = this.numberFormatter(processedCoin.market.no);
-        processedCoin.buy.formatted = this.numberFormatter(processedCoin.buy.no);
-        processedCoin.sell.formatted = this.numberFormatter(processedCoin.sell.no);
+        processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
+        processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
+        processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
         if (processedCoin.min.no != undefined) {
-            processedCoin.min.formatted = this.numberFormatter(processedCoin.min.no);
-            processedCoin.max.formatted = this.numberFormatter(processedCoin.max.no);
+            processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
+            processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
         }
         if (processedCoin.global.INR.no != undefined) {
-            processedCoin.global.INR.formatted = this.numberFormatter(processedCoin.global.INR.no);
-            processedCoin.global.USD.formatted = this.numberFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-            processedCoin.globalDiff.val.formatted = this.numberFormatter(processedCoin.globalDiff.val.no);
+            processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
+            processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+            processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
         }
         return processedCoin;
     };
@@ -1350,8 +1445,8 @@ var ApiDataProvider = (function () {
             try {
                 ObjectTarget.range.plusPercent.no = percentage.plusPercent;
                 ObjectTarget.range.minusPercent.no = percentage.minusPercent;
-                ObjectTarget.range.plusPercent.formatted = this.numberFormatter(ObjectTarget.range.plusPercent.no);
-                ObjectTarget.range.minusPercent.formatted = this.numberFormatter(ObjectTarget.range.minusPercent.no);
+                ObjectTarget.range.plusPercent.formatted = this.utility.currencyFormatter(ObjectTarget.range.plusPercent.no);
+                ObjectTarget.range.minusPercent.formatted = this.utility.currencyFormatter(ObjectTarget.range.minusPercent.no);
                 return ObjectTarget;
             }
             catch (e) {
@@ -1361,11 +1456,6 @@ var ApiDataProvider = (function () {
         else {
             return percentage;
         }
-    };
-    ApiDataProvider.prototype.numberFormatter = function (number, locale, currency) {
-        if (locale === void 0) { locale = 'hi-IN'; }
-        if (currency === void 0) { currency = 'INR'; }
-        return number.toLocaleString(locale, { style: 'currency', currency: currency });
     };
     ApiDataProvider.prototype.rangeStepCalculator = function (min, max) {
         var diff = max - min;
@@ -1475,16 +1565,16 @@ var ApiDataProvider = (function () {
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["d" /* BTC */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.BTC);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["e" /* ETH */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* ETH */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.ETH);
             }
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["c" /* BCH */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.BCH);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* LTC */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* LTC */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.LTC);
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* XRP */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* XRP */]: {
                 return this.http.get(this.apiUrls.global.coinmarketcap.coin.XPR);
             }
             case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["a" /* ALL */]: {
@@ -1498,12 +1588,12 @@ var ApiDataProvider = (function () {
         // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
         try {
             switch (exchange) {
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* KOINEX */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* KOINEX */]:
                     {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
                     }
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* ZEBPAY */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* ZEBPAY */]:
                     {
                         // console.log("switch case zebpay");
                         return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -1551,23 +1641,25 @@ var ApiDataProvider = (function () {
 
 /***/ }),
 
-/***/ 53:
+/***/ 42:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return API_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return KOINEX_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return KOINEX_DATA; });
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return XRP; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ETH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return LTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return ETH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BCH; });
 /* unused harmony export INR */
 /* unused harmony export USD */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ALL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return ZEBPAY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return KOINEX; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return KOINEX; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return LIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return DARK; });
 var API_URL = "{\r\n  \"exchange\": {\r\n    \"koinex\": \"https:\/\/koinex.in\/api\/ticker\",\r\n    \"zebpay\": \"https:\/\/www.zebapi.com\/api\/v1\/market\/ticker\/btc\/inr\"\r\n  },\r\n  \"global\": {\r\n    \"coindesk\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice.json\",\r\n        \"INR\": \"https:\/\/api.coindesk.com\/v1\/bpi\/currentprice\/inr.json\"\r\n      }\r\n    },\r\n    \"coinmarketcap\": {\r\n      \"api\": {\r\n        \"USD\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?limit=6\",\r\n        \"INR\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/?convert=INR&limit=6\"\r\n      },\r\n      \"coin\": {\r\n        \"bitcoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin\",\r\n        \"ether\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ethereum\",\r\n        \"ripple\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/ripple\",\r\n        \"btc-cash\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/bitcoin-cash\",\r\n        \"litecoin\": \"https:\/\/api.coinmarketcap.com\/v1\/ticker\/litecoin\"\r\n      }\r\n    }\r\n  },\r\n  \"version\": \"1.0.0\"\r\n}";
 var KOINEX_DATA = "{\"prices\":{\"BTC\":\"1271000.0\",\"XRP\":\"203.5\",\"ETH\":\"76989.0\",\"BCH\":\"192499.0\",\"LTC\":\"21498.99\",\"MIOTA\":253.15,\"OMG\":1282.71,\"GNT\":68.61},\"stats\":{\"ETH\":{\"last_traded_price\":\"76989.0\",\"lowest_ask\":\"76988.0\",\"highest_bid\":\"76800.0\",\"min_24hrs\":\"74000.0\",\"max_24hrs\":\"77887.0\",\"vol_24hrs\":\"2187.735\"},\"BTC\":{\"last_traded_price\":\"1271000.0\",\"lowest_ask\":\"1280000.0\",\"highest_bid\":\"1271000.0\",\"min_24hrs\":\"1218601.5\",\"max_24hrs\":\"1310000.0\",\"vol_24hrs\":\"253.7324\"},\"LTC\":{\"last_traded_price\":\"21498.99\",\"lowest_ask\":\"21498.99\",\"highest_bid\":\"21410.0\",\"min_24hrs\":\"20200.0\",\"max_24hrs\":\"23000.0\",\"vol_24hrs\":\"22545.462\"},\"XRP\":{\"last_traded_price\":\"203.5\",\"lowest_ask\":\"203.7\",\"highest_bid\":\"203.55\",\"min_24hrs\":\"165.0\",\"max_24hrs\":\"210.0\",\"vol_24hrs\":\"4739999.3\"},\"BCH\":{\"last_traded_price\":\"192499.0\",\"lowest_ask\":\"192499.0\",\"highest_bid\":\"191340.0\",\"min_24hrs\":\"182000.0\",\"max_24hrs\":\"195000.0\",\"vol_24hrs\":\"816.173\"}}}";
 var COIN_LIST_TEMPLATE = "{\r\n  \"coin\": \"bitcoin\",\r\n  \"market\": \"5000\",\r\n  \"buy\": \"6000\",\r\n  \"sell\": \"4000\",\r\n  \"price_index\": \"high\",\r\n  \"change\": \"7\"\r\n}";
@@ -1581,6 +1673,8 @@ var USD = "USD";
 var ALL = "ALL";
 var ZEBPAY = "zebpay";
 var KOINEX = "koinex";
+var LIGHT = "light";
+var DARK = "dark";
 //# sourceMappingURL=api-constants.js.map
 
 /***/ }),
@@ -1591,7 +1685,7 @@ var KOINEX = "koinex";
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Utilities; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__ = __webpack_require__(42);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1610,24 +1704,30 @@ var Utilities = (function () {
         if (coinName === void 0) { coinName = "default"; }
         var trimmedQty;
         switch (coinName) {
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["d" /* BTC */]: {
-                return trimmedQty = +quantity.toFixed(4);
-            }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["e" /* ETH */]: {
-                return trimmedQty = +quantity.toFixed(3);
-            }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["i" /* XRP */]: {
-                return trimmedQty = +quantity.toFixed(0);
-            }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["h" /* LTC */]: {
-                return trimmedQty = +quantity.toFixed(3);
-            }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["c" /* BCH */]: {
-                return trimmedQty = +quantity.toFixed(3);
-            }
-            default: {
-                return trimmedQty = +quantity.toFixed(2);
-            }
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["d" /* BTC */]:
+                {
+                    return trimmedQty = +quantity.toFixed(4);
+                }
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["f" /* ETH */]:
+                {
+                    return trimmedQty = +quantity.toFixed(3);
+                }
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["k" /* XRP */]:
+                {
+                    return trimmedQty = +quantity.toFixed(0);
+                }
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["j" /* LTC */]:
+                {
+                    return trimmedQty = +quantity.toFixed(3);
+                }
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["c" /* BCH */]:
+                {
+                    return trimmedQty = +quantity.toFixed(3);
+                }
+            default:
+                {
+                    return trimmedQty = +quantity.toFixed(2);
+                }
         }
     };
     Utilities.prototype.trimToDecimal = function (value, decimal) {
@@ -1637,6 +1737,25 @@ var Utilities = (function () {
         // console.log(finalValue, "final value");
         return finalValue;
         // return +numericValue.toFixed(decimal);
+    };
+    Utilities.prototype.currencyFormatter = function (number, locale, currency) {
+        if (locale === void 0) { locale = 'hi-IN'; }
+        if (currency === void 0) { currency = 'INR'; }
+        number = +number;
+        if (isNaN(number)) {
+            number = 0;
+        }
+        return number.toLocaleString(locale, {
+            style: 'currency',
+            currency: currency
+        });
+    };
+    Utilities.prototype.numberFormatter = function (number) {
+        number = +number;
+        if (isNaN(number)) {
+            number = 0;
+        }
+        return number.toLocaleString('hi-IN');
     };
     Utilities = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
@@ -1649,5 +1768,5 @@ var Utilities = (function () {
 
 /***/ })
 
-},[214]);
+},[215]);
 //# sourceMappingURL=main.js.map

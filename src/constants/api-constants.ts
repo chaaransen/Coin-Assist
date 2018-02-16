@@ -12,5 +12,8 @@ export const USD: string = "USD";
 export const ALL: string = "ALL";
 export const ZEBPAY: string = "zebpay";
 export const KOINEX: string = "koinex";
+export const LIGHT: string = "light";
+export const DARK: string = "dark";
+
 
 

@@ -25696,28 +25696,40 @@ ion-navbar.toolbar {
   color: #009b2c;
 }
 
+.size1rem4 {
+  font-size: 1.4rem;
+}
+
+.size1rem5 {
+  font-size: 1.5rem;
+}
+
+.size1rem6 {
+  font-size: 1.6rem;
+}
+
 .size1rem7 {
   font-size: 1.7rem;
 }
 
-.size1rem6 {
-  font-size: 1.7rem;
-}
-
-.size1rem4 {
-  font-size: 1.4rem;
+.size1rem8 {
+  font-size: 1.8rem;
 }
 
 .size1rem9 {
   font-size: 1.9rem;
 }
 
-.size3rem {
-  font-size: 3rem;
-}
-
 .size2rem {
   font-size: 2rem;
+}
+
+.size2rem8 {
+  font-size: 2.8rem;
+}
+
+.size3rem {
+  font-size: 3rem;
 }
 
 .Medium {
@@ -25778,6 +25790,10 @@ ion-navbar.toolbar {
   color: grey;
 }
 
+.blueColor {
+  color: #3784ff;
+}
+
 .price {
   font-size: 1.9rem;
   font-weight: 500;
@@ -25834,6 +25850,10 @@ hr, .hrBottomMargin {
 
 .width100 {
   width: 100%;
+}
+
+.alignCenter {
+  text-align: center;
 }
 
 page-coin-detail ion-avatar img,
@@ -25943,4 +25963,28 @@ page-home [col-9] {
 
 page-home .grid {
   padding: 0px;
+}
+
+page-profit-calc * {
+  font-size: 1.6rem;
+}
+
+page-profit-calc .grid {
+  padding: 10px;
+}
+
+page-profit-calc .padding2rem {
+  padding: 2rem !important;
+}
+
+page-quantity-calc * {
+  font-size: 1.6rem;
+}
+
+page-quantity-calc ion-select {
+  max-width: 100%;
+}
+
+page-quantity-calc img {
+  width: 50%;
 }
