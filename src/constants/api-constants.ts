@@ -14,6 +14,7 @@ export const ZEBPAY: string = "zebpay";
 export const KOINEX: string = "koinex";
 export const LIGHT: string = "light";
 export const DARK: string = "dark";
+export const zebpayCoins: Array<string> = ["btc", "bch", "ltc", "xrp"];
 
 
 

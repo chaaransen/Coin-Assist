@@ -37,7 +37,7 @@
         <ion-col col-8 class="priceDetail center">
           {{coinDetail.market.formatted}}
         </ion-col>
-        <ion-col col-4 class="boldTextValue left size1rem6 center">
+        <ion-col col-4 class="boldTextValue left size1rem6 center" *ngIf="coinDetail.change">
           <div *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
             <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
           </div>
@@ -69,7 +69,7 @@
       </ion-row>
 
       <ion-row>
-        <ion-col col-4 class="center padding0">
+        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.hour}}%
@@ -79,7 +79,7 @@
             </span>
           </span>
         </ion-col>
-        <ion-col col-4 class="center padding0 marginBotton0rem5">
+        <ion-col col-4 class="center padding0 marginBotton0rem5" *ngIf="coinDetail.change">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
@@ -89,7 +89,7 @@
             </span>
           </span>
         </ion-col>
-        <ion-col col-4 class="center padding0">
+        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.week >= 0" class="greenColor weight500">
               <span class="size1rem7">&#9650;</span>+{{coinDetail.change.week}}%
@@ -101,7 +101,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="coinDetail.volatility">
         <ion-col col-6 class="center paddingBottom0">
           <span>Low: </span>
           <span class="redColor weight500">{{coinDetail.min.formatted}}</span>
@@ -112,12 +112,12 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="coinDetail.volatility">
         <ion-col col-6 class="center paddingBottom0">
           <span>High: </span>
           <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>
         </ion-col>
-        <ion-col col-6 *ngIf="coinDetail.volatility" class="center">
+        <ion-col col-6 class="center">
           Volatility:
           <span class="riseFallSymbol weight500"> &#8645;</span>
           <span class="weight500"> {{coinDetail.volatility}}% </span>

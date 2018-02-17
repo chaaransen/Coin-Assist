@@ -41,7 +41,10 @@ export class MyApp {
     this.api.fetchApiUrl().subscribe(res => {
       // console.log("fetched in app component");
       // console.log(res);
-      this.api.storeApiUrl(res);
+      this.api.generateZebpayApis(res).subscribe(generated => {
+        // console.log("generated urls passed for store", generated);
+        this.api.storeApiUrl(generated);
+      });
     },
       err => {
         console.log("App component - error fetching data");
