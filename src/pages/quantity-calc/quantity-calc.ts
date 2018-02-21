@@ -85,10 +85,15 @@ export class QuantityCalcPage {
   }
 
   populateCoins(exchange: any) {
-    // console.log("4 populate coins");
+    console.log("4 populate coins", exchange);
     this.api.getExchangeData(exchange, true).subscribe(res => {
+      console.log("Exchange data", res);
+
       this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
-      // console.log(this.coins, "coins in qty");
+      console.log(this.coins, "coins in qty");
+      if (this.selCoin.coinName == undefined) {
+        this.selCoin.coinName = Constants.BTC;
+      }
       this.populateCoinValues(this.selCoin.coinName);
     });
   }
@@ -177,26 +182,37 @@ export class QuantityCalcPage {
   }
 
   public calcAmount(quantity: string) {
-    this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
-    this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
-    console.log("Formatted quantity", this.quantity.formatted);
+    // console.log("quantity changed ", quantity);
+    if (quantity != "0" && quantity != '') {
+      this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
 
-    this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
-    this.calcFeesAmount(false);
+      // console.log("Formatted quantity", this.quantity.formatted);
+      this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
+      this.calcFeesAmount(false);
+    }
+    this.dataFormatter();
   }
 
   public amountChanged(amount: string) {
-    console.log("amount changed ", amount);
-    if (amount != null && amount != "") {
+    // console.log("amount changed ", amount);
+    if (amount != '0' && amount != '') {
       this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
-      this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
-      console.log("formatted amount", this.amount.formatted);
+
+      // console.log("formatted amount", this.amount.formatted);
       this.calcQuantity();
     }
+    this.dataFormatter();
     // console.log("new amount.no value", this.amount.no);
 
   }
 
+  dataFormatter() {
+    // console.log(this.quantity.no);
+
+    this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
+    this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
+    // console.log(this.quantity.no);
+  }
   public trimAmount(amount) {
     return amount.substring(0, 9);
   }

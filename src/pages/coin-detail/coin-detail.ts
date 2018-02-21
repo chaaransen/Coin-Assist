@@ -57,7 +57,7 @@ export class CoinDetailPage {
 
   ionViewWillEnter() {
     this.alive = true;
-
+    this.populateView();
     // console.log("Detail page -View Entered", this.alive);
   }
 
@@ -101,20 +101,20 @@ export class CoinDetailPage {
 
     let coinName = this.api.getCoinName(this.coinDetail.coinCode);
     this.api.getMarketOverviewData(sel, coinName).subscribe(res => {
-      console.log("COIN DETAIL");
-      console.log("first data - exchange data");
-      console.log(res[0]);
-      console.log("second data - coin market Cap data");
-      console.log(res[1]);
-      console.log("third data - coindesk data");
-      console.log(res[2]);
-      console.log("exchange -", sel);
+      // console.log("COIN DETAIL");
+      // console.log("first data - exchange data");
+      // console.log(res[0]);
+      // console.log("second data - coin market Cap data");
+      // console.log(res[1]);
+      // console.log("third data - coindesk data");
+      // console.log(res[2]);
+      // console.log("exchange -", sel);
 
       var coinArray = this.api.processExchangeData(sel, res[0], res[1], res[2]);
-      console.log("coin array detail", coinArray);
+      // console.log("coin array detail", coinArray);
       this.coinDetail = coinArray[0];
       this.initRange(this.coinDetail);
-      console.log(this.coinDetail, "coinDetail Processed Detail");
+      // console.log(this.coinDetail, "coinDetail Processed Detail");
     },
       err => {
         console.log(err);

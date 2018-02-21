@@ -19,7 +19,7 @@
 
     <ion-item>
       <ion-label fixed>Exchange</ion-label>
-      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="populateCoins(selExchange)">
+      <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="exchangeChanged(selExchange)">
         <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
       </ion-select>
     </ion-item>
@@ -33,7 +33,7 @@
 
     <ion-item>
       <ion-label fixed>Coin Rate</ion-label>
-      <ion-input type="number" placeholder="Rate" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>
+      <ion-input type="number" placeholder="(e.g) 3000" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>
     </ion-item>
     <ion-item>
       &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})
@@ -48,12 +48,12 @@
 
     <ion-item>
       <ion-label fixed>Amount &#8377;</ion-label>
-      <ion-input type="number" placeholder="1000" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
+      <ion-input type="number" placeholder="(e.g) 1000" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
     </ion-item>
     <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->
     <ion-item>
       <ion-label fixed>Quantity</ion-label>
-      <ion-input type="number" placeholder="0.0001" clearInput="true" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>
+      <ion-input type="number" placeholder="(e.g) 0.0001" clearInput="true" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>
     </ion-item>
   </ion-list>
   <ion-card-header class="weight500 size1rem8">
@@ -100,7 +100,7 @@
         <ion-col col-6>
           Buy Fees:({{buyerFeesPercent}}%)
         </ion-col>
-        <ion-col col-6>
+        <ion-col col-6 class="redColor">
           {{buyerFees.formatted}}
         </ion-col>
       </ion-row>

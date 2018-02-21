@@ -90,7 +90,7 @@ export class HomePage {
   populateView() {
     // console.log(this.apiUrls.exchange);
     // console.log("Populating Home page");
-    if (this.selExchange == undefined) {
+    if (this.selExchange == undefined && this.apiUrls != undefined) {
       this.exchanges = Object.keys(this.apiUrls.exchange);
       this.selExchange = this.exchanges[0];
     }
