@@ -17,6 +17,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { NewsPage } from '../pages/news/news';
 import { Utilities } from '../providers/utilities/utilities';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { Utilities } from '../providers/utilities/utilities';
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ApiDataProvider,
     Utilities,
+    FirebaseAnalytics
   ]
 })
 export class AppModule { }

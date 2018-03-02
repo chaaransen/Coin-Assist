@@ -85,12 +85,12 @@ export class QuantityCalcPage {
   }
 
   populateCoins(exchange: any) {
-    console.log("4 populate coins", exchange);
+    // console.log("4 populate coins", exchange);
     this.api.getExchangeData(exchange, true).subscribe(res => {
-      console.log("Exchange data", res);
+      // console.log("Exchange data", res);
 
       this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
-      console.log(this.coins, "coins in qty");
+      // console.log(this.coins, "coins in qty");
       if (this.selCoin.coinName == undefined) {
         this.selCoin.coinName = Constants.BTC;
       }

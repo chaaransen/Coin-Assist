@@ -22,9 +22,9 @@ export class ApiDataProvider {
   zebpayData: any = {};
   LOCAL: boolean = true;
   // ******************************************************************************
-  // private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
+  private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
 
-  private coinAssistApis = "http://localhost:3000/apis";
+  // private coinAssistApis = "http://localhost:3000/apis";
 
   constructor(private http: HttpClient, private storage: Storage, private utility: Utilities) {
   }
@@ -68,9 +68,14 @@ export class ApiDataProvider {
     // console.log("passed for store", fetchedApiUrl);
 
     let zebpayCoinUrls: any = {};
+    var coinList = fetchedApiUrl.exchange.zebpay.coinList;
+    console.log(coinList);
 
-    for (let coin in fetchedApiUrl.exchange.zebpay.coinList) {
-      zebpayCoinUrls[Constants.zebpayCoins[coin]] = fetchedApiUrl.exchange.zebpay.api + Constants.zebpayCoins[coin] + "/inr";
+    for (let coin in coinList) {
+      console.log(coin, "coin");
+      console.log(coinList[coin]);
+
+      zebpayCoinUrls[coinList[coin]] = fetchedApiUrl.exchange.zebpay.api + coinList[coin] + "/inr";
     }
     fetchedApiUrl.exchange.zebpay.coinUrls = {};
     fetchedApiUrl.exchange.zebpay.coinUrls = zebpayCoinUrls;
@@ -240,33 +245,33 @@ export class ApiDataProvider {
     var coinList = this.apiUrls.exchange.zebpay.coinList;
     var tempKoinexData = exchangeData.stats;
     // console.log(coinMarketCapData, "coinmarket cap data- processor");
-    console.log("temp koinex data full", tempKoinexData);
+    // console.log("temp koinex data full", tempKoinexData);
 
-    console.log(coinList, "before");
+    // console.log(coinList, "before");
     if (coinMarketCapData != undefined) {
       if (coinMarketCapData.length == 1) {
-        console.log(coinMarketCapData);
+        // console.log(coinMarketCapData);
 
-        console.log(coinList[coinMarketCapData[0].symbol]);
+        // console.log(coinList[coinMarketCapData[0].symbol]);
 
 
         coinList = [coinMarketCapData[0].symbol];
-        console.log(coinList, "after");
+        // console.log(coinList, "after");
 
       }
     }
     for (let coin in coinList) {
 
       // var processedCoin: any = {};
-      console.log(coinList[coin], "coin value");
+      // console.log(coinList[coin], "coin value");
 
       var processedCoin: CoinDetail = new CoinDetail();
       var coinCode = coinList[coin].toUpperCase();
-      console.log("Coin Code", coinCode);
+      // console.log("Coin Code", coinCode);
 
       processedCoin.coinCode = coinCode;
       processedCoin.coinName = this.getCoinName(coinCode);
-      console.log("temp koinex data", tempKoinexData[coinCode]);
+      // console.log("temp koinex data", tempKoinexData[coinCode]);
 
       processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
       processedCoin.buy.no = +tempKoinexData[coinCode].lowest_ask;
@@ -285,7 +290,7 @@ export class ApiDataProvider {
       }
 
       processedCoin = this.coinDetailFormatter(processedCoin);
-      console.log(processedCoin);
+      // console.log(processedCoin);
       processedKoinexData.push(processedCoin);
     }
     return processedKoinexData;
@@ -346,7 +351,7 @@ export class ApiDataProvider {
   getCoinGlobalStats(coinCode, coinMarketCapData, coinDeskData): any {
     try {
       var coinGlobalStats: any = {};
-      console.log(coinCode, "symbol required");
+      // console.log(coinCode, "symbol required");
 
       for (let coin in coinMarketCapData) {
         if (coinMarketCapData[coin].symbol == coinCode || coinMarketCapData[coin].symbol.toLowerCase() == coinCode) {
@@ -523,7 +528,7 @@ export class ApiDataProvider {
       switch (exchange) {
         case Constants.KOINEX:
           {
-            console.log("switch case koinex");
+            // console.log("switch case koinex");
 
             return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
           }

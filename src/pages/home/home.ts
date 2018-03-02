@@ -12,6 +12,7 @@ import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Observable } from 'rxjs/Observable';
 import { ToastController } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-home',
@@ -25,7 +26,7 @@ export class HomePage {
   selExchange: any;
   alive: boolean;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     // console.log("Constructor - Home page");
 
     this.alive = true;
@@ -56,6 +57,10 @@ export class HomePage {
           this.populateView();
         });
     });
+
+    this.firebaseAnalytics.logEvent('Home Page', null)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
   }
 
   presentToast() {
@@ -75,7 +80,6 @@ export class HomePage {
 
   ionViewWillEnter() {
     this.alive = true;
-
     // console.log("Home page -View Entered", this.alive);
   }
 
@@ -89,7 +93,7 @@ export class HomePage {
 
   populateView() {
     // console.log(this.apiUrls.exchange);
-    console.log("Populating Home page");
+    // console.log("Populating Home page");
     if (this.selExchange == undefined && this.apiUrls != undefined) {
       this.exchanges = Object.keys(this.apiUrls.exchange);
       this.selExchange = this.exchanges[0];
@@ -100,12 +104,12 @@ export class HomePage {
   public selectedExchange(sel: any) {
 
     this.api.getMarketOverviewData(sel, Constants.ALL).subscribe(res => {
-      console.log("first data - exchange data", res[0]);
-      console.log("second data - coin market Cap data", res[1]);
-      console.log("third data - coindesk data", res[2]);
+      // console.log("first data - exchange data", res[0]);
+      // console.log("second data - coin market Cap data", res[1]);
+      // console.log("third data - coindesk data", res[2]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
-      console.log("processed exchange data");
-      console.log(this.coins);
+      // console.log("processed exchange data");
+      // console.log(this.coins);
 
     },
       err => {

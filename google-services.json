@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1040319281132",
+    "firebase_url": "https://coin-assist-13ebe.firebaseio.com",
+    "project_id": "coin-assist-13ebe",
+    "storage_bucket": "coin-assist-13ebe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040319281132:android:b3db602888465ce8",
+        "android_client_info": {
+          "package_name": "com.extendsapk.coinassist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040319281132-sq9a05fu30h7ngm5sqhlmitd6f8vb2c4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiRuuxdb59eK8R_xnEiWyfxh1x_HXu3rg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
