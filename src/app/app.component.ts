@@ -47,7 +47,7 @@ export class MyApp {
       });
     },
       err => {
-        console.log("App component - error fetching data");
+        console.log("App component - error fetching data", err);
 
       });
   }
