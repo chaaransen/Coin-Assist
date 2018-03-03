@@ -21,6 +21,7 @@ export class CoinDetailPage {
   referralLink: string;
   apis: any;
   alive: boolean;
+  pageName: string = "coin-detail page";
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     let coin = this.navParam.get("coin");
@@ -40,17 +41,11 @@ export class CoinDetailPage {
         this.populateView();
       });
 
+    this.api.instructionToast(this.pageName, 1500);
+
     this.firebaseAnalytics.logEvent('Coin Detail Page', null)
       .then((res: any) => console.log(res))
       .catch((error: any) => console.error(error));
-  }
-  presentToast() {
-    let toast = this.toastCtrl.create({
-      message: 'Latest Price Refreshed',
-      duration: 1500,
-      position: 'top'
-    });
-    toast.present();
   }
 
   ionViewDidLeave() {
@@ -90,7 +85,7 @@ export class CoinDetailPage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
-      this.presentToast();
+      this.api.priceUpdateToast();
       refresher.complete();
     }, 800);
   }

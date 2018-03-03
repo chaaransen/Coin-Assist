@@ -14,6 +14,7 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 export class ProfitCalcPage {
   public profitCalc: ProfitCalc = new ProfitCalc();
   private profitCalcForm: FormGroup;
+  pageName: string = "profit-calc page";
 
   constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder, private firebaseAnalytics: FirebaseAnalytics) {
     this.profitCalcForm = this.formBuilder.group({

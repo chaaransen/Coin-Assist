@@ -12,6 +12,7 @@ import 'rxjs/add/operator/catch';
 import { CoinDetail } from '../../models/coin-detail';
 import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { ToastController } from 'ionic-angular';
 
 @Injectable()
 export class ApiDataProvider {
@@ -26,7 +27,7 @@ export class ApiDataProvider {
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController) {
   }
 
   setApiUrl(apiUrl: any): any {
@@ -40,6 +41,36 @@ export class ApiDataProvider {
 
   }
 
+  priceUpdateToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Latest Price Refreshed',
+      duration: 1500,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  instructionToast(page: string, duration: number) {
+    this.fetchService(page).then(lock => {
+      console.log("instruction toast lock", page, lock);
+
+      if (lock != true) {
+        let toast = this.toastCtrl.create({
+          message: 'Pull down to refresh',
+          position: 'bottom',
+          duration: duration,
+          showCloseButton: true,
+          closeButtonText: 'Ok'
+        });
+        toast.onDidDismiss(() => {
+          this.storeService(page, true);
+        });
+        toast.present();
+      }
+    });
+
+  }
+
   getApiUrlStorage(): any {
     // console.log("GET - api url storage");
     return this.storage.ready().then(() => {
@@ -50,6 +81,25 @@ export class ApiDataProvider {
   getConstantApiUrl(): any {
     // console.log("GET - constant URL ");
     return Constants.API_URL;
+  }
+
+  storeService(key: string, value: any) {
+
+    this.storage.set(key, value).then(res => {
+    },
+      err => {
+        console.log("Storage Error");
+        console.log(err);
+      });
+  }
+
+  fetchService(key: string): any {
+    return this.storage.ready().then(() => {
+      return this.storage.get(key).catch(err => {
+        console.log("Error fetching data from storage");
+
+      });
+    });
   }
 
   storeApiUrl(fetchedApiUrl: any) {
@@ -94,25 +144,25 @@ export class ApiDataProvider {
     // console.log(this.koinexData, "before");
 
 
-    // return Observable.of(this.koinexData = Constants.KOINEX_DATA);
+    return Observable.of(this.koinexData = Constants.KOINEX_DATA);
 
-    if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-      this.koinexData.lock = true;
-      return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
-        // console.log(res);
-        // console.log("FETCHED - koinex data", res);
+    // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+    //   this.koinexData.lock = true;
+    //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+    //     // console.log(res);
+    //     // console.log("FETCHED - koinex data", res);
 
-        this.updateRecentExchangeData(Constants.KOINEX, res);
-        return res;
-      }).catch(error => {
-        this.updateRecentExchangeData(Constants.KOINEX);
-        return Observable.of(this.koinexData)
-      });
+    //     this.updateRecentExchangeData(Constants.KOINEX, res);
+    //     return res;
+    //   }).catch(error => {
+    //     this.updateRecentExchangeData(Constants.KOINEX);
+    //     return Observable.of(this.koinexData)
+    //   });
 
-    } else if (this.koinexData.lock == true) {
-      // console.log("STATIC - koinex data", this.koinexData);
-      return Observable.of(this.koinexData);
-    }
+    // } else if (this.koinexData.lock == true) {
+    //   // console.log("STATIC - koinex data", this.koinexData);
+    //   return Observable.of(this.koinexData);
+    // }
   }
 
   updateRecentExchangeData(exchange: string, exchangeData?: any) {

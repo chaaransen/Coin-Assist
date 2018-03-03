@@ -25,6 +25,7 @@ export class HomePage {
   apiUrls: any;
   selExchange: any;
   alive: boolean;
+  pageName: string = "home page";
 
   constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     // console.log("Constructor - Home page");
@@ -61,15 +62,8 @@ export class HomePage {
     this.firebaseAnalytics.logEvent('Home Page', null)
       .then((res: any) => console.log(res))
       .catch((error: any) => console.error(error));
-  }
 
-  presentToast() {
-    let toast = this.toastCtrl.create({
-      message: 'Latest Price Refreshed',
-      duration: 1500,
-      position: 'top'
-    });
-    toast.present();
+    this.api.instructionToast(this.pageName, 0);
   }
 
   ionViewDidLeave() {
@@ -86,7 +80,7 @@ export class HomePage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
-      this.presentToast();
+      this.api.priceUpdateToast();
       refresher.complete();
     }, 800);
   }

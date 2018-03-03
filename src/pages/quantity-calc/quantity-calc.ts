@@ -29,6 +29,7 @@ export class QuantityCalcPage {
   public quantity: ValueDetail = new ValueDetail();
   percent: number = 0.05;
   rangeValue: number;
+  pageName: string = "quantity-calc page";
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     // console.log("1 qty constructor called");
@@ -55,22 +56,15 @@ export class QuantityCalcPage {
     this.firebaseAnalytics.logEvent('Coin Detail Page', null)
       .then((res: any) => console.log(res))
       .catch((error: any) => console.error(error));
-  }
 
-  presentToast() {
-    let toast = this.toastCtrl.create({
-      message: 'Latest Price Refreshed',
-      duration: 1500,
-      position: 'top'
-    });
-    toast.present();
+    this.api.instructionToast(this.pageName, 2000);
   }
 
   doRefresh(refresher) {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.populateView();
     setTimeout(() => {
-      this.presentToast();
+      this.api.priceUpdateToast();
       refresher.complete();
     }, 800);
   }
