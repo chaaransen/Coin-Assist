@@ -5,6 +5,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { LIGHT, DARK } from '../../constants/api-constants';
 import { ValueDetail } from '../../models/value-detail';
 import { ProfitCalc } from '../../models/profit-calc';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-profit-calc',
@@ -14,11 +15,17 @@ export class ProfitCalcPage {
   public profitCalc: ProfitCalc = new ProfitCalc();
   private profitCalcForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder, private firebaseAnalytics: FirebaseAnalytics) {
     this.profitCalcForm = this.formBuilder.group({
       title: ['', Validators.required],
       description: [''],
     });
+  }
+
+  ngOnInit() {
+    this.firebaseAnalytics.logEvent('Profit Calc Page', null)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
   }
 
   public checkRequiredFields() {

@@ -7,6 +7,7 @@ import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants'
 import { ToastController } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -29,7 +30,7 @@ export class QuantityCalcPage {
   percent: number = 0.05;
   rangeValue: number;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     // console.log("1 qty constructor called");
     this.selExchange = navParam.get("exchange");
     this.selCoin.coinName = navParam.get("coin");
@@ -50,6 +51,10 @@ export class QuantityCalcPage {
       this.selCoin.coinName = Constants.BTC;
     }
     this.populateView();
+
+    this.firebaseAnalytics.logEvent('Coin Detail Page', null)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
   }
 
   presentToast() {
