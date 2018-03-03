@@ -103,13 +103,13 @@ export class HomePage {
 
   public selectedExchange(sel: any) {
 
-    this.api.getMarketOverviewData(sel, Constants.ALL).subscribe(res => {
+    this.api.getMarketOverviewData(sel, this.apiUrls.exchange[sel].coinList).subscribe(res => {
       // console.log("first data - exchange data", res[0]);
       // console.log("second data - coin market Cap data", res[1]);
       // console.log("third data - coindesk data", res[2]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
       // console.log("processed exchange data");
-      // console.log(this.coins);
+      console.log(this.coins);
 
     },
       err => {

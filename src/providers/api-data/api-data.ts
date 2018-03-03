@@ -69,11 +69,11 @@ export class ApiDataProvider {
 
     let zebpayCoinUrls: any = {};
     var coinList = fetchedApiUrl.exchange.zebpay.coinList;
-    console.log(coinList);
+    // console.log(coinList);
 
     for (let coin in coinList) {
-      console.log(coin, "coin");
-      console.log(coinList[coin]);
+      // console.log(coin, "coin");
+      // console.log(coinList[coin]);
 
       zebpayCoinUrls[coinList[coin]] = fetchedApiUrl.exchange.zebpay.api + coinList[coin] + "/inr";
     }
@@ -223,6 +223,8 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   getCoinName(coin: any) {
+    // console.log("find coin for symbol", coin);
+
     switch (coin) {
       case "BTC" || 'btc':
         return Constants.BTC;
@@ -234,6 +236,18 @@ export class ApiDataProvider {
         return Constants.BCH;
       case "LTC" || 'ltc':
         return Constants.LTC;
+      case "OMG" || 'omg':
+        return Constants.OMG;
+      case "REQ" || 'req':
+        return Constants.REQ;
+      case "ZRX" || 'zrx':
+        return Constants.ZRX;
+      case "GNT" || 'gnt':
+        return Constants.GNT;
+      case "BAT" || 'bat':
+        return Constants.BAT;
+      case "AE" || 'ae':
+        return Constants.AE;
     }
   }
 
@@ -242,7 +256,7 @@ export class ApiDataProvider {
     // console.log("Koinex Exchange data", exchangeData);
 
     var processedKoinexData = [];
-    var coinList = this.apiUrls.exchange.zebpay.coinList;
+    var coinList = this.apiUrls.exchange.koinex.coinList;
     var tempKoinexData = exchangeData.stats;
     // console.log(coinMarketCapData, "coinmarket cap data- processor");
     // console.log("temp koinex data full", tempKoinexData);
@@ -387,11 +401,11 @@ export class ApiDataProvider {
     let lowRegionHigh = min + diff
     let mediumRegionHigh = (min + (2 * diff));
 
-    if (current <= lowRegionHigh && current > min || current < min) {
+    if (current < lowRegionHigh && current >= min || current < min) {
       return "Low"
-    } else if (current <= mediumRegionHigh && current > lowRegionHigh) {
+    } else if (current < mediumRegionHigh && current >= lowRegionHigh) {
       return "Medium";
-    } else if (current <= max && current > mediumRegionHigh || current > max) {
+    } else if (current <= max && current >= mediumRegionHigh || current > max) {
       return "High";
     }
 
@@ -497,30 +511,43 @@ export class ApiDataProvider {
   }
 
   // TO BE TESTED
-  getCoinMarketCapData(coin: string): any {
-    switch (coin) {
-      case Constants.BTC: {
-        return this.http.get(this.apiUrls.global.coinmarketcap.coin.BTC);
+  getCoinMarketCapData(coinList: Array<string>): any {
+    let coinRequests: Array<Observable<Object>> = this.generateCoinMarketCapURL(coinList);
+    var coinMarketCapData: Array<Object> = new Array<Object>();
+    return forkJoin(coinRequests).map(res => {
+      // console.log(res);
+      // console.log("FETCHED - coin market cap data", res);
+      for (let index in res) {
+        let inArray = res[index];
+        coinMarketCapData.push(inArray[0]);
       }
-      case Constants.ETH: {
-        return this.http.get(this.apiUrls.global.coinmarketcap.coin.ETH);
-      }
-      case Constants.BCH: {
-        return this.http.get(this.apiUrls.global.coinmarketcap.coin.BCH);
-      }
-      case Constants.LTC: {
-        return this.http.get(this.apiUrls.global.coinmarketcap.coin.LTC);
-      }
-      case Constants.XRP: {
-        return this.http.get(this.apiUrls.global.coinmarketcap.coin.XRP);
-      }
-      case Constants.ALL: {
-        let coinMarketCapApi = this.apiUrls.global.coinmarketcap.api + this.apiUrls.global.coinmarketcap.coin_limit;
-        return this.http.get(coinMarketCapApi);
-      }
-    }
+      // console.log("coin market cap data final", coinMarketCapData);
+
+      return coinMarketCapData;
+    }).catch(error => {
+      console.log("Error fetching coinmarket cap data", error);
+      return Observable.of(error);
+    });
   }
 
+  generateCoinMarketCapURL(coinList: Array<string>): any {
+    let coinRequestUrls: Array<Observable<Object>> = new Array<Observable<Object>>();
+    var coinHolder = "COINNAME";
+    // console.log("Coin list to fetch - coin Market cap", coinList);
+
+    for (let coin in coinList) {
+      // console.log("Coin CMC", coinList[coin]);
+
+      let coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
+      // console.log("coin name", coinName);
+
+      let url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
+      // console.log("URL CMC", url);
+
+      coinRequestUrls.push(this.http.get(url));
+    }
+    return coinRequestUrls;
+  }
   // TO BE TESTED
   processExchangeData(exchange: any, exchangeData: any, coinMarketCapData?: any, coinDeskData?: any): any {
     // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
@@ -546,9 +573,9 @@ export class ApiDataProvider {
   }
 
   // TO BE TESTED
-  getMarketOverviewData(sel: string, coin: string, data: boolean = true): Observable<any> {
+  getMarketOverviewData(sel: string, coin: Array<string>, dataFlag: boolean = true): Observable<any> {
     try {
-      return Observable.forkJoin([this.getExchangeData(sel, data), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
+      return Observable.forkJoin([this.getExchangeData(sel, dataFlag), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
     }
     catch (e) {
       console.log(e);

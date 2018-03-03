@@ -7,6 +7,7 @@ import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
 import { CoinDetail } from '../../models/coin-detail';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { ToastController } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-coin-detail',
@@ -21,11 +22,11 @@ export class CoinDetailPage {
   apis: any;
   alive: boolean;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
     let coin = this.navParam.get("coin");
     this.exchange = this.navParam.get("exchange");
     // console.log(coin);
-
+    this.alive = true;
     this.initRange(coin);
   }
 
@@ -39,6 +40,9 @@ export class CoinDetailPage {
         this.populateView();
       });
 
+    this.firebaseAnalytics.logEvent('Coin Detail Page', null)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
   }
   presentToast() {
     let toast = this.toastCtrl.create({
@@ -99,12 +103,11 @@ export class CoinDetailPage {
 
   public selectedExchange(sel: any) {
 
-    let coinName = this.api.getCoinName(this.coinDetail.coinCode);
-    this.api.getMarketOverviewData(sel, coinName).subscribe(res => {
+    this.api.getMarketOverviewData(sel, [this.coinDetail.coinCode]).subscribe(res => {
       // console.log("COIN DETAIL");
       // console.log("first data - exchange data");
-      // console.log(res[0]);
-      // console.log("second data - coin market Cap data");
+      // console.log(res[0]);;
+      // console.log("second data - coin market Cap data")
       // console.log(res[1]);
       // console.log("third data - coindesk data");
       // console.log(res[2]);
