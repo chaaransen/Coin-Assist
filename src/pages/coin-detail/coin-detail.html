@@ -22,12 +22,12 @@
     <hr class="hrBottomMargin">
     <ion-grid>
       <ion-row>
-        <ion-col col-6>
+        <ion-col col-5>
 
           <img src="assets/imgs/{{coinDetail.coinCode}}.png">
 
         </ion-col>
-        <ion-col col-6 class="vertical-align-content">
+        <ion-col col-7 class="vertical-align-content">
 
           <div class=" weight500 size2rem">{{coinDetail.coinName}}
             <br>({{coinDetail.coinCode}})</div>
@@ -54,6 +54,7 @@
           <span class="boldTextValue price">{{coinDetail.sell.formatted}}</span>
         </ion-col>
       </ion-row>
+      <br>
       <ion-row class="marginBottom0">
         <hr>
         <ion-col col-4 class="center marginBottom0 padding1">
@@ -67,7 +68,6 @@
         </ion-col>
         <hr>
       </ion-row>
-
       <ion-row>
         <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">
           <span class="boldTextValue">
@@ -100,7 +100,7 @@
           </span>
         </ion-col>
       </ion-row>
-
+      <br>
       <ion-row *ngIf="coinDetail.volatility">
         <ion-col col-6 class="center paddingBottom0">
           <span>Low: </span>
@@ -119,7 +119,7 @@
         </ion-col>
         <ion-col col-6 class="center">
           Volatility:
-          <span class="riseFallSymbol weight500 size1rem6"> &#8645;</span>
+          <span class="riseFallSymbol weight500 size1rem9"> &#8645;</span>
           <span class="weight500"> {{coinDetail.volatility}}% </span>
         </ion-col>
 
@@ -129,7 +129,6 @@
     <ion-grid>
       <ion-card-header class="size1rem7 greyColor padding1rem">Global price -
       </ion-card-header>
-
       <ion-row>
         <ion-col col-6 class="right">
           <span class="price">{{coinDetail.global.INR.formatted}} </span>
@@ -139,6 +138,7 @@
           <span class="price">({{coinDetail.global.USD.formatted}})</span>
         </ion-col>
       </ion-row>
+      <br>
       <ion-row>
         <ion-col col-6>
           Global Diff(%):
