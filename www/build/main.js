@@ -5,20 +5,20 @@ webpackJsonp([0],{
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return API_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return KOINEX_DATA; });
+/* unused harmony export KOINEX_DATA */
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return XRP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return ETH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return LTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return BCH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return OMG; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return REQ; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return ZRX; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return OMG; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return REQ; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return ZRX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return GNT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BAT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return ZEBPAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return KOINEX; });
 /* unused harmony export LIGHT */
 /* unused harmony export DARK */
@@ -1322,22 +1322,24 @@ var ApiDataProvider = (function () {
         // console.log("GET - koinex data");
         // console.log(this.apiUrls.exchange.koinex);
         // console.log(this.koinexData, "before");
-        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData = __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* KOINEX_DATA */]);
-        // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-        //   this.koinexData.lock = true;
-        //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
-        //     // console.log(res);
-        //     // console.log("FETCHED - koinex data", res);
-        //     this.updateRecentExchangeData(Constants.KOINEX, res);
-        //     return res;
-        //   }).catch(error => {
-        //     this.updateRecentExchangeData(Constants.KOINEX);
-        //     return Observable.of(this.koinexData)
-        //   });
-        // } else if (this.koinexData.lock == true) {
-        //   // console.log("STATIC - koinex data", this.koinexData);
-        //   return Observable.of(this.koinexData);
-        // }
+        var _this = this;
+        // return Observable.of(this.koinexData = Constants.KOINEX_DATA);
+        if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+            this.koinexData.lock = true;
+            return this.http.get(this.apiUrls.exchange.koinex.api).map(function (res) {
+                // console.log(res);
+                // console.log("FETCHED - koinex data", res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* KOINEX */], res);
+                return res;
+            }).catch(function (error) {
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* KOINEX */]);
+                return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.koinexData);
+            });
+        }
+        else if (this.koinexData.lock == true) {
+            // console.log("STATIC - koinex data", this.koinexData);
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData);
+        }
     };
     ApiDataProvider.prototype.updateRecentExchangeData = function (exchange, exchangeData) {
         if (exchangeData != undefined) {
@@ -1358,7 +1360,7 @@ var ApiDataProvider = (function () {
                 });
                 break;
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["n" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* ZEBPAY */]:
                 {
                     this.zebpayData.lock = true;
                     // console.log("LOCK SET", this.zebpayData);
@@ -1385,10 +1387,10 @@ var ApiDataProvider = (function () {
             return Object(__WEBPACK_IMPORTED_MODULE_12_rxjs_observable_forkJoin__["forkJoin"])(coinRequests).map(function (res) {
                 // console.log(res);
                 // console.log("FETCHED - zebpay data", res);
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["n" /* ZEBPAY */], res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* ZEBPAY */], res);
                 return res;
             }).catch(function (error) {
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["n" /* ZEBPAY */]);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* ZEBPAY */]);
                 return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.zebpayData);
             });
         }
@@ -1441,17 +1443,17 @@ var ApiDataProvider = (function () {
             case "ETH" || 'eth':
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["f" /* ETH */];
             case "XRP" || 'xrp':
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* XRP */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* XRP */];
             case "BCH" || 'bch':
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["d" /* BCH */];
             case "LTC" || 'ltc':
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* LTC */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["i" /* LTC */];
             case "OMG" || 'omg':
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* OMG */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* OMG */];
             case "REQ" || 'req':
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* REQ */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* REQ */];
             case "ZRX" || 'zrx':
-                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["o" /* ZRX */];
+                return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["n" /* ZRX */];
             case "GNT" || 'gnt':
                 return __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["g" /* GNT */];
             case "BAT" || 'bat':
@@ -1715,7 +1717,7 @@ var ApiDataProvider = (function () {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
                     }
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["n" /* ZEBPAY */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* ZEBPAY */]:
                     {
                         // console.log("switch case zebpay");
                         return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -1754,9 +1756,10 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__["a" /* Utilities */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__["a" /* Utilities */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__["a" /* Utilities */]) === "function" && _c || Object])
     ], ApiDataProvider);
     return ApiDataProvider;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=api-data.js.map
@@ -1796,11 +1799,11 @@ var Utilities = (function () {
                 {
                     return trimmedQty = +quantity.toFixed(3);
                 }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["m" /* XRP */]:
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["l" /* XRP */]:
                 {
                     return trimmedQty = +quantity.toFixed(0);
                 }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["j" /* LTC */]:
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["i" /* LTC */]:
                 {
                     return trimmedQty = +quantity.toFixed(3);
                 }
