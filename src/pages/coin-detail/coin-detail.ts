@@ -23,7 +23,7 @@ export class CoinDetailPage {
   alive: boolean;
   pageName: string = "coin-detail page";
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider) {
     let coin = this.navParam.get("coin");
     this.exchange = this.navParam.get("exchange");
     // console.log(coin);
@@ -43,9 +43,7 @@ export class CoinDetailPage {
 
     this.api.instructionToast(this.pageName, 1500);
 
-    this.firebaseAnalytics.logEvent('Coin Detail Page', null)
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.error(error));
+    this.api.logAnalytics(this.pageName);
   }
 
   ionViewDidLeave() {

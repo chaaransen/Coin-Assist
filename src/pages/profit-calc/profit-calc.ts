@@ -6,6 +6,7 @@ import { LIGHT, DARK } from '../../constants/api-constants';
 import { ValueDetail } from '../../models/value-detail';
 import { ProfitCalc } from '../../models/profit-calc';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { ApiDataProvider } from '../../providers/api-data/api-data';
 
 @Component({
   selector: 'page-profit-calc',
@@ -16,7 +17,7 @@ export class ProfitCalcPage {
   private profitCalcForm: FormGroup;
   pageName: string = "profit-calc page";
 
-  constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder, private firebaseAnalytics: FirebaseAnalytics) {
+  constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder, public api: ApiDataProvider) {
     this.profitCalcForm = this.formBuilder.group({
       title: ['', Validators.required],
       description: [''],
@@ -24,9 +25,7 @@ export class ProfitCalcPage {
   }
 
   ngOnInit() {
-    this.firebaseAnalytics.logEvent('Profit Calc Page', null)
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.error(error));
+    this.api.logAnalytics(this.pageName);
   }
 
   public checkRequiredFields() {

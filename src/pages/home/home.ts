@@ -27,7 +27,7 @@ export class HomePage {
   alive: boolean;
   pageName: string = "home page";
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams) {
     // console.log("Constructor - Home page");
 
     this.alive = true;
@@ -59,9 +59,7 @@ export class HomePage {
         });
     });
 
-    this.firebaseAnalytics.logEvent('Home Page', null)
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.error(error));
+    this.api.logAnalytics(this.pageName);
 
     this.api.instructionToast(this.pageName, 0);
   }

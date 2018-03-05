@@ -13,6 +13,7 @@ import { CoinDetail } from '../../models/coin-detail';
 import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ToastController } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Injectable()
 export class ApiDataProvider {
@@ -27,7 +28,7 @@ export class ApiDataProvider {
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
   }
 
   setApiUrl(apiUrl: any): any {
@@ -48,6 +49,12 @@ export class ApiDataProvider {
       position: 'top'
     });
     toast.present();
+  }
+
+  logAnalytics(pageName: string) {
+    this.firebaseAnalytics.logEvent(pageName, null)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
   }
 
   instructionToast(page: string, duration: number) {

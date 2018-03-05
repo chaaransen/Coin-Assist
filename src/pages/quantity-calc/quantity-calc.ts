@@ -31,7 +31,7 @@ export class QuantityCalcPage {
   rangeValue: number;
   pageName: string = "quantity-calc page";
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities) {
     // console.log("1 qty constructor called");
     this.selExchange = navParam.get("exchange");
     this.selCoin.coinName = navParam.get("coin");
@@ -53,9 +53,7 @@ export class QuantityCalcPage {
     }
     this.populateView();
 
-    this.firebaseAnalytics.logEvent('Coin Detail Page', null)
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.error(error));
+    this.api.logAnalytics(this.pageName);
 
     this.api.instructionToast(this.pageName, 2000);
   }
