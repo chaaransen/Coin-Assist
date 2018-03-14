@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
+import { File } from '@ionic-native/file';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
@@ -14,6 +15,15 @@ import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ToastController } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
+
+const videoConfig: AdMobFreeRewardVideoConfig = {
+  // add your config here
+  // for the sake of this example we will just use the test config
+  id: "ca-app-pub-4512084985073909/8834823940",
+  isTesting: true,
+  autoShow: false
+};
 
 @Injectable()
 export class ApiDataProvider {
@@ -23,16 +33,71 @@ export class ApiDataProvider {
   koinexData: any = {};
   zebpayData: any = {};
   LOCAL: boolean = true;
+  coins: any = {};
+
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
-
+  koinexTest = true;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, private admobFree: AdMobFree, private file: File) {
+
+  }
+
+  ngOnInit() {
+    console.log("ng on init api data");
+    this.file.checkFile("assets/img", "BTC.png").then(res => {
+      console.log(res);
+
+    }).catch(err => {
+      console.log(err);
+
+    });
+  }
+
+  prepareVideoAd() {
+    this.admobFree.rewardVideo.config(videoConfig);
+
+    this.admobFree.rewardVideo.prepare().then(res => {
+      console.log("Reward Video Prepared", res);
+
+    }).catch(err => {
+      console.log("Unable to prepare", err);
+
+    });
+
+  }
+
+  showVideoAd() {
+    this.admobFree.rewardVideo.isReady().then(res => {
+      console.log("Video Ad is Ready", res);
+      if (res) {
+        this.admobFree.rewardVideo.show().then(res => {
+          console.log("Video Ad is Showing", res);
+
+          this.prepareVideoAd();
+
+
+        }).catch(err => {
+          console.log("Unable to show Video Ad", err);
+          this.prepareVideoAd();
+
+        });
+      }
+      else {
+        console.log("Video ad not ready calling prepare");
+
+        this.prepareVideoAd();
+      }
+    }).catch(err => {
+      console.log("Video Ad ready exception", err);
+      this.prepareVideoAd();
+    });
   }
 
   setApiUrl(apiUrl: any): any {
     this.apiUrls = apiUrl;
+    this.coins = this.apiUrls.coins;
   }
 
   fetchApiUrl(): any {
@@ -59,7 +124,7 @@ export class ApiDataProvider {
 
   instructionToast(page: string, duration: number) {
     this.fetchService(page).then(lock => {
-      console.log("instruction toast lock", page, lock);
+      // console.log("instruction toast lock", page, lock);
 
       if (lock != true) {
         let toast = this.toastCtrl.create({
@@ -150,26 +215,28 @@ export class ApiDataProvider {
     // console.log(this.apiUrls.exchange.koinex);
     // console.log(this.koinexData, "before");
 
+    if (this.koinexTest) {
+      return Observable.of(this.koinexData = Constants.KOINEX_DATA);
+    }
+    else {
+      if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
+        this.koinexData.lock = true;
+        return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+          // console.log(res);
+          // console.log("FETCHED - koinex data", res);
 
-    return Observable.of(this.koinexData = Constants.KOINEX_DATA);
+          this.updateRecentExchangeData(Constants.KOINEX, res);
+          return res;
+        }).catch(error => {
+          this.updateRecentExchangeData(Constants.KOINEX);
+          return Observable.of(this.koinexData)
+        });
 
-    // if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
-    //   this.koinexData.lock = true;
-    //   return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
-    //     // console.log(res);
-    //     // console.log("FETCHED - koinex data", res);
-
-    //     this.updateRecentExchangeData(Constants.KOINEX, res);
-    //     return res;
-    //   }).catch(error => {
-    //     this.updateRecentExchangeData(Constants.KOINEX);
-    //     return Observable.of(this.koinexData)
-    //   });
-
-    // } else if (this.koinexData.lock == true) {
-    //   // console.log("STATIC - koinex data", this.koinexData);
-    //   return Observable.of(this.koinexData);
-    // }
+      } else if (this.koinexData.lock == true) {
+        // console.log("STATIC - koinex data", this.koinexData);
+        return Observable.of(this.koinexData);
+      }
+    }
   }
 
   updateRecentExchangeData(exchange: string, exchangeData?: any) {
@@ -279,33 +346,11 @@ export class ApiDataProvider {
   }
 
   // TO BE TESTED
-  getCoinName(coin: any) {
+  getCoinName(coin: string) {
     // console.log("find coin for symbol", coin);
+    // console.log("coinsList", this.coins);
 
-    switch (coin) {
-      case "BTC" || 'btc':
-        return Constants.BTC;
-      case "ETH" || 'eth':
-        return Constants.ETH;
-      case "XRP" || 'xrp':
-        return Constants.XRP;
-      case "BCH" || 'bch':
-        return Constants.BCH;
-      case "LTC" || 'ltc':
-        return Constants.LTC;
-      case "OMG" || 'omg':
-        return Constants.OMG;
-      case "REQ" || 'req':
-        return Constants.REQ;
-      case "ZRX" || 'zrx':
-        return Constants.ZRX;
-      case "GNT" || 'gnt':
-        return Constants.GNT;
-      case "BAT" || 'bat':
-        return Constants.BAT;
-      case "AE" || 'ae':
-        return Constants.AE;
-    }
+    return this.coins[coin.toUpperCase()].name;
   }
 
   // TO BE TESTED

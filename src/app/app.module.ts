@@ -18,6 +18,8 @@ import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { NewsPage } from '../pages/news/news';
 import { Utilities } from '../providers/utilities/utilities';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
+import { File } from '@ionic-native/file';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,10 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ApiDataProvider,
     Utilities,
-    FirebaseAnalytics
+    FirebaseAnalytics,
+    AdMobFree,
+    AdMobFreeRewardVideo,
+    File
   ]
 })
 export class AppModule { }

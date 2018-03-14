@@ -12,6 +12,14 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
+  <div>
+    <ion-card-header class="weight500 size1rem8">
+      <ion-icon name="add"></ion-icon>
+      {{remainingUseCount}} - remaining points
+      <button class="padding2rem" (click)="showAd()" ion-button color="light">Get Points</button>
+    </ion-card-header>
+
+  </div>
   <ion-card-header class="weight500 size1rem8">
     Enter Coin Detail
   </ion-card-header>

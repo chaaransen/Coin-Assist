@@ -5,6 +5,7 @@
     <author email="extendsapk@gmail.com" href="http://extendsapk.weebly.com/">Chaaran Sen</author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="http://*/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -90,5 +91,8 @@
     <plugin name="cordova-plugin-firebase-analytics" spec="^0.12.1">
         <variable name="FIREBASE_VERSION" value="11.0.+" />
     </plugin>
+    <plugin name="cordova-admob-sdk" spec="^0.15.0" />
+    <plugin name="lycwed-cordova-plugin-admob-free" spec="https://github.com/RenaudROHLINGER/lycwed-cordova-plugin-admob-free" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
 </widget>

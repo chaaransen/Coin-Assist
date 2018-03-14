@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { CoinDetail } from '../../models/coin-detail';
@@ -8,13 +8,14 @@ import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants'
 import { ToastController } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
 
 @Component({
   selector: 'page-quantity-calc',
   templateUrl: 'quantity-calc.html'
 })
 export class QuantityCalcPage {
-
+  points: number;
   exchanges: any;
   exchange: any;
   coins: CoinDetail[];
@@ -31,7 +32,7 @@ export class QuantityCalcPage {
   rangeValue: number;
   pageName: string = "quantity-calc page";
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
     this.selExchange = navParam.get("exchange");
     this.selCoin.coinName = navParam.get("coin");
@@ -39,8 +40,8 @@ export class QuantityCalcPage {
     // console.log(this.selExchange, " sel Exchange qty");
     this.apis = this.api.apiUrls.exchange;
     this.exchanges = Object.keys(this.apis);
+    this.points = this.api.fetchService("points");
     // console.log(this.apis, "api list fetched back");
-
   }
 
   ngOnInit() {
@@ -49,13 +50,38 @@ export class QuantityCalcPage {
       this.selExchange = Constants.KOINEX;
     }
     if (this.selCoin.coinName == undefined) {
-      this.selCoin.coinName = Constants.BTC;
+      this.selCoin.coinName = this.api.apiUrls.coins.BTC;
     }
     this.populateView();
 
     this.api.logAnalytics(this.pageName);
 
     this.api.instructionToast(this.pageName, 2000);
+
+    this.presentGetPoints();
+  }
+
+  presentGetPoints() {
+    let alert = this.alertCtrl.create({
+      title: 'Insufficient Points to use',
+      message: 'Get 5 points by viewing Video Ad to use',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Watch Ad',
+          handler: () => {
+            console.log('Watch Ad clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   doRefresh(refresher) {
@@ -77,7 +103,7 @@ export class QuantityCalcPage {
   public exchangeChanged(exchange: any) {
     // console.log("Exchange changed", exchange);
     this.selExchange = exchange;
-    this.selCoin.coinName = Constants.BTC;
+    this.selCoin.coinName = this.api.apiUrls.coins.BTC;
     this.populateView();
   }
 
@@ -89,7 +115,7 @@ export class QuantityCalcPage {
       this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
       // console.log(this.coins, "coins in qty");
       if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = Constants.BTC;
+        this.selCoin.coinName = this.api.apiUrls.coins.BTC;
       }
       this.populateCoinValues(this.selCoin.coinName);
     });
@@ -212,5 +238,9 @@ export class QuantityCalcPage {
   }
   public trimAmount(amount) {
     return amount.substring(0, 9);
+  }
+
+  public showAd() {
+    this.api.showVideoAd();
   }
 }
