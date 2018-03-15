@@ -50,7 +50,7 @@ export class QuantityCalcPage {
       this.selExchange = Constants.KOINEX;
     }
     if (this.selCoin.coinName == undefined) {
-      this.selCoin.coinName = this.api.apiUrls.coins.BTC;
+      this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
     }
     this.populateView();
 
@@ -59,6 +59,8 @@ export class QuantityCalcPage {
     this.api.instructionToast(this.pageName, 2000);
 
     this.presentGetPoints();
+    // console.log("Init Done");
+
   }
 
   presentGetPoints() {
@@ -103,7 +105,9 @@ export class QuantityCalcPage {
   public exchangeChanged(exchange: any) {
     // console.log("Exchange changed", exchange);
     this.selExchange = exchange;
-    this.selCoin.coinName = this.api.apiUrls.coins.BTC;
+    // console.log("BTC test name", this.api.apiUrls.coins.BTC.name);
+
+    this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
     this.populateView();
   }
 
@@ -115,7 +119,9 @@ export class QuantityCalcPage {
       this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
       // console.log(this.coins, "coins in qty");
       if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = this.api.apiUrls.coins.BTC;
+        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
+        // console.log("Coiname sent", this.selCoin.coinName);
+
       }
       this.populateCoinValues(this.selCoin.coinName);
     });
@@ -135,15 +141,15 @@ export class QuantityCalcPage {
 
   public updateRange() {
 
-    // console.log(this.selCoin.range.rate.no);
+    console.log(this.selCoin.range.rate.no);
     this.formateRate();
     this.selCoin = this.api.plusMinusPercent(this.selCoin, this.selCoin.range.rate.no, this.percent);
     // console.log("8 plus minus percent called");
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
-    // console.log(this.selCoin);
+    console.log(this.selCoin);
     this.calcQuantity();
-    // console.log(this.selCoin);
+    console.log(this.selCoin);
   }
 
   public coinRateChanged() {
