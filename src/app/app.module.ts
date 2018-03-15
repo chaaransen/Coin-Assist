@@ -19,7 +19,6 @@ import { NewsPage } from '../pages/news/news';
 import { Utilities } from '../providers/utilities/utilities';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
-import { File } from '@ionic-native/file';
 
 @NgModule({
   declarations: [
@@ -65,8 +64,7 @@ import { File } from '@ionic-native/file';
     Utilities,
     FirebaseAnalytics,
     AdMobFree,
-    AdMobFreeRewardVideo,
-    File
+    AdMobFreeRewardVideo
   ]
 })
 export class AppModule { }

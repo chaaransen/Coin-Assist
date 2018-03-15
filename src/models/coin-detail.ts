@@ -2,6 +2,7 @@ import { ValueDetail } from "./value-detail";
 
 export class CoinDetail {
     coinName: string;
+    coinImage: string;
     coinCode: string;
     market: ValueDetail;
     buy: ValueDetail;

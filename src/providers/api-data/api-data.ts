@@ -1,6 +1,6 @@
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { File } from '@ionic-native/file';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
@@ -32,27 +32,18 @@ export class ApiDataProvider {
   apiUrlStore = "apiUrls";
   koinexData: any = {};
   zebpayData: any = {};
-  LOCAL: boolean = true;
   coins: any = {};
 
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
-  koinexTest = true;
+  koinexTest = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, private admobFree: AdMobFree, private file: File) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, private admobFree: AdMobFree) {
 
   }
 
   ngOnInit() {
-    console.log("ng on init api data");
-    this.file.checkFile("assets/img", "BTC.png").then(res => {
-      console.log(res);
-
-    }).catch(err => {
-      console.log(err);
-
-    });
   }
 
   prepareVideoAd() {
@@ -387,6 +378,9 @@ export class ApiDataProvider {
 
       processedCoin.coinCode = coinCode;
       processedCoin.coinName = this.getCoinName(coinCode);
+      // console.log("processed coin before", processedCoin);
+
+      processedCoin = this.injectCoinImage(processedCoin);
       // console.log("temp koinex data", tempKoinexData[coinCode]);
 
       processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
@@ -553,6 +547,9 @@ export class ApiDataProvider {
       processedCoin.coinCode = zebpayData[coin].virtualCurrency;
       processedCoin.coinCode = processedCoin.coinCode.toUpperCase();
       processedCoin.coinName = this.getCoinName(processedCoin.coinCode);
+      processedCoin = this.injectCoinImage(processedCoin);
+      // console.log("coin image url", processedCoin.coinImage);
+
       // console.log("Coin name is", processedCoin.coinName);
       // console.log("Coin code is", processedCoin.coinCode);
       processedCoin.market.no = +zebpayData[coin].market;
@@ -572,6 +569,13 @@ export class ApiDataProvider {
 
     }
     return processedZebpayData;
+  }
+
+  injectCoinImage(processedCoin: CoinDetail): CoinDetail {
+    // console.log("processedCoin inside", processedCoin);
+
+    processedCoin.coinImage = this.coins[processedCoin.coinCode].imageUrl;
+    return processedCoin;
   }
 
   injectGlobalStats(coinCode: string, processedCoin: CoinDetail, coinMarketCapData, coinDeskData): any {
