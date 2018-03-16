@@ -57,7 +57,7 @@ export class QuantityCalcPage {
     this.api.instructionToast(this.pageName, 2000);
 
     this.api.fetchService("points").then(points => {
-      console.log("QTY fetched points", points);
+      // console.log("QTY fetched points", points);
 
       this.points = points;
 
@@ -68,13 +68,13 @@ export class QuantityCalcPage {
         this.enable = false;
       }
 
-      console.log("Storing new Points", this.points);
+      // console.log("Storing new Points", this.points);
       this.api.storeService(Constants.POINTS, this.points);
 
       if (!this.enable) {
         this.presentGetPoints();
       }
-      console.log("Existing points", this.points);
+      // console.log("Existing points", this.points);
     });
     // console.log("Init Done");
   }
@@ -95,7 +95,7 @@ export class QuantityCalcPage {
           text: 'Watch Ad',
           handler: () => {
             console.log('Watch Ad clicked');
-            this.api.showVideoAd();
+            this.showAd();
           }
         }
       ]
@@ -265,5 +265,16 @@ export class QuantityCalcPage {
 
   public showAd() {
     this.api.showVideoAd();
+
+    this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+      this.api.fetchService("points").then(points => {
+        // console.log("Fetching Points on Enter");
+
+        this.points = points;
+        this.enable = true;
+        // console.log("Naya Points", this.points);
+
+      });
+    });
   }
 }

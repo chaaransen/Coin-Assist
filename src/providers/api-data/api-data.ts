@@ -30,21 +30,21 @@ export class ApiDataProvider {
   apiUrlStore = "apiUrls";
   koinexData: any = {};
   zebpayData: any = {};
-  coins: any = {};
 
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, private admobFree: AdMobFree) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, public admobFree: AdMobFree) {
 
   }
 
   ngOnInit() {
+
   }
 
-  prepareVideoAd() {
+  prepareVideoAd(show: boolean = false) {
     this.admobFree.rewardVideo.config(videoConfig);
 
     this.admobFree.rewardVideo.prepare().then(res => {
@@ -55,38 +55,72 @@ export class ApiDataProvider {
 
     });
 
+
+    this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
+      console.log("AD failed to Load - new", res);
+      this.prepareVideoAd(show);
+    });
+
+    this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
+      console.log("AD loadded - new", res);
+      if (show) {
+        this.showVideoAd();
+      }
+    });
+
   }
 
   showVideoAd() {
+
+
     this.admobFree.rewardVideo.isReady().then(res => {
-      console.log("Video Ad is Ready", res);
+      // console.log("Video Ad is Ready", res);
       if (res) {
         this.admobFree.rewardVideo.show().then(res => {
-          console.log("Video Ad is Showing", res);
+          // console.log("Video Ad is Showing", res);
 
-          this.prepareVideoAd();
+          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+            this.fetchService("points").then(points => {
+
+              let newPoints: number = points;
+              newPoints += 5;
+              this.storeService(Constants.POINTS, newPoints);
+              // console.log("Earned New points", newPoints);
+            });
+            // console.log("Successful view - reward", res);
+            this.prepareVideoAd();
+          });
 
 
+          this.admobFree.on("admob.rewardvideo.events.START").subscribe(res => {
+            // console.log("AD started", res);
+          });
+
+          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+            // console.log("AD closed", res);
+          });
+
+
+          this.admobFree.on("admob.rewardvideo.events.OPEN").subscribe(res => {
+            // console.log("AD opened", res);
+          });
         }).catch(err => {
           console.log("Unable to show Video Ad", err);
-          this.prepareVideoAd();
-
+          this.prepareVideoAd(true);
         });
       }
       else {
-        console.log("Video ad not ready calling prepare");
-
-        this.prepareVideoAd();
+        // console.log("Video ad not ready calling prepare");
+        this.prepareVideoAd(true);
       }
     }).catch(err => {
       console.log("Video Ad ready exception", err);
-      this.prepareVideoAd();
+      this.prepareVideoAd(true);
     });
   }
 
   setApiUrl(apiUrl: any): any {
     this.apiUrls = apiUrl;
-    this.coins = this.apiUrls.coins;
   }
 
   fetchApiUrl(): any {
@@ -145,7 +179,7 @@ export class ApiDataProvider {
   }
 
   storeService(key: string, value: any) {
-    console.log("value", value);
+    // console.log("value", value);
 
     this.storage.set(key, value).then(res => {
     },
@@ -340,7 +374,7 @@ export class ApiDataProvider {
     // console.log("find coin for symbol", coin);
     // console.log("coinsList", this.coins);
 
-    return this.coins[coin.toUpperCase()].name;
+    return this.apiUrls.coins[coin.toUpperCase()].name;
   }
 
   // TO BE TESTED
@@ -573,7 +607,7 @@ export class ApiDataProvider {
   injectCoinImage(processedCoin: CoinDetail): CoinDetail {
     // console.log("processedCoin inside", processedCoin);
 
-    processedCoin.coinImage = this.coins[processedCoin.coinCode].imageUrl;
+    processedCoin.coinImage = this.apiUrls.coins[processedCoin.coinCode].imageUrl;
     return processedCoin;
   }
 

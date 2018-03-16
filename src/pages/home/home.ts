@@ -43,7 +43,9 @@ export class HomePage {
       // console.log(this.apiUrls);
 
       this.api.setApiUrl(this.apiUrls);
+
       this.populateView();
+
       var refresher = IntervalObservable.create(20000);
       refresher.takeWhile(() => this.alive) // only fires when component is alive
         .subscribe(() => {
