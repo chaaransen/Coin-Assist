@@ -28,6 +28,7 @@ export class QuantityCalcPage {
   percent: number = 0.05;
   rangeValue: number;
   pageName: string = "quantity-calc page";
+  enable: boolean;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
@@ -59,28 +60,29 @@ export class QuantityCalcPage {
       console.log("QTY fetched points", points);
 
       this.points = points;
-      if (this.points == 0) {
-        this.presentGetPoints();
-      }
-      console.log("Existing points", this.points);
 
       if (this.points > 0) {
         this.points = this.points - 1;
+        this.enable = true;
+      } else {
+        this.enable = false;
       }
 
       console.log("Storing new Points", this.points);
       this.api.storeService(Constants.POINTS, this.points);
+
+      if (!this.enable) {
+        this.presentGetPoints();
+      }
+      console.log("Existing points", this.points);
     });
-
-
     // console.log("Init Done");
-
   }
 
   presentGetPoints() {
     let alert = this.alertCtrl.create({
       title: 'Insufficient Points',
-      message: 'Get 5 points by viewing Video Ad',
+      message: 'Get 5 points by watching Video Ad',
       buttons: [
         {
           text: 'Cancel',

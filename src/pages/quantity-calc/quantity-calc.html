@@ -8,20 +8,22 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="points > 0">
+  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
   <div>
-    <div class="size2rem">
-      <button class="padding1rem" (click)="showAd()" ion-button color="light">Get Points</button>
-      <span class="padding1rem"> remaining points -
-        <span class="size2rem weight500">{{points}}</span>
+    <div class="size2rem center">
+      <span class="size2rem3 weight500">{{points}}</span>
+      <span class="padding1rem"> remaining use:
       </span>
+      <button class="padding1rem getPoints" (click)="showAd()" ion-button color="dark">Get use Points</button>
     </div>
+
   </div>
-  <div *ngIf="points > 0">
-    <ion-card-header class="weight500 size1rem8">
+  <hr>
+  <div *ngIf="enable">
+    <ion-card-header class="weight500 size1rem8  paddingTop0">
       Enter Coin Detail
     </ion-card-header>
     <ion-list>
