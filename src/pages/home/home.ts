@@ -83,11 +83,14 @@ export class HomePage {
     if (this.selExchange == undefined && this.apiUrls != undefined) {
       this.exchanges = Object.keys(this.apiUrls.exchange);
       this.selExchange = this.exchanges[0];
+      // console.log("Selected Exchange", this.selExchange);
+
     }
     this.selectedExchange(this.selExchange);
   }
 
   public selectedExchange(sel: any) {
+    // console.log("Coin List", this.apiUrls.exchange[sel].coinList);
 
     this.api.getMarketOverviewData(sel, this.apiUrls.exchange[sel].coinList).subscribe(res => {
       // console.log("first data - exchange data", res[0]);

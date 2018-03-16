@@ -25,8 +25,8 @@ export const XLM: string = "Stellar";
 
 
 //Exchanges
-export const ZEBPAY: string = "zebpay";
-export const KOINEX: string = "koinex";
+export const ZEBPAY: string = "Zebpay";
+export const KOINEX: string = "Koinex";
 
 export const POINTS: string = "points";
 

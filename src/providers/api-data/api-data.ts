@@ -214,17 +214,17 @@ export class ApiDataProvider {
     // console.log("passed for store", fetchedApiUrl);
 
     let zebpayCoinUrls: any = {};
-    var coinList = fetchedApiUrl.exchange.zebpay.coinList;
+    var coinList = fetchedApiUrl.exchange.Zebpay.coinList;
     // console.log(coinList);
 
     for (let coin in coinList) {
       // console.log(coin, "coin");
       // console.log(coinList[coin]);
 
-      zebpayCoinUrls[coinList[coin]] = fetchedApiUrl.exchange.zebpay.api + coinList[coin] + "/inr";
+      zebpayCoinUrls[coinList[coin]] = fetchedApiUrl.exchange.Zebpay.api + coinList[coin] + "/inr";
     }
-    fetchedApiUrl.exchange.zebpay.coinUrls = {};
-    fetchedApiUrl.exchange.zebpay.coinUrls = zebpayCoinUrls;
+    fetchedApiUrl.exchange.Zebpay.coinUrls = {};
+    fetchedApiUrl.exchange.Zebpay.coinUrls = zebpayCoinUrls;
 
     return Observable.of(fetchedApiUrl);
   }
@@ -236,7 +236,7 @@ export class ApiDataProvider {
   // ************************************************************************
   getKoinexData(): any {
     // console.log("GET - koinex data");
-    // console.log(this.apiUrls.exchange.koinex);
+    // console.log(this.apiUrls.exchange.Koinex);
     // console.log(this.koinexData, "before");
 
     if (this.koinexTest) {
@@ -245,7 +245,7 @@ export class ApiDataProvider {
     else {
       if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
         this.koinexData.lock = true;
-        return this.http.get(this.apiUrls.exchange.koinex.api).map(res => {
+        return this.http.get(this.apiUrls.exchange.Koinex.api).map(res => {
           // console.log(res);
           // console.log("FETCHED - koinex data", res);
 
@@ -306,8 +306,8 @@ export class ApiDataProvider {
     if (this.zebpayData.lock == false || this.zebpayData.lock == undefined) {
       this.zebpayData.lock = true;
       let coinRequests: Array<Observable<Object>> = new Array<Observable<Object>>();
-      for (let coinUrl in this.apiUrls.exchange.zebpay.coinUrls) {
-        coinRequests.push(this.http.get(this.apiUrls.exchange.zebpay.coinUrls[coinUrl]));
+      for (let coinUrl in this.apiUrls.exchange.Zebpay.coinUrls) {
+        coinRequests.push(this.http.get(this.apiUrls.exchange.Zebpay.coinUrls[coinUrl]));
       }
       // console.log("coinRequests", coinRequests);
 
@@ -330,7 +330,7 @@ export class ApiDataProvider {
   getExchangeData(exchange: string, data: boolean = true): any {
 
     switch (exchange) {
-      case "koinex":
+      case Constants.KOINEX:
         {
           // console.log("switch case koinex");
           if (data) {
@@ -338,7 +338,7 @@ export class ApiDataProvider {
           }
           return this.getKoinexTemplate();
         }
-      case "zebpay":
+      case Constants.ZEBPAY:
         {
           if (data) {
             return this.getZebpayData();
@@ -382,7 +382,7 @@ export class ApiDataProvider {
     // console.log("Koinex Exchange data", exchangeData);
 
     var processedKoinexData = [];
-    var coinList = this.apiUrls.exchange.koinex.coinList;
+    var coinList = this.apiUrls.exchange.Koinex.coinList;
     var tempKoinexData = exchangeData.stats;
     // console.log(coinMarketCapData, "coinmarket cap data- processor");
     // console.log("temp koinex data full", tempKoinexData);
@@ -725,13 +725,13 @@ export class ApiDataProvider {
 
   setExchangeData(exchange: any, exchangeData: any) {
     switch (exchange) {
-      case "koinex":
+      case Constants.KOINEX:
         {
           this.koinexData = exchangeData;
           // console.log("SET - koinex exchange data", this.koinexData);
           break;
         }
-      case "zebpay":
+      case Constants.ZEBPAY:
         {
           // console.log("SET - zebpay exchange data");
           this.zebpayData = exchangeData;
