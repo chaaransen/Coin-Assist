@@ -1,13 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
-import * as Constants from '../../constants/api-constants';
 import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
 import { CoinDetail } from '../../models/coin-detail';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { ToastController } from 'ionic-angular';
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+
 
 @Component({
   selector: 'page-coin-detail',

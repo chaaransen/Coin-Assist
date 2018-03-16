@@ -3,13 +3,11 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
-
-import { FavouritesPage } from '../pages/favourites/favourites';
-import { RemindersPage } from '../pages/reminders/reminders';
 import { ProfitCalcPage } from '../pages/profit-calc/profit-calc';
 import { ApiDataProvider } from '../providers/api-data/api-data';
 import { NewsPage } from '../pages/news/news';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
+import { POINTS } from '../constants/api-constants';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,7 +18,6 @@ export class MyApp {
   // rootPage: any = HomePage;
   tab1Root = HomePage;
   tab2Root = QuantityCalcPage;
-  tab3Root = RemindersPage;
   tab4Root = ProfitCalcPage;
   tab5Root = NewsPage;
 
@@ -49,6 +46,15 @@ export class MyApp {
         console.log("App component - error fetching data", err);
 
       });
+    this.api.fetchService(POINTS).then(points => {
+      console.log("Points", points);
+      if (points == null) {
+        this.api.storeService(POINTS, 2);
+      }
+    });
+
+
+
   }
 
   initializeApp() {

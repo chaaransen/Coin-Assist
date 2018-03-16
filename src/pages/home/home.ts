@@ -1,18 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
-import { ApiUrls } from '../../models/api-urls';
-import { Storage } from '@ionic/storage';
-import { NavParams } from 'ionic-angular/navigation/nav-params';
-import * as Constants from '../../constants/api-constants';
-import { forkJoin } from "rxjs/observable/forkJoin";
 import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Observable } from 'rxjs/Observable';
-import { ToastController } from 'ionic-angular';
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-home',
@@ -27,7 +19,7 @@ export class HomePage {
   alive: boolean;
   pageName: string = "home page";
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, private storage: Storage, private navParam: NavParams) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider) {
     // console.log("Constructor - Home page");
 
     this.alive = true;

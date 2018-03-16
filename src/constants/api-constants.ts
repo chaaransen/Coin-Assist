@@ -28,6 +28,8 @@ export const XLM: string = "Stellar";
 export const ZEBPAY: string = "zebpay";
 export const KOINEX: string = "koinex";
 
+export const POINTS: string = "points";
+
 //Generic
 export const LIGHT: string = "light";
 export const DARK: string = "dark";

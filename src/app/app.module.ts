@@ -18,7 +18,7 @@ import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { NewsPage } from '../pages/news/news';
 import { Utilities } from '../providers/utilities/utilities';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
-import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
+import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
 
 @NgModule({
   declarations: [

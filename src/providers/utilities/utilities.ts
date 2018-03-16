@@ -2,7 +2,6 @@ import {
     Injectable
 } from "@angular/core";
 import * as Constants from '../../constants/api-constants';
-import { ApiDataProvider } from "../api-data/api-data";
 
 @Injectable()
 export class Utilities {

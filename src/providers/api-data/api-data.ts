@@ -1,10 +1,8 @@
-import { HttpClient, HttpRequest } from '@angular/common/http';
-import { File } from '@ionic-native/file';
-import { Injectable, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
-import { ApiUrls } from '../../models/api-urls';
 import * as Constants from '../../constants/api-constants'
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/timer';
@@ -147,6 +145,7 @@ export class ApiDataProvider {
   }
 
   storeService(key: string, value: any) {
+    console.log("value", value);
 
     this.storage.set(key, value).then(res => {
     },

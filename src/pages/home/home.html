@@ -73,18 +73,19 @@
                   <span [ngClass]="coin.price_index">{{coin.price_index}}</span>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="coin.min.no">
-                <ion-col col-12>
-                  <span>Low: </span>
-                  <span class="redColor weight500">{{coin.min.formatted}}</span>
-                </ion-col>
-              </ion-row>
               <ion-row *ngIf="coin.max.no">
                 <ion-col col-12>
                   <span>High: </span>
                   <span class="greenColor weight500">{{coin.max.formatted}}</span>
                 </ion-col>
               </ion-row>
+              <ion-row *ngIf="coin.min.no">
+                <ion-col col-12>
+                  <span>Low: </span>
+                  <span class="redColor weight500">{{coin.min.formatted}}</span>
+                </ion-col>
+              </ion-row>
+
               <ion-row>
                 <ion-col col-12>
                   <div *ngIf="coin.globalDiff.percent >= 0">

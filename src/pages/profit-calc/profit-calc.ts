@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Utilities } from '../../providers/utilities/utilities';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { LIGHT, DARK } from '../../constants/api-constants';
-import { ValueDetail } from '../../models/value-detail';
 import { ProfitCalc } from '../../models/profit-calc';
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 
 @Component({
@@ -14,14 +10,9 @@ import { ApiDataProvider } from '../../providers/api-data/api-data';
 })
 export class ProfitCalcPage {
   public profitCalc: ProfitCalc = new ProfitCalc();
-  private profitCalcForm: FormGroup;
   pageName: string = "profit-calc page";
 
-  constructor(public navCtrl: NavController, public utilities: Utilities, private formBuilder: FormBuilder, public api: ApiDataProvider) {
-    this.profitCalcForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: [''],
-    });
+  constructor(public navCtrl: NavController, public utilities: Utilities, public api: ApiDataProvider) {
   }
 
   ngOnInit() {

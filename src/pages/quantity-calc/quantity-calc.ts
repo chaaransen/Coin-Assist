@@ -6,9 +6,6 @@ import { CoinDetail } from '../../models/coin-detail';
 import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants'
-import { ToastController } from 'ionic-angular';
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
-import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -40,7 +37,7 @@ export class QuantityCalcPage {
     // console.log(this.selExchange, " sel Exchange qty");
     this.apis = this.api.apiUrls.exchange;
     this.exchanges = Object.keys(this.apis);
-    this.points = this.api.fetchService("points");
+
     // console.log(this.apis, "api list fetched back");
   }
 
@@ -58,15 +55,32 @@ export class QuantityCalcPage {
 
     this.api.instructionToast(this.pageName, 2000);
 
-    this.presentGetPoints();
+    this.api.fetchService("points").then(points => {
+      console.log("QTY fetched points", points);
+
+      this.points = points;
+      if (this.points == 0) {
+        this.presentGetPoints();
+      }
+      console.log("Existing points", this.points);
+
+      if (this.points > 0) {
+        this.points = this.points - 1;
+      }
+
+      console.log("Storing new Points", this.points);
+      this.api.storeService(Constants.POINTS, this.points);
+    });
+
+
     // console.log("Init Done");
 
   }
 
   presentGetPoints() {
     let alert = this.alertCtrl.create({
-      title: 'Insufficient Points to use',
-      message: 'Get 5 points by viewing Video Ad to use',
+      title: 'Insufficient Points',
+      message: 'Get 5 points by viewing Video Ad',
       buttons: [
         {
           text: 'Cancel',
@@ -79,6 +93,7 @@ export class QuantityCalcPage {
           text: 'Watch Ad',
           handler: () => {
             console.log('Watch Ad clicked');
+            this.api.showVideoAd();
           }
         }
       ]
@@ -141,15 +156,15 @@ export class QuantityCalcPage {
 
   public updateRange() {
 
-    console.log(this.selCoin.range.rate.no);
+    // console.log(this.selCoin.range.rate.no);
     this.formateRate();
     this.selCoin = this.api.plusMinusPercent(this.selCoin, this.selCoin.range.rate.no, this.percent);
     // console.log("8 plus minus percent called");
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
-    console.log(this.selCoin);
+    // console.log(this.selCoin);
     this.calcQuantity();
-    console.log(this.selCoin);
+    // console.log(this.selCoin);
   }
 
   public coinRateChanged() {
