@@ -5,6 +5,7 @@ import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { PRICE_REFRESH, TOP } from '../../constants/api-constants';
 
 @Component({
   selector: 'page-home',
@@ -72,7 +73,7 @@ export class HomePage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
-      this.api.priceUpdateToast();
+      this.api.showToast(PRICE_REFRESH, TOP);
       refresher.complete();
     }, 800);
   }

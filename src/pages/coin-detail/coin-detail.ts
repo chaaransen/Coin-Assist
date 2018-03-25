@@ -5,6 +5,7 @@ import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
 import { CoinDetail } from '../../models/coin-detail';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { PRICE_REFRESH, TOP } from '../../constants/api-constants';
 
 
 @Component({
@@ -81,7 +82,7 @@ export class CoinDetailPage {
   doRefresh(refresher) {
     this.populateView();
     setTimeout(() => {
-      this.api.priceUpdateToast();
+      this.api.showToast(PRICE_REFRESH, TOP);
       refresher.complete();
     }, 800);
   }

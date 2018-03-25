@@ -22,7 +22,23 @@ export const KNC: string = "Kyber Network";
 export const NANO: string = "Nano";
 export const XLM: string = "Stellar";
 
+//Messages
+export const PRICE_REFRESH: string = "Latest Price Refreshed";
+export const REWARD_POINTS: string = "5 Reward points Added!";
+export const TOP: string = "top";
+export const BOTTOM: string = "bottom";
 
+//Quantity Page
+export const INSUF_POINTS_MSG: string = "Insufficient Use Points";
+export const INSUF_POINTS_DESC: string = "Get 5 Use Points by watching Video Ad";
+
+export const LAST_POINT_MSG: string = "1 Use Point remaining!";
+export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
+
+export const POINTS_MSG: string = "Info:";
+export const POINTS_DESC: string = "You can refill the 'Uses left' by clicking 'Refill Use' and  watch a Video Ad";
+
+export const NO_VIDEO_AD: string = "Try Later - Video Ad not available";
 
 //Exchanges
 export const ZEBPAY: string = "Zebpay";

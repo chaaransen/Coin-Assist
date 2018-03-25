@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 import { CoinDetail } from '../../models/coin-detail';
 import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ToastController } from 'ionic-angular';
+import { ToastController, AlertController } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
 
@@ -36,7 +36,7 @@ export class ApiDataProvider {
   koinexTest = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, public admobFree: AdMobFree) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, public admobFree: AdMobFree, private alertCtrl: AlertController) {
 
   }
 
@@ -47,37 +47,57 @@ export class ApiDataProvider {
   prepareVideoAd(show: boolean = false) {
     this.admobFree.rewardVideo.config(videoConfig);
 
-    this.admobFree.rewardVideo.prepare().then(res => {
-      console.log("Reward Video Prepared", res);
+    this.admobFree.rewardVideo.isReady().then(res => {
+      if (!res) {
+        console.log("AD not ready - Preparing...");
 
-    }).catch(err => {
-      console.log("Unable to prepare", err);
+        this.admobFree.rewardVideo.prepare().then(res => {
+          console.log("Reward Video Prepared", res);
+          if (show) {
+            console.log("Prepared Ad - calling Show!");
 
-    });
+            this.showVideoAd();
+            show = false;
+          }
 
+        }).catch(err => {
+          console.log("Unable to prepare", err);
 
-    this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
-      console.log("AD failed to Load - new", res);
-      this.prepareVideoAd(show);
-    });
+        });
+        this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
+          console.log("AD failed to Load - new", res);
+          this.prepareVideoAd(show);
+          if (show) {
+            this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
+          }
+        });
 
-    this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
-      console.log("AD loadded - new", res);
-      if (show) {
-        this.showVideoAd();
+        this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
+          console.log("AD loadded - new", res);
+          if (show) {
+            this.showVideoAd();
+            show = false;
+          }
+        });
+
+      } else {
+        if (show) {
+          console.log("Video Ad Already Ready - calling Show!");
+
+          this.showVideoAd();
+          show = false;
+        }
       }
     });
-
   }
 
   showVideoAd() {
-
 
     this.admobFree.rewardVideo.isReady().then(res => {
       // console.log("Video Ad is Ready", res);
       if (res) {
         this.admobFree.rewardVideo.show().then(res => {
-          // console.log("Video Ad is Showing", res);
+          console.log("Video Ad is Showing", res);
 
           this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
             this.fetchService("points").then(points => {
@@ -88,34 +108,25 @@ export class ApiDataProvider {
               // console.log("Earned New points", newPoints);
             });
             // console.log("Successful view - reward", res);
-            this.prepareVideoAd();
-          });
 
-
-          this.admobFree.on("admob.rewardvideo.events.START").subscribe(res => {
-            // console.log("AD started", res);
           });
 
           this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+            this.prepareVideoAd();
             // console.log("AD closed", res);
           });
 
-
-          this.admobFree.on("admob.rewardvideo.events.OPEN").subscribe(res => {
-            // console.log("AD opened", res);
-          });
         }).catch(err => {
           console.log("Unable to show Video Ad", err);
           this.prepareVideoAd(true);
         });
       }
       else {
-        // console.log("Video ad not ready calling prepare");
+        console.log("Fetch and Show AD Triggered");
         this.prepareVideoAd(true);
       }
     }).catch(err => {
       console.log("Video Ad ready exception", err);
-      this.prepareVideoAd(true);
     });
   }
 
@@ -130,11 +141,11 @@ export class ApiDataProvider {
 
   }
 
-  priceUpdateToast() {
+  showToast(message: string, position: string, duration: number = 1500) {
     let toast = this.toastCtrl.create({
-      message: 'Latest Price Refreshed',
-      duration: 1500,
-      position: 'top'
+      message: message,
+      duration: duration,
+      position: position
     });
     toast.present();
   }
@@ -163,6 +174,23 @@ export class ApiDataProvider {
         toast.present();
       }
     });
+
+  }
+
+  infoAlert() {
+
+    let alert = this.alertCtrl.create({
+      title: '',
+      message: '',
+      buttons: [
+        {
+          text: 'Got it!',
+          handler: () => {
+          }
+        }
+      ]
+    });
+    alert.present();
 
   }
 

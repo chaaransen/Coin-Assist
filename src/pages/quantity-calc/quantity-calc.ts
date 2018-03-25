@@ -28,6 +28,7 @@ export class QuantityCalcPage {
   percent: number = 0.05;
   rangeValue: number;
   pageName: string = "quantity-calc page";
+  reward: boolean;
   enable: boolean;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
@@ -54,12 +55,20 @@ export class QuantityCalcPage {
 
     this.api.logAnalytics(this.pageName);
 
-    this.api.instructionToast(this.pageName, 2000);
+    this.api.fetchService(this.pageName).then(lock => {
+      if (lock != true) {
+        this.infoAlert();
+      }
+    });
 
     this.api.fetchService("points").then(points => {
       // console.log("QTY fetched points", points);
 
       this.points = points;
+
+      if (this.points == 2) {
+        this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+      }
 
       if (this.points > 0) {
         this.points = this.points - 1;
@@ -71,18 +80,37 @@ export class QuantityCalcPage {
       // console.log("Storing new Points", this.points);
       this.api.storeService(Constants.POINTS, this.points);
 
+
       if (!this.enable) {
-        this.presentGetPoints();
+        this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
       }
       // console.log("Existing points", this.points);
     });
     // console.log("Init Done");
   }
 
-  presentGetPoints() {
+  infoAlert() {
+
     let alert = this.alertCtrl.create({
-      title: 'Insufficient Points',
-      message: 'Get 5 points by watching Video Ad',
+      title: Constants.POINTS_MSG,
+      message: Constants.POINTS_DESC,
+      buttons: [
+        {
+          text: 'Got it!',
+          handler: () => {
+            this.api.instructionToast(this.pageName, 2000);
+          }
+        }
+      ]
+    });
+    alert.present();
+
+  }
+
+  presentGetPoints(message: string, description: string) {
+    let alert = this.alertCtrl.create({
+      title: message,
+      message: description,
       buttons: [
         {
           text: 'Cancel',
@@ -107,7 +135,7 @@ export class QuantityCalcPage {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.populateView();
     setTimeout(() => {
-      this.api.priceUpdateToast();
+      this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
       refresher.complete();
     }, 800);
   }
@@ -271,10 +299,20 @@ export class QuantityCalcPage {
         // console.log("Fetching Points on Enter");
 
         this.points = points;
-        this.enable = true;
+        if (this.points > 0) {
+          this.enable = true;
+          if (this.reward) {
+            this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+            this.reward = false;
+          }
+        }
         // console.log("Naya Points", this.points);
 
       });
+    });
+
+    this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+      this.reward = true;
     });
   }
 }

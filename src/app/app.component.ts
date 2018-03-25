@@ -49,7 +49,7 @@ export class MyApp {
     this.api.fetchService(POINTS).then(points => {
       // console.log("Points", points);
       if (points == null) {
-        this.api.storeService(POINTS, 15);
+        this.api.storeService(POINTS, 4);
       }
     });
 
