@@ -1826,13 +1826,13 @@ var ApiDataProvider = (function () {
         var coinRequests = this.generateCoinMarketCapURL(coinList);
         var coinMarketCapData = new Array();
         return Object(__WEBPACK_IMPORTED_MODULE_12_rxjs_observable_forkJoin__["forkJoin"])(coinRequests).map(function (res) {
-            console.log(res);
-            console.log("FETCHED - coin market cap data", res);
+            // console.log(res);
+            // console.log("FETCHED - coin market cap data", res);
             for (var index in res) {
                 var inArray = res[index];
                 coinMarketCapData.push(inArray[0]);
             }
-            console.log("coin market cap data final", coinMarketCapData);
+            // console.log("coin market cap data final", coinMarketCapData);
             return coinMarketCapData;
         }).catch(function (error) {
             console.log("Error fetching coinmarket cap data", error);
