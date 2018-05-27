@@ -407,13 +407,13 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
-    console.log("Koinex Exchange data", exchangeData);
+    // console.log("Koinex Exchange data", exchangeData);
 
     var processedKoinexData = [];
     var coinList = this.apiUrls.exchange.Koinex.coinList;
     var tempKoinexData = exchangeData.stats.inr;
-    console.log(coinMarketCapData, "coinmarket cap data- processor");
-    console.log("temp koinex data full", tempKoinexData);
+    // console.log(coinMarketCapData, "coinmarket cap data- processor");
+    // console.log("temp koinex data full", tempKoinexData);
 
     // console.log(coinList, "before");
     if (coinMarketCapData != undefined) {
