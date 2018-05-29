@@ -440,6 +440,7 @@ export class ApiDataProvider {
       processedCoin.coinCode = coinCode;
       processedCoin.coinName = this.getCoinName(coinCode);
       // console.log("processed coin before", processedCoin);
+      // console.log("Coin name", processedCoin.coinName);
 
       processedCoin = this.injectCoinImage(processedCoin);
       // console.log("temp koinex data", tempKoinexData[coinCode]);
@@ -641,6 +642,10 @@ export class ApiDataProvider {
 
   injectGlobalStats(coinCode: string, processedCoin: CoinDetail, coinMarketCapData, coinDeskData): any {
     try {
+      if (coinCode == "XRB") {
+        coinCode = "NANO";
+      }
+      processedCoin.coinCode = coinCode;
       let coinGlobalStats: any = this.getCoinGlobalStats(coinCode, coinMarketCapData, coinDeskData);
 
       processedCoin.global.INR.no = +coinGlobalStats.globalINR;
@@ -713,6 +718,7 @@ export class ApiDataProvider {
 
       coinRequestUrls.push(this.http.get(url));
     }
+
     return coinRequestUrls;
   }
   // TO BE TESTED

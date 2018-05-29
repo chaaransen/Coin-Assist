@@ -35,8 +35,8 @@ export class MyApp {
   ngOnInit() {
     // console.log("GET - api urls from app component");
     this.api.fetchApiUrl().subscribe(res => {
-      // console.log("fetched in app component");
-      // console.log(res);
+      console.log("fetched in app component");
+      console.log(res);
       this.api.generateZebpayApis(res).subscribe(generated => {
         // console.log("generated urls passed for store", generated);
         this.api.storeApiUrl(generated);

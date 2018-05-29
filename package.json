@@ -38,7 +38,6 @@
     "cordova-plugin-admob-free": "^0.15.0",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-device": "^1.1.7",
-    "cordova-plugin-firebase-analytics": "^0.13.0",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -66,7 +65,6 @@
       "cordova-plugin-device": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-whitelist": {},
-      "cordova-support-google-services": {},
       "cordova-plugin-admob-free": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-statusbar": {},
@@ -74,19 +72,17 @@
         "PLAY_SERVICES_VERSION": "latest"
       },
       "cordova-plugin-compat": {},
-      "cordova-plugin-firebase-analytics": {
-        "FIREBASE_VERSION": "latest"
-      },
       "cordova-plugin-splashscreen": {},
       "cordova-android-play-services-gradle-release": {
         "PLAY_SERVICES_VERSION": "15.+"
-      }
+      },
+      "cordova-support-google-services": {}
     },
     "platforms": [
       "browser",
       "windows",
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
