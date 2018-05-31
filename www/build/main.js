@@ -1295,21 +1295,22 @@ var ApiDataProvider = (function () {
         if (show === void 0) { show = false; }
         this.admobFree.rewardVideo.config(videoConfig);
         this.admobFree.rewardVideo.isReady().then(function (res) {
-            if (!res) {
+            if (res) {
+                if (show) {
+                    console.log("Video Ad Already Ready - calling Show!");
+                    _this.showVideoAd();
+                    show = false;
+                }
+            }
+            else {
                 console.log("AD not ready - Preparing...");
                 _this.admobFree.rewardVideo.prepare().then(function (res) {
                     console.log("Reward Video Prepared", res);
-                    if (show) {
-                        console.log("Prepared Ad - calling Show!");
-                        _this.showVideoAd();
-                        show = false;
-                    }
                 }).catch(function (err) {
                     console.log("Unable to prepare", err);
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(function (res) {
                     console.log("AD failed to Load - new", res);
-                    _this.prepareVideoAd(show);
                     if (show) {
                         _this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["r" /* TOP */]);
                     }
@@ -1322,46 +1323,27 @@ var ApiDataProvider = (function () {
                     }
                 });
             }
-            else {
-                if (show) {
-                    console.log("Video Ad Already Ready - calling Show!");
-                    _this.showVideoAd();
-                    show = false;
-                }
-            }
         });
     };
     ApiDataProvider.prototype.showVideoAd = function () {
         var _this = this;
-        this.admobFree.rewardVideo.isReady().then(function (res) {
-            // console.log("Video Ad is Ready", res);
-            if (res) {
-                _this.admobFree.rewardVideo.show().then(function (res) {
-                    console.log("Video Ad is Showing", res);
-                    _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
-                        _this.fetchService("points").then(function (points) {
-                            var newPoints = points;
-                            newPoints += 5;
-                            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */], newPoints);
-                            // console.log("Earned New points", newPoints);
-                        });
-                        // console.log("Successful view - reward", res);
-                    });
-                    _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
-                        _this.prepareVideoAd();
-                        // console.log("AD closed", res);
-                    });
-                }).catch(function (err) {
-                    console.log("Unable to show Video Ad", err);
-                    _this.prepareVideoAd(true);
+        this.admobFree.rewardVideo.show().then(function (res) {
+            console.log("Video Ad is Showing", res);
+            _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
+                _this.fetchService("points").then(function (points) {
+                    var newPoints = points;
+                    newPoints += 5;
+                    _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */], newPoints);
+                    // console.log("Earned New points", newPoints);
                 });
-            }
-            else {
-                console.log("Fetch and Show AD Triggered");
-                _this.prepareVideoAd(true);
-            }
+                // console.log("Successful view - reward", res);
+            });
+            _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
+                _this.prepareVideoAd();
+                // console.log("AD closed", res);
+            });
         }).catch(function (err) {
-            console.log("Video Ad ready exception", err);
+            console.log("Unable to show Video Ad", err);
         });
     };
     ApiDataProvider.prototype.setApiUrl = function (apiUrl) {
@@ -1695,7 +1677,7 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.getCoinGlobalStats = function (coinCode, coinMarketCapData, coinDeskData) {
         try {
             var coinGlobalStats = {};
-            console.log(coinCode, "symbol required");
+            // console.log(coinCode, "symbol required");
             for (var coin in coinMarketCapData) {
                 if (coinMarketCapData[coin].symbol == coinCode || coinMarketCapData[coin].symbol.toLowerCase() == coinCode) {
                     coinGlobalStats.changeHour = coinMarketCapData[coin].percent_change_1h;
@@ -1853,7 +1835,7 @@ var ApiDataProvider = (function () {
             var coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
             // console.log("coin name", coinName);
             var url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
-            console.log("URL CMC", url);
+            // console.log("URL CMC", url);
             coinRequestUrls.push(this.http.get(url));
         }
         return coinRequestUrls;

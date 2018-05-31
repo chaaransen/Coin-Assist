@@ -48,17 +48,18 @@ export class ApiDataProvider {
     this.admobFree.rewardVideo.config(videoConfig);
 
     this.admobFree.rewardVideo.isReady().then(res => {
-      if (!res) {
+      if (res) {
+        if (show) {
+          console.log("Video Ad Already Ready - calling Show!");
+
+          this.showVideoAd();
+          show = false;
+        }
+      } else {
         console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
           console.log("Reward Video Prepared", res);
-          if (show) {
-            console.log("Prepared Ad - calling Show!");
-
-            this.showVideoAd();
-            show = false;
-          }
 
         }).catch(err => {
           console.log("Unable to prepare", err);
@@ -66,7 +67,6 @@ export class ApiDataProvider {
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
           console.log("AD failed to Load - new", res);
-          this.prepareVideoAd(show);
           if (show) {
             this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
           }
@@ -80,53 +80,34 @@ export class ApiDataProvider {
           }
         });
 
-      } else {
-        if (show) {
-          console.log("Video Ad Already Ready - calling Show!");
-
-          this.showVideoAd();
-          show = false;
-        }
       }
     });
   }
 
   showVideoAd() {
 
-    this.admobFree.rewardVideo.isReady().then(res => {
-      // console.log("Video Ad is Ready", res);
-      if (res) {
-        this.admobFree.rewardVideo.show().then(res => {
-          console.log("Video Ad is Showing", res);
+    this.admobFree.rewardVideo.show().then(res => {
+      console.log("Video Ad is Showing", res);
 
-          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-            this.fetchService("points").then(points => {
+      this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+        this.fetchService("points").then(points => {
 
-              let newPoints: number = points;
-              newPoints += 5;
-              this.storeService(Constants.POINTS, newPoints);
-              // console.log("Earned New points", newPoints);
-            });
-            // console.log("Successful view - reward", res);
-
-          });
-
-          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-            this.prepareVideoAd();
-            // console.log("AD closed", res);
-          });
-
-        }).catch(err => {
-          console.log("Unable to show Video Ad", err);
-          this.prepareVideoAd(true);
+          let newPoints: number = points;
+          newPoints += 5;
+          this.storeService(Constants.POINTS, newPoints);
+          // console.log("Earned New points", newPoints);
         });
-      }
-      else {
-        console.log("Fetch and Show AD Triggered");
-        this.prepareVideoAd(true);
-      }
+        // console.log("Successful view - reward", res);
+
+      });
+
+      this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+        this.prepareVideoAd();
+        // console.log("AD closed", res);
+      });
+
     }).catch(err => {
-      console.log("Video Ad ready exception", err);
+      console.log("Unable to show Video Ad", err);
     });
   }
 
