@@ -18,6 +18,7 @@ import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { NewsPage } from '../pages/news/news';
 import { Utilities } from '../providers/utilities/utilities';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
 
 @NgModule({
@@ -63,6 +64,7 @@ import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
     ApiDataProvider,
     Utilities,
     FirebaseAnalytics,
+    GoogleAnalytics,
     AdMobFree,
     AdMobFreeRewardVideo
   ]

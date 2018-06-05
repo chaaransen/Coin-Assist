@@ -31,6 +31,9 @@ export class CoinDetailPage {
   }
 
   ngOnInit() {
+
+    // this.api.trackPage(this.pageName);
+    this.api.logAnalytics(this.pageName);
     this.referralLink = this.api.apiUrls.exchange[this.exchange].referral;
     // console.log("referral Link", this.referralLink);
     this.populateView();
@@ -42,7 +45,6 @@ export class CoinDetailPage {
 
     this.api.instructionToast(this.pageName, 1500);
 
-    this.api.logAnalytics(this.pageName);
   }
 
   ionViewDidLeave() {

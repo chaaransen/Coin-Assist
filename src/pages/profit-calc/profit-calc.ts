@@ -16,6 +16,7 @@ export class ProfitCalcPage {
   }
 
   ngOnInit() {
+    // this.api.trackPage(this.pageName);
     this.api.logAnalytics(this.pageName);
   }
 

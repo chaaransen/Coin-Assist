@@ -53,6 +53,7 @@ export class QuantityCalcPage {
     }
     this.populateView();
 
+    // this.api.trackPage(this.pageName);
     this.api.logAnalytics(this.pageName);
 
     this.api.fetchService(this.pageName).then(lock => {

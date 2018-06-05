@@ -11,15 +11,15 @@ import 'rxjs/add/operator/catch';
 import { CoinDetail } from '../../models/coin-detail';
 import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ToastController, AlertController } from 'ionic-angular';
+import { ToastController, AlertController, Platform } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
 
 const videoConfig: AdMobFreeRewardVideoConfig = {
   // add your config here
   // for the sake of this example we will just use the test config
-  id: "ca-app-pub-4512084985073909/8834823940",
-  isTesting: true,
+  id: "ca-app-pub-4512084985073909/9656600655",
+  isTesting: false,
   autoShow: false
 };
 
@@ -36,7 +36,7 @@ export class ApiDataProvider {
   koinexTest = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, private firebaseAnalytics: FirebaseAnalytics, public admobFree: AdMobFree, private alertCtrl: AlertController) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform) {
 
   }
 
@@ -85,29 +85,40 @@ export class ApiDataProvider {
   }
 
   showVideoAd() {
+    this.admobFree.rewardVideo.isReady().then(res => {
+      if (res) {
+        this.admobFree.rewardVideo.show().then(res => {
+          console.log("Video Ad is Showing", res);
 
-    this.admobFree.rewardVideo.show().then(res => {
-      console.log("Video Ad is Showing", res);
+          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+            console.log("Reward Video value return " + res);
 
-      this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-        this.fetchService("points").then(points => {
+            this.fetchService(Constants.POINTS).then(points => {
 
-          let newPoints: number = points;
-          newPoints += 5;
-          this.storeService(Constants.POINTS, newPoints);
-          // console.log("Earned New points", newPoints);
+              let newPoints: number = points;
+              newPoints += 5;
+              this.storeService(Constants.POINTS, newPoints);
+              // console.log("Earned New points", newPoints);
+            });
+            // console.log("Successful view - reward", res);
+
+          });
+
+          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+            this.prepareVideoAd();
+            // console.log("AD closed", res);
+          });
+
+        }).catch(err => {
+          console.log("Unable to show Video Ad", err);
         });
-        // console.log("Successful view - reward", res);
+      } else {
+        console.log("Video not ready, preparing and showing");
 
-      });
-
-      this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-        this.prepareVideoAd();
-        // console.log("AD closed", res);
-      });
-
+        this.prepareVideoAd(true);
+      }
     }).catch(err => {
-      console.log("Unable to show Video Ad", err);
+      console.log("Exception thrown - ready", err);
     });
   }
 
@@ -132,9 +143,13 @@ export class ApiDataProvider {
   }
 
   logAnalytics(pageName: string) {
-    // this.firebaseAnalytics.logEvent(pageName, null)
-    //   .then((res: any) => console.log(res))
-    //   .catch((error: any) => console.error(error));
+    console.log("Logging page: " + pageName);
+    this.platform.ready().then(() => {
+      this.firebaseAnalytics.logEvent(pageName, null)
+        .then((res: any) => console.log(res))
+        .catch((error: any) => console.error(error));
+    })
+
   }
 
   instructionToast(page: string, duration: number) {

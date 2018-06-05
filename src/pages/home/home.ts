@@ -28,7 +28,8 @@ export class HomePage {
 
   ngOnInit() {
     // console.log("Home component ngOninit Called");
-
+    this.api.logAnalytics(this.pageName);
+    // this.api.trackPage(this.pageName);
 
     this.api.getApiUrlStorage().then(res => {
       if (res != null) {
@@ -53,8 +54,6 @@ export class HomePage {
           this.populateView();
         });
     });
-
-    this.api.logAnalytics(this.pageName);
 
     this.api.instructionToast(this.pageName, 0);
   }
