@@ -20,6 +20,8 @@ import { Utilities } from '../providers/utilities/utilities';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
+import { FCM } from '@ionic-native/fcm';
+
 
 @NgModule({
   declarations: [
@@ -66,7 +68,8 @@ import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
     FirebaseAnalytics,
     GoogleAnalytics,
     AdMobFree,
-    AdMobFreeRewardVideo
+    AdMobFreeRewardVideo,
+    FCM
   ]
 })
 export class AppModule { }

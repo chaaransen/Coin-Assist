@@ -8,6 +8,7 @@ import { ApiDataProvider } from '../providers/api-data/api-data';
 import { NewsPage } from '../pages/news/news';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import { POINTS } from '../constants/api-constants';
+import { FCM } from '@ionic-native/fcm';
 
 @Component({
   templateUrl: 'app.html'
@@ -24,7 +25,7 @@ export class MyApp {
   apiUrls: any;
   pages: Array<{ title: string, component: any }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM) {
     this.initializeApp();
     // used for an example of ngFor and navigation
     this.pages = [
@@ -65,6 +66,14 @@ export class MyApp {
       this.api.prepareVideoAd();
       this.statusBar.styleDefault();
       this.splashScreen.hide()
+      this.fcm.onNotification().subscribe(data => {
+        if (data.wasTapped) {
+          console.log(data);
+
+        } else {
+          console.log(data);
+        };
+      });
     });
   }
 
