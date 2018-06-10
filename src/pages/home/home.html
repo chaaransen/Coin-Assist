@@ -8,12 +8,16 @@
 </ion-header>
 
 <ion-content padding>
+  <div class="centerNetwork" *ngIf="!networkFlag">
+    <b>Network connection unavailable.</b> Please connect to a network.
+    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
+  </div>
 
-  <ion-refresher (ionRefresh)="doRefresh($event)">
+  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="networkFlag">
     <ion-refresher-content padding pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <ion-item>
+  <ion-item *ngIf="networkFlag">
     <ion-label>Exchange:</ion-label>
     <ion-select [(ngModel)]="selExchange" interface="popover" (ngModelChange)="selectedExchange(selExchange)">
       <ion-option *ngFor="let exchange of exchanges">{{exchange}}</ion-option>
@@ -21,7 +25,7 @@
 
   </ion-item>
 
-  <ion-list>
+  <ion-list *ngIf="networkFlag">
     <!-- <ion-card>
       <ion-grid>
         <ion-row>
@@ -108,5 +112,4 @@
       </ion-item>
     </ion-card>
   </ion-list>
-
 </ion-content>

@@ -44,9 +44,10 @@ export class MyApp {
       });
     },
       err => {
-        console.log("App component - error fetching data", err);
+        // console.log("App component - error fetching data", err);
 
       });
+      
     this.api.fetchService(POINTS).then(points => {
       // console.log("Points", points);
       if (points == null) {

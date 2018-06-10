@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { PRICE_REFRESH, TOP } from '../../constants/api-constants';
+import { Network } from '@ionic-native/network';
 
 @Component({
   selector: 'page-home',
@@ -19,25 +20,37 @@ export class HomePage {
   selExchange: any;
   alive: boolean;
   pageName: string = "home page";
+  updateFlag: boolean = false;
+  networkFlag: boolean;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
     // console.log("Constructor - Home page");
 
     this.alive = true;
   }
 
   ngOnInit() {
-    // console.log("Home component ngOninit Called");
-    this.api.logAnalytics(this.pageName);
-    // this.api.trackPage(this.pageName);
+    console.log("ngOnInit - home called");
+    this.api.checkNetworkConnection().then(val => {
+      this.networkFlag = val;
+      if (val) {
+        this.api.logAnalytics(this.pageName);
+        this.setApiUrl();
+        this.api.instructionToast(this.pageName, 0);
+      }
+    });
+  }
 
+  setApiUrl() {
     this.api.getApiUrlStorage().then(res => {
+      // console.log("Stored Url value");
+      // console.log(res);
       if (res != null) {
         this.apiUrls = res;
       }
       else {
         // console.log("constant Api urls called");
-
+        this.updateFlag = true;
         this.apiUrls = this.api.getConstantApiUrl();
       }
       // console.log("Home Compo Value return");
@@ -48,14 +61,18 @@ export class HomePage {
 
       this.populateView();
 
+      //Automatic fetching of new data every 20 seconds
       var refresher = IntervalObservable.create(20000);
       refresher.takeWhile(() => this.alive) // only fires when component is alive
         .subscribe(() => {
-          this.populateView();
+
+          this.networkFlag = this.api.networkFlag;
+          console.log("Auto Refresh Network Flag " + this.networkFlag);
+          if (this.networkFlag) {
+            this.populateView();
+          }
         });
     });
-
-    this.api.instructionToast(this.pageName, 0);
   }
 
   ionViewDidLeave() {
@@ -67,14 +84,24 @@ export class HomePage {
   ionViewWillEnter() {
     this.alive = true;
     // console.log("Home page -View Entered", this.alive);
+
   }
 
   doRefresh(refresher) {
-    this.populateView();
-    setTimeout(() => {
-      this.api.showToast(PRICE_REFRESH, TOP);
-      refresher.complete();
-    }, 800);
+    //update flag - if api fetched from constants file
+    this.networkFlag = this.api.networkFlag;
+    console.log("Refresh Network Flag " + this.networkFlag);
+    if (this.networkFlag) {
+      if (this.updateFlag) {
+        this.setApiUrl();
+        this.updateFlag = false;
+      }
+      this.populateView();
+      setTimeout(() => {
+        this.api.showToast(PRICE_REFRESH, TOP);
+        refresher.complete();
+      }, 800);
+    }
   }
 
   populateView() {

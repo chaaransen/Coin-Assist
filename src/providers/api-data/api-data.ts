@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ToastController, AlertController, Platform } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
+import { Network } from '@ionic-native/network';
 
 const videoConfig: AdMobFreeRewardVideoConfig = {
   // add your config here
@@ -30,18 +31,45 @@ export class ApiDataProvider {
   apiUrlStore = "apiUrls";
   koinexData: any = {};
   zebpayData: any = {};
+  networkFlag = false;
 
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network) {
 
   }
 
   ngOnInit() {
 
+  }
+
+  checkNetworkConnection(): Promise<boolean> {
+
+    return this.platform.ready().then(() => {
+      console.log("platform ready - home");
+
+      if (this.network.type != 'none') {
+        console.log(this.network.type);
+        console.log("network flag set as true");
+        this.networkFlag = true;
+      }
+      console.log("checking network connection");
+
+      let connectSubscription = this.network.onConnect().subscribe(() => {
+        console.log('network connected!');
+        this.networkFlag = true;
+      });
+
+      let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+        console.log('network was disconnected :-(');
+        this.networkFlag = false;
+      });
+
+      return this.networkFlag;
+    });
   }
 
   prepareVideoAd(show: boolean = false) {
@@ -227,6 +255,8 @@ export class ApiDataProvider {
     // console.log("STORE - store api url");
     this.storage.set(this.apiUrlStore, fetchedApiUrl).then(res => {
       // console.log("Stored Successfully");
+      // console.log(res);
+
     },
       err => {
         console.log("Storage Error");

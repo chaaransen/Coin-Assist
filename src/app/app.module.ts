@@ -21,6 +21,7 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
 import { FCM } from '@ionic-native/fcm';
+import { Network } from '@ionic-native/network';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { FCM } from '@ionic-native/fcm';
     GoogleAnalytics,
     AdMobFree,
     AdMobFreeRewardVideo,
-    FCM
+    FCM,
+    Network
   ]
 })
 export class AppModule { }
