@@ -30,64 +30,73 @@ export class QuantityCalcPage {
   pageName: string = "quantity-calc page";
   reward: boolean;
   enable: boolean;
+  networkFlag: boolean = false;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
-    this.selExchange = navParam.get("exchange");
-    this.selCoin.coinName = navParam.get("coin");
+
     // console.log(this.selCoin, " sel coin qty");
     // console.log(this.selExchange, " sel Exchange qty");
-    this.apis = this.api.apiUrls.exchange;
-    this.exchanges = Object.keys(this.apis);
+
 
     // console.log(this.apis, "api list fetched back");
   }
 
   ngOnInit() {
     // console.log("2 ng oninit called");
-    if (this.selExchange == undefined) {
-      this.selExchange = Constants.KOINEX;
+
+    this.networkFlag = this.api.networkFlag;
+    if (this.networkFlag) {
+      this.selExchange = this.navParam.get("exchange");
+      this.selCoin.coinName = this.navParam.get("coin");
+
+      this.apis = this.api.apiUrls.exchange;
+      this.exchanges = Object.keys(this.apis);
+
+      if (this.selExchange == undefined) {
+        this.selExchange = Constants.KOINEX;
+      }
+      if (this.selCoin.coinName == undefined) {
+        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
+      }
+      this.populateView();
+
+      // this.api.trackPage(this.pageName);
+      this.api.logAnalytics(this.pageName);
+
+      this.api.fetchService(this.pageName).then(lock => {
+        if (lock != true) {
+          this.infoAlert();
+        }
+      });
+
+      this.api.fetchService("points").then(points => {
+        // console.log("QTY fetched points", points);
+
+        this.points = points;
+
+        if (this.points == 2) {
+          this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+        }
+
+        if (this.points > 0) {
+          this.points = this.points - 1;
+          this.enable = true;
+        } else {
+          this.enable = false;
+        }
+
+        // console.log("Storing new Points", this.points);
+        this.api.storeService(Constants.POINTS, this.points);
+
+
+        if (!this.enable) {
+          this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
+        }
+        // console.log("Existing points", this.points);
+      });
+      // console.log("Init Done");
     }
-    if (this.selCoin.coinName == undefined) {
-      this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-    }
-    this.populateView();
-
-    // this.api.trackPage(this.pageName);
-    this.api.logAnalytics(this.pageName);
-
-    this.api.fetchService(this.pageName).then(lock => {
-      if (lock != true) {
-        this.infoAlert();
-      }
-    });
-
-    this.api.fetchService("points").then(points => {
-      // console.log("QTY fetched points", points);
-
-      this.points = points;
-
-      if (this.points == 2) {
-        this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-      }
-
-      if (this.points > 0) {
-        this.points = this.points - 1;
-        this.enable = true;
-      } else {
-        this.enable = false;
-      }
-
-      // console.log("Storing new Points", this.points);
-      this.api.storeService(Constants.POINTS, this.points);
-
-
-      if (!this.enable) {
-        this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
-      }
-      // console.log("Existing points", this.points);
-    });
-    // console.log("Init Done");
   }
 
   infoAlert() {
@@ -134,11 +143,16 @@ export class QuantityCalcPage {
 
   doRefresh(refresher) {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
-    this.populateView();
-    setTimeout(() => {
-      this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
-      refresher.complete();
-    }, 800);
+    this.networkFlag = this.api.networkFlag;
+    if (this.networkFlag) {
+      this.populateView();
+      setTimeout(() => {
+        this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
+        refresher.complete();
+      }, 800);
+    } else {
+      this.api.showToast(Constants.PRICE_REFRESH_FAIL, Constants.TOP);
+    }
   }
 
   populateView() {

@@ -8,11 +8,16 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">
+  <div class="centerNetwork" *ngIf="!networkFlag">
+    <b>Network connection unavailable.</b> Please connect to a network.
+    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
+  </div>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable && networkFlag">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div>
+  <div *ngIf="networkFlag">
     <div class="size2rem center">
       <span class="size2rem3 weight500">{{points}}</span>
       <span class="padding1rem">: Uses Left
@@ -22,7 +27,7 @@
 
   </div>
   <hr>
-  <div *ngIf="enable">
+  <div *ngIf="enable && networkFlag">
     <ion-card-header class="weight500 size1rem8  paddingTop0">
       Enter Coin Detail
     </ion-card-header>

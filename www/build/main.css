@@ -25751,6 +25751,13 @@ ion-navbar.toolbar {
   font-weight: 500;
 }
 
+.centerNetwork {
+  margin-top: 60%;
+  text-align: center;
+  border: 3px solid grey;
+  padding: 10px;
+}
+
 .boldTextValue {
   font-weight: 500;
   font-size: 1.5rem;
@@ -25905,6 +25912,10 @@ page-home .item-md ion-thumbnail[item-start] {
 
 page-home .text-center {
   text-align: center;
+}
+
+page-home * {
+  font-size: 1.6rem;
 }
 
 page-home ion-label,

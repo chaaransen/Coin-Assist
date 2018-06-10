@@ -5,7 +5,7 @@ import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { PRICE_REFRESH, TOP } from '../../constants/api-constants';
+import { PRICE_REFRESH, TOP, PRICE_REFRESH_FAIL } from '../../constants/api-constants';
 import { Network } from '@ionic-native/network';
 
 @Component({
@@ -101,6 +101,8 @@ export class HomePage {
         this.api.showToast(PRICE_REFRESH, TOP);
         refresher.complete();
       }, 800);
+    } else {
+      this.api.showToast(PRICE_REFRESH_FAIL, TOP);
     }
   }
 
