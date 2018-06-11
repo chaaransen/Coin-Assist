@@ -19,8 +19,8 @@ import { Network } from '@ionic-native/network';
 const videoConfig: AdMobFreeRewardVideoConfig = {
   // add your config here
   // for the sake of this example we will just use the test config
-  id: "ca-app-pub-4512084985073909/9656600655",
-  isTesting: false,
+  // id: "ca-app-pub-4512084985073909/9656600655",
+  isTesting: true,
   autoShow: false
 };
 
@@ -49,22 +49,22 @@ export class ApiDataProvider {
   checkNetworkConnection(): Promise<boolean> {
 
     return this.platform.ready().then(() => {
-      console.log("platform ready - home");
+      // console.log("platform ready - api data");
 
       if (this.network.type != 'none') {
-        console.log(this.network.type);
-        console.log("network flag set as true");
+        // console.log(this.network.type);
+        // console.log("network flag set as true");
         this.networkFlag = true;
       }
-      console.log("checking network connection");
+      // console.log("checking network connection");
 
       let connectSubscription = this.network.onConnect().subscribe(() => {
-        console.log('network connected!');
+        // console.log('network connected!');
         this.networkFlag = true;
       });
 
       let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-        console.log('network was disconnected :-(');
+        // console.log('network was disconnected :-(');
         this.networkFlag = false;
       });
 
@@ -119,12 +119,13 @@ export class ApiDataProvider {
           console.log("Video Ad is Showing", res);
 
           this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-            console.log("Reward Video value return " + res);
-
+            console.log("Reward Video value return ", res);
+            console.log(res.rewardAmount);
+            var refillPoints = res.rewardAmount;
             this.fetchService(Constants.POINTS).then(points => {
 
               let newPoints: number = points;
-              newPoints += 5;
+              newPoints += refillPoints;
               this.storeService(Constants.POINTS, newPoints);
               // console.log("Earned New points", newPoints);
             });
@@ -171,7 +172,7 @@ export class ApiDataProvider {
   }
 
   logAnalytics(pageName: string) {
-    console.log("Logging page: " + pageName);
+    // console.log("Logging page: " + pageName);
     this.platform.ready().then(() => {
       this.firebaseAnalytics.logEvent(pageName, null)
         .then((res: any) => console.log(res))

@@ -47,7 +47,7 @@ export class MyApp {
         // console.log("App component - error fetching data", err);
 
       });
-      
+
     this.api.fetchService(POINTS).then(points => {
       // console.log("Points", points);
       if (points == null) {
@@ -65,7 +65,9 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       // console.log("Platform ready");
       this.api.prepareVideoAd();
-      this.statusBar.styleDefault();
+      this.statusBar.overlaysWebView(true);
+      this.statusBar.styleBlackOpaque();
+      this.statusBar.show();
       this.splashScreen.hide()
       this.fcm.onNotification().subscribe(data => {
         if (data.wasTapped) {

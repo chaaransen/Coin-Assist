@@ -75,7 +75,9 @@ var QuantityCalcPage = (function () {
         var _this = this;
         this.networkFlag = this.api.networkFlag;
         if (this.networkFlag) {
+            // console.log("Api Urls in quantity page", this.api.apiUrls);
             this.apis = this.api.apiUrls.exchange;
+            // console.log("Exchange values", this.apis);
             this.exchanges = Object.keys(this.apis);
             if (this.selExchange == undefined) {
                 this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["g" /* KOINEX */];
@@ -420,7 +422,7 @@ var HomePage = (function () {
     }
     HomePage.prototype.ngOnInit = function () {
         var _this = this;
-        console.log("ngOnInit - home called");
+        // console.log("ngOnInit - home called");
         this.api.checkNetworkConnection().then(function (val) {
             _this.networkFlag = val;
             if (val) {
@@ -452,7 +454,7 @@ var HomePage = (function () {
             refresher.takeWhile(function () { return _this.alive; }) // only fires when component is alive
                 .subscribe(function () {
                 _this.networkFlag = _this.api.networkFlag;
-                console.log("Auto Refresh Network Flag " + _this.networkFlag);
+                // console.log("Auto Refresh Network Flag " + this.networkFlag);
                 if (_this.networkFlag) {
                     _this.populateView();
                 }
@@ -472,7 +474,7 @@ var HomePage = (function () {
         var _this = this;
         //update flag - if api fetched from constants file
         this.networkFlag = this.api.networkFlag;
-        console.log("Refresh Network Flag " + this.networkFlag);
+        // console.log("Refresh Network Flag " + this.networkFlag);
         if (this.networkFlag) {
             if (this.updateFlag) {
                 this.setApiUrl();
@@ -643,7 +645,7 @@ var CoinDetailPage = (function () {
             refresher.takeWhile(function () { return _this.alive; }) // only fires when component is alive
                 .subscribe(function () {
                 _this.networkFlag = _this.api.networkFlag;
-                console.log("Auto Refresh Network Flag - coinDetail" + _this.networkFlag);
+                // console.log("Auto Refresh Network Flag - coinDetail" + this.networkFlag);
                 if (_this.networkFlag) {
                     _this.populateView();
                 }
@@ -658,7 +660,7 @@ var CoinDetailPage = (function () {
     CoinDetailPage.prototype.ionViewWillEnter = function () {
         this.alive = true;
         this.networkFlag = this.api.networkFlag;
-        console.log("View enter Network Flag " + this.networkFlag);
+        // console.log("View enter Network Flag " + this.networkFlag);
         if (this.networkFlag) {
             this.populateView();
         }
@@ -1138,7 +1140,9 @@ var MyApp = (function () {
             // Here you can do any higher level native things you might need.
             // console.log("Platform ready");
             _this.api.prepareVideoAd();
-            _this.statusBar.styleDefault();
+            _this.statusBar.overlaysWebView(true);
+            _this.statusBar.styleBlackOpaque();
+            _this.statusBar.show();
             _this.splashScreen.hide();
             _this.fcm.onNotification().subscribe(function (data) {
                 if (data.wasTapped) {
@@ -1358,8 +1362,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var videoConfig = {
     // add your config here
     // for the sake of this example we will just use the test config
-    id: "ca-app-pub-4512084985073909/9656600655",
-    isTesting: false,
+    // id: "ca-app-pub-4512084985073909/9656600655",
+    isTesting: true,
     autoShow: false
 };
 var ApiDataProvider = (function () {
@@ -1388,19 +1392,19 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.checkNetworkConnection = function () {
         var _this = this;
         return this.platform.ready().then(function () {
-            console.log("platform ready - home");
+            // console.log("platform ready - api data");
             if (_this.network.type != 'none') {
-                console.log(_this.network.type);
-                console.log("network flag set as true");
+                // console.log(this.network.type);
+                // console.log("network flag set as true");
                 _this.networkFlag = true;
             }
-            console.log("checking network connection");
+            // console.log("checking network connection");
             var connectSubscription = _this.network.onConnect().subscribe(function () {
-                console.log('network connected!');
+                // console.log('network connected!');
                 _this.networkFlag = true;
             });
             var disconnectSubscription = _this.network.onDisconnect().subscribe(function () {
-                console.log('network was disconnected :-(');
+                // console.log('network was disconnected :-(');
                 _this.networkFlag = false;
             });
             return _this.networkFlag;
@@ -1448,10 +1452,12 @@ var ApiDataProvider = (function () {
                 _this.admobFree.rewardVideo.show().then(function (res) {
                     console.log("Video Ad is Showing", res);
                     _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
-                        console.log("Reward Video value return " + res);
+                        console.log("Reward Video value return ", res);
+                        console.log(res.rewardAmount);
+                        var refillPoints = res.rewardAmount;
                         _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */]).then(function (points) {
                             var newPoints = points;
-                            newPoints += 5;
+                            newPoints += refillPoints;
                             _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */], newPoints);
                             // console.log("Earned New points", newPoints);
                         });
@@ -1491,7 +1497,7 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.logAnalytics = function (pageName) {
         var _this = this;
-        console.log("Logging page: " + pageName);
+        // console.log("Logging page: " + pageName);
         this.platform.ready().then(function () {
             _this.firebaseAnalytics.logEvent(pageName, null)
                 .then(function (res) { return console.log(res); })

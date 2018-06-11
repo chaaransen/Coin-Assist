@@ -36,11 +36,8 @@ export class QuantityCalcPage {
     // console.log("1 qty constructor called");
     this.selExchange = this.navParam.get("exchange");
     this.selCoin.coinName = this.navParam.get("coin");
-
     // console.log(this.selCoin, " sel coin qty");
     // console.log(this.selExchange, " sel Exchange qty");
-
-
     // console.log(this.apis, "api list fetched back");
   }
 
@@ -49,8 +46,11 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
+      // console.log("Api Urls in quantity page", this.api.apiUrls);
 
       this.apis = this.api.apiUrls.exchange;
+      // console.log("Exchange values", this.apis);
+
       this.exchanges = Object.keys(this.apis);
 
       if (this.selExchange == undefined) {

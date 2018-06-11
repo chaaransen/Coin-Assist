@@ -30,7 +30,7 @@ export class HomePage {
   }
 
   ngOnInit() {
-    console.log("ngOnInit - home called");
+    // console.log("ngOnInit - home called");
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
       if (val) {
@@ -66,7 +66,7 @@ export class HomePage {
       refresher.takeWhile(() => this.alive) // only fires when component is alive
         .subscribe(() => {
           this.networkFlag = this.api.networkFlag;
-          console.log("Auto Refresh Network Flag " + this.networkFlag);
+          // console.log("Auto Refresh Network Flag " + this.networkFlag);
           if (this.networkFlag) {
             this.populateView();
           }
@@ -89,7 +89,7 @@ export class HomePage {
   doRefresh(refresher) {
     //update flag - if api fetched from constants file
     this.networkFlag = this.api.networkFlag;
-    console.log("Refresh Network Flag " + this.networkFlag);
+    // console.log("Refresh Network Flag " + this.networkFlag);
     if (this.networkFlag) {
       if (this.updateFlag) {
         this.setApiUrl();

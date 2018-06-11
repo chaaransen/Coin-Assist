@@ -46,7 +46,7 @@ export class CoinDetailPage {
       refresher.takeWhile(() => this.alive) // only fires when component is alive
         .subscribe(() => {
           this.networkFlag = this.api.networkFlag;
-          console.log("Auto Refresh Network Flag - coinDetail" + this.networkFlag);
+          // console.log("Auto Refresh Network Flag - coinDetail" + this.networkFlag);
           if (this.networkFlag) {
             this.populateView();
           }
@@ -66,7 +66,7 @@ export class CoinDetailPage {
     this.alive = true;
 
     this.networkFlag = this.api.networkFlag;
-    console.log("View enter Network Flag " + this.networkFlag);
+    // console.log("View enter Network Flag " + this.networkFlag);
     if (this.networkFlag) {
       this.populateView();
     }
