@@ -14,6 +14,15 @@ import { ApiDataProvider } from '../providers/api-data/api-data';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from "@angular/common/http";
 import { IonicStorageModule } from '@ionic/storage';
+import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
+import { NewsPage } from '../pages/news/news';
+import { Utilities } from '../providers/utilities/utilities';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
+import { FCM } from '@ionic-native/fcm';
+import { Network } from '@ionic-native/network';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +35,8 @@ import { IonicStorageModule } from '@ionic/storage';
     FavouritesPage,
     RemindersPage,
     ProfitCalcPage,
+    QuantityCalcPage,
+    NewsPage,
 
   ],
   imports: [
@@ -46,12 +57,21 @@ import { IonicStorageModule } from '@ionic/storage';
     FavouritesPage,
     RemindersPage,
     ProfitCalcPage,
+    QuantityCalcPage,
+    NewsPage,
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ApiDataProvider,
+    Utilities,
+    FirebaseAnalytics,
+    GoogleAnalytics,
+    AdMobFree,
+    AdMobFreeRewardVideo,
+    FCM,
+    Network
   ]
 })
 export class AppModule { }

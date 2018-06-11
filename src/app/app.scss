@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,6 +12,191 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-.scroll-content {
-    overflow-y: auto !important;
- }
+* {
+    text-transform: none;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.redColor {
+    color: #b95516;
+}
+
+.greenColor {
+    color: #009b2c;
+}
+
+// Font sizes
+.size1rem4 {
+    font-size: 1.4rem;
+}
+
+.size1rem5 {
+    font-size: 1.5rem;
+}
+
+.size1rem6 {
+    font-size: 1.6rem;
+}
+
+.size1rem7 {
+    font-size: 1.7rem;
+}
+
+.size1rem8 {
+    font-size: 1.8rem;
+}
+
+.size1rem9 {
+    font-size: 1.9rem;
+}
+
+.size2rem {
+    font-size: 2rem;
+}
+
+.size2rem3 {
+    font-size: 3rem;
+}
+
+.size2rem4 {
+    font-size: 4rem;
+}
+
+.size2rem8 {
+    font-size: 2.8rem;
+}
+
+.size3rem {
+    font-size: 3rem;
+}
+
+.Medium {
+    color: darkolivegreen;
+    font-weight: 500;
+}
+
+.High {
+    color: #009b2c;
+    font-weight: 500;
+}
+
+.Low {
+    color: #b95516;
+    font-weight: 500;
+}
+
+.centerNetwork {
+    margin-top: 60%;
+    text-align: center;
+    border: 3px solid grey;
+    padding: 10px;
+}
+
+.boldTextValue {
+    font-weight: 500;
+    font-size: 1.5rem;
+}
+
+.weight500 {
+    font-weight: 500;
+}
+
+.font .row {
+    align-items: center;
+}
+
+.vertical-align-content>* {
+    display: flex !important;
+    align-content: center !important;
+    align-items: center !important;
+    white-space: normal;
+}
+
+// Margins
+.marginTop1rem5 {
+    margin-top: 1.5rem;
+}
+
+.margin1rem {
+    margin: 1rem;
+}
+
+.greyColor {
+    color: grey;
+}
+
+.blueColor {
+    color: #3784ff;
+}
+
+.price {
+    font-size: 1.9rem;
+    font-weight: 500;
+    color: #909090;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.padding0 {
+    padding: 0px;
+}
+
+.padding1 {
+    padding: 1px;
+}
+
+.paddingTop0 {
+    padding-top: 0px;
+}
+
+.paddingBottom0 {
+    padding-bottom: 0px;
+}
+
+.leftPadding1rem {
+    padding-left: 1rem;
+}
+
+.padding1rem {
+    padding: 1rem;
+}
+
+hr {
+    margin-top: 0px;
+}
+
+.hrBottomMargin {
+    @extend hr;
+    margin-bottom: 2rem;
+}
+
+.marginLeft3rem {
+    margin-left: 3rem;
+}
+
+.marginBotton0rem5 {
+    margin-bottom: 0.5rem;
+}
+
+.marginBottom0 {
+    margin-bottom: 0px;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.alignCenter {
+    text-align: center;
+}

@@ -1,1 +1,11 @@
-page-profit-calc {}
+page-profit-calc {
+    * {
+        font-size: 1.6rem;
+    }
+    .grid {
+        padding: 10px;
+    }
+    .padding2rem {
+        padding: 2rem !important;
+    }
+}
