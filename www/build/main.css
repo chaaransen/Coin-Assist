@@ -25897,6 +25897,14 @@ page-coin-detail ion-row {
   margin-bottom: 0.2rem;
 }
 
+page-coin-detail .padding2rem5 {
+  padding: 2.5rem;
+}
+
+page-coin-detail * {
+  font-size: 1.6rem;
+}
+
 page-home .item-md ion-thumbnail ion-img,
 page-home .item-md ion-thumbnail img {
   width: 3rem;

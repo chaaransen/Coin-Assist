@@ -13,7 +13,7 @@
     <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
   </div>
 
-  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable && networkFlag">
+  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>

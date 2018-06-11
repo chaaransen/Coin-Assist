@@ -5,8 +5,8 @@ import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { PRICE_REFRESH, TOP, PRICE_REFRESH_FAIL } from '../../constants/api-constants';
 import { Network } from '@ionic-native/network';
+import * as Constants from '../../constants/api-constants'
 
 @Component({
   selector: 'page-home',
@@ -65,7 +65,6 @@ export class HomePage {
       var refresher = IntervalObservable.create(20000);
       refresher.takeWhile(() => this.alive) // only fires when component is alive
         .subscribe(() => {
-
           this.networkFlag = this.api.networkFlag;
           console.log("Auto Refresh Network Flag " + this.networkFlag);
           if (this.networkFlag) {
@@ -83,8 +82,8 @@ export class HomePage {
 
   ionViewWillEnter() {
     this.alive = true;
+    this.networkFlag = this.api.networkFlag;
     // console.log("Home page -View Entered", this.alive);
-
   }
 
   doRefresh(refresher) {
@@ -98,11 +97,12 @@ export class HomePage {
       }
       this.populateView();
       setTimeout(() => {
-        this.api.showToast(PRICE_REFRESH, TOP);
+        this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
         refresher.complete();
       }, 800);
     } else {
-      this.api.showToast(PRICE_REFRESH_FAIL, TOP);
+      refresher.complete();
+      this.api.showToast(Constants.PRICE_REFRESH_FAIL, Constants.TOP);
     }
   }
 

@@ -34,6 +34,8 @@ export class QuantityCalcPage {
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
+    this.selExchange = this.navParam.get("exchange");
+    this.selCoin.coinName = this.navParam.get("coin");
 
     // console.log(this.selCoin, " sel coin qty");
     // console.log(this.selExchange, " sel Exchange qty");
@@ -47,8 +49,6 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
-      this.selExchange = this.navParam.get("exchange");
-      this.selCoin.coinName = this.navParam.get("coin");
 
       this.apis = this.api.apiUrls.exchange;
       this.exchanges = Object.keys(this.apis);
@@ -97,6 +97,11 @@ export class QuantityCalcPage {
       });
       // console.log("Init Done");
     }
+  }
+
+  ionViewWillEnter() {
+    this.networkFlag = this.api.networkFlag;
+    // console.log("Home page -View Entered", this.alive);
   }
 
   infoAlert() {
@@ -151,6 +156,7 @@ export class QuantityCalcPage {
         refresher.complete();
       }, 800);
     } else {
+      refresher.complete();
       this.api.showToast(Constants.PRICE_REFRESH_FAIL, Constants.TOP);
     }
   }
@@ -166,9 +172,12 @@ export class QuantityCalcPage {
     // console.log("Exchange changed", exchange);
     this.selExchange = exchange;
     // console.log("BTC test name", this.api.apiUrls.coins.BTC.name);
-
     this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-    this.populateView();
+
+    this.networkFlag = this.api.networkFlag;
+    if (this.networkFlag) {
+      this.populateView();
+    }
   }
 
   populateCoins(exchange: any) {

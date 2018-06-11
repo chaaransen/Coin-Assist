@@ -5,7 +5,7 @@ import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { QuantityCalcPage } from '../quantity-calc/quantity-calc';
 import { CoinDetail } from '../../models/coin-detail';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { PRICE_REFRESH, TOP } from '../../constants/api-constants';
+import * as Constants from '../../constants/api-constants'
 
 
 @Component({
@@ -21,30 +21,39 @@ export class CoinDetailPage {
   apis: any;
   alive: boolean;
   pageName: string = "coin-detail page";
+  networkFlag: boolean;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider) {
-    let coin = this.navParam.get("coin");
-    this.exchange = this.navParam.get("exchange");
+
     // console.log(coin);
     this.alive = true;
-    this.initRange(coin);
+
   }
 
   ngOnInit() {
+    this.networkFlag = this.api.networkFlag;
 
-    // this.api.trackPage(this.pageName);
-    this.api.logAnalytics(this.pageName);
-    this.referralLink = this.api.apiUrls.exchange[this.exchange].referral;
-    // console.log("referral Link", this.referralLink);
-    this.populateView();
-    var refresher = IntervalObservable.create(20000);
-    refresher.takeWhile(() => this.alive) // only fires when component is alive
-      .subscribe(() => {
-        this.populateView();
-      });
+    if (this.networkFlag) {
+      let coin = this.navParam.get("coin");
+      this.exchange = this.navParam.get("exchange");
+      this.initRange(coin);
+      // this.api.trackPage(this.pageName);
+      this.api.logAnalytics(this.pageName);
+      this.referralLink = this.api.apiUrls.exchange[this.exchange].referral;
+      // console.log("referral Link", this.referralLink);
+      this.populateView();
+      var refresher = IntervalObservable.create(20000);
+      refresher.takeWhile(() => this.alive) // only fires when component is alive
+        .subscribe(() => {
+          this.networkFlag = this.api.networkFlag;
+          console.log("Auto Refresh Network Flag - coinDetail" + this.networkFlag);
+          if (this.networkFlag) {
+            this.populateView();
+          }
+        });
 
-    this.api.instructionToast(this.pageName, 1500);
-
+      this.api.instructionToast(this.pageName, 1500);
+    }
   }
 
   ionViewDidLeave() {
@@ -55,7 +64,12 @@ export class CoinDetailPage {
 
   ionViewWillEnter() {
     this.alive = true;
-    this.populateView();
+
+    this.networkFlag = this.api.networkFlag;
+    console.log("View enter Network Flag " + this.networkFlag);
+    if (this.networkFlag) {
+      this.populateView();
+    }
     // console.log("Detail page -View Entered", this.alive);
   }
 
@@ -77,16 +91,20 @@ export class CoinDetailPage {
 
   }
 
-  change() {
-    // console.log(this.rangeRegion);
-  }
-
   doRefresh(refresher) {
-    this.populateView();
-    setTimeout(() => {
-      this.api.showToast(PRICE_REFRESH, TOP);
+
+    this.networkFlag = this.api.networkFlag;
+
+    if (this.networkFlag) {
+      this.populateView();
+      setTimeout(() => {
+        this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
+        refresher.complete();
+      }, 800);
+    } else {
       refresher.complete();
-    }, 800);
+      this.api.showToast(Constants.PRICE_REFRESH_FAIL, Constants.TOP);
+    }
   }
 
   populateView() {
