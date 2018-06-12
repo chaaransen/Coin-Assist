@@ -47,60 +47,86 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
-      console.log("Api Urls in quantity page", this.api.apiUrls);
 
-      this.apis = this.api.apiUrls.exchange;
-      console.log("Exchange values", this.apis);
+      this.api.getApiUrlStorage().then(res => {
 
-      this.exchanges = Object.keys(this.apis);
 
-      if (this.selExchange == undefined) {
-        this.selExchange = Constants.KOINEX;
-      }
-      if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-      }
-      this.populateView();
-
-      // this.api.trackPage(this.pageName);
-      this.api.logAnalytics(this.pageName);
-
-      this.api.fetchService(this.pageName).then(lock => {
-        if (lock != true) {
-          this.infoAlert();
+        if (res != null) {
+          // console.log("Stored Url value", res);
+          this.apiUrls = res;
         }
-      });
+        else {
 
-      this.api.fetchService("points").then(points => {
-        // console.log("QTY fetched points", points);
+          this.api.fetchApiUrl().then(res => {
+            // console.log("fetching Api urls called", res);
+            this.apiUrls = res;
+            this.api.storeApiUrl(this.apiUrls);
+          }).catch(err => {
+            // console.log("constant Api urls called", err);
+            this.apiUrls = this.api.getConstantApiUrl();
+          });
 
-        this.points = points;
+        }
 
-        if (this.points > 0) {
-          if (!this.api.usedFlag) {
-            this.points = this.points - 1;
-            this.api.usedFlag = true;
+        // console.log("Init Done");
+      }).then(res => {
+        // console.log("Api Urls in quantity page", this.apiUrls);
+
+        this.apis = this.apiUrls.exchange;
+        // console.log("Exchange values", this.apis);
+
+        this.exchanges = Object.keys(this.apis);
+
+        if (this.selExchange == undefined) {
+          this.selExchange = Constants.KOINEX;
+        }
+        if (this.selCoin.coinName == undefined) {
+          this.selCoin.coinName = this.apiUrls.coins.BTC.name;
+        }
+
+
+        this.populateView();
+
+        // this.api.trackPage(this.pageName);
+        this.api.logAnalytics(this.pageName);
+
+        this.api.fetchService(this.pageName).then(lock => {
+          if (lock != true) {
+            this.infoAlert();
           }
-          this.enable = true;
+        });
 
-        } else {
-          this.enable = false;
-        }
-        if (this.points == 1) {
-          this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-        }
+        this.api.fetchService("points").then(points => {
+          // console.log("QTY fetched points", points);
+
+          this.points = points;
+
+          if (this.points > 0) {
+            if (!this.api.usedFlag) {
+              this.points = this.points - 1;
+              this.api.usedFlag = true;
+            }
+            this.enable = true;
+
+          } else {
+            this.enable = false;
+          }
+          if (this.points == 1) {
+            this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+          }
 
 
-        // console.log("Storing new Points", this.points);
-        this.api.storeService(Constants.POINTS, this.points);
+          // console.log("Storing new Points", this.points);
+          this.api.storeService(Constants.POINTS, this.points);
 
 
-        if (!this.enable) {
-          this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
-        }
-        // console.log("Existing points", this.points);
+          if (!this.enable) {
+            this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
+          }
+          // console.log("Existing points", this.points);
+        });
+
       });
-      // console.log("Init Done");
     }
   }
 
@@ -136,13 +162,13 @@ export class QuantityCalcPage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
           text: 'Watch Ad',
           handler: () => {
-            console.log('Watch Ad clicked');
+            // console.log('Watch Ad clicked');
             this.showAd();
           }
         }

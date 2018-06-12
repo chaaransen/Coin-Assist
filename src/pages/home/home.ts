@@ -20,17 +20,17 @@ export class HomePage {
   selExchange: any;
   alive: boolean;
   pageName: string = "home page";
-  updateFlag: boolean = false;
   networkFlag: boolean = true;
+  firstEntryFlag: boolean = true;
 
   constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
     // console.log("Constructor - Home page");
-
     this.alive = true;
   }
 
   ngOnInit() {
-    // console.log("ngOnInit - home called");
+    console.log("ngOnInit - home called");
+    this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
       if (this.networkFlag) {
@@ -50,8 +50,14 @@ export class HomePage {
       }
       else {
         // console.log("constant Api urls called");
-        this.updateFlag = true;
-        this.apiUrls = this.api.getConstantApiUrl();
+        this.api.fetchApiUrl().then(res => {
+          console.log("fetching Api urls called", res);
+          this.apiUrls = res;
+          this.api.storeApiUrl(this.apiUrls);
+        }).catch(err => {
+          console.log("constant Api urls called", err);
+          this.apiUrls = this.api.getConstantApiUrl();
+        });
       }
       // console.log("Home Compo Value return");
 
@@ -83,6 +89,9 @@ export class HomePage {
   ionViewWillEnter() {
     this.alive = true;
     this.networkFlag = this.api.networkFlag;
+    if (!this.firstEntryFlag && this.networkFlag && this.apiUrls == undefined) {
+      this.ngOnInit();
+    }
     // console.log("Home page -View Entered", this.alive);
   }
 
@@ -91,10 +100,6 @@ export class HomePage {
     this.networkFlag = this.api.networkFlag;
     // console.log("Refresh Network Flag " + this.networkFlag);
     if (this.networkFlag) {
-      if (this.updateFlag) {
-        this.setApiUrl();
-        this.updateFlag = false;
-      }
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);

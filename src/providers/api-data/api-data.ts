@@ -223,7 +223,11 @@ export class ApiDataProvider {
   getApiUrlStorage(): any {
     // console.log("GET - api url storage");
     return this.storage.ready().then(() => {
-      return this.storage.get(this.apiUrlStore);
+
+      return this.storage.get(this.apiUrlStore).then(res => {
+        this.apiUrls = res;
+        return this.apiUrls;
+      });
     });
   }
 
@@ -301,6 +305,8 @@ export class ApiDataProvider {
     else {
       if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
         this.koinexData.lock = true;
+        console.log("koinex api urls", this.apiUrls);
+
         return this.http.get(this.apiUrls.exchange.Koinex.api).map(res => {
           // console.log(res);
           // console.log("FETCHED - koinex data", res);

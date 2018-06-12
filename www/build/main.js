@@ -76,48 +76,65 @@ var QuantityCalcPage = (function () {
         var _this = this;
         this.networkFlag = this.api.networkFlag;
         if (this.networkFlag) {
-            console.log("Api Urls in quantity page", this.api.apiUrls);
-            this.apis = this.api.apiUrls.exchange;
-            console.log("Exchange values", this.apis);
-            this.exchanges = Object.keys(this.apis);
-            if (this.selExchange == undefined) {
-                this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["g" /* KOINEX */];
-            }
-            if (this.selCoin.coinName == undefined) {
-                this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-            }
-            this.populateView();
-            // this.api.trackPage(this.pageName);
-            this.api.logAnalytics(this.pageName);
-            this.api.fetchService(this.pageName).then(function (lock) {
-                if (lock != true) {
-                    _this.infoAlert();
-                }
-            });
-            this.api.fetchService("points").then(function (points) {
-                // console.log("QTY fetched points", points);
-                _this.points = points;
-                if (_this.points > 0) {
-                    if (!_this.api.usedFlag) {
-                        _this.points = _this.points - 1;
-                        _this.api.usedFlag = true;
-                    }
-                    _this.enable = true;
+            this.api.getApiUrlStorage().then(function (res) {
+                if (res != null) {
+                    // console.log("Stored Url value", res);
+                    _this.apiUrls = res;
                 }
                 else {
-                    _this.enable = false;
+                    _this.api.fetchApiUrl().then(function (res) {
+                        // console.log("fetching Api urls called", res);
+                        _this.apiUrls = res;
+                        _this.api.storeApiUrl(_this.apiUrls);
+                    }).catch(function (err) {
+                        // console.log("constant Api urls called", err);
+                        _this.apiUrls = _this.api.getConstantApiUrl();
+                    });
                 }
-                if (_this.points == 1) {
-                    _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["i" /* LAST_POINT_DESC */]);
+                // console.log("Init Done");
+            }).then(function (res) {
+                // console.log("Api Urls in quantity page", this.apiUrls);
+                _this.apis = _this.apiUrls.exchange;
+                // console.log("Exchange values", this.apis);
+                _this.exchanges = Object.keys(_this.apis);
+                if (_this.selExchange == undefined) {
+                    _this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["g" /* KOINEX */];
                 }
-                // console.log("Storing new Points", this.points);
-                _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["m" /* POINTS */], _this.points);
-                if (!_this.enable) {
-                    _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["f" /* INSUF_POINTS_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["e" /* INSUF_POINTS_DESC */]);
+                if (_this.selCoin.coinName == undefined) {
+                    _this.selCoin.coinName = _this.apiUrls.coins.BTC.name;
                 }
-                // console.log("Existing points", this.points);
+                _this.populateView();
+                // this.api.trackPage(this.pageName);
+                _this.api.logAnalytics(_this.pageName);
+                _this.api.fetchService(_this.pageName).then(function (lock) {
+                    if (lock != true) {
+                        _this.infoAlert();
+                    }
+                });
+                _this.api.fetchService("points").then(function (points) {
+                    // console.log("QTY fetched points", points);
+                    _this.points = points;
+                    if (_this.points > 0) {
+                        if (!_this.api.usedFlag) {
+                            _this.points = _this.points - 1;
+                            _this.api.usedFlag = true;
+                        }
+                        _this.enable = true;
+                    }
+                    else {
+                        _this.enable = false;
+                    }
+                    if (_this.points == 1) {
+                        _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["i" /* LAST_POINT_DESC */]);
+                    }
+                    // console.log("Storing new Points", this.points);
+                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["m" /* POINTS */], _this.points);
+                    if (!_this.enable) {
+                        _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["f" /* INSUF_POINTS_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["e" /* INSUF_POINTS_DESC */]);
+                    }
+                    // console.log("Existing points", this.points);
+                });
             });
-            // console.log("Init Done");
         }
     };
     QuantityCalcPage.prototype.ionViewWillEnter = function () {
@@ -150,13 +167,13 @@ var QuantityCalcPage = (function () {
                     text: 'Cancel',
                     role: 'cancel',
                     handler: function () {
-                        console.log('Cancel clicked');
+                        // console.log('Cancel clicked');
                     }
                 },
                 {
                     text: 'Watch Ad',
                     handler: function () {
-                        console.log('Watch Ad clicked');
+                        // console.log('Watch Ad clicked');
                         _this.showAd();
                     }
                 }
@@ -416,18 +433,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var HomePage = (function () {
     function HomePage(navCtrl, api, platform) {
-        // console.log("Constructor - Home page");
         this.navCtrl = navCtrl;
         this.api = api;
         this.platform = platform;
         this.pageName = "home page";
-        this.updateFlag = false;
         this.networkFlag = true;
+        this.firstEntryFlag = true;
+        // console.log("Constructor - Home page");
         this.alive = true;
     }
     HomePage.prototype.ngOnInit = function () {
         var _this = this;
-        // console.log("ngOnInit - home called");
+        console.log("ngOnInit - home called");
+        this.firstEntryFlag = false;
         this.api.checkNetworkConnection().then(function (val) {
             _this.networkFlag = val;
             if (_this.networkFlag) {
@@ -447,8 +465,14 @@ var HomePage = (function () {
             }
             else {
                 // console.log("constant Api urls called");
-                _this.updateFlag = true;
-                _this.apiUrls = _this.api.getConstantApiUrl();
+                _this.api.fetchApiUrl().then(function (res) {
+                    console.log("fetching Api urls called", res);
+                    _this.apiUrls = res;
+                    _this.api.storeApiUrl(_this.apiUrls);
+                }).catch(function (err) {
+                    console.log("constant Api urls called", err);
+                    _this.apiUrls = _this.api.getConstantApiUrl();
+                });
             }
             // console.log("Home Compo Value return");
             // console.log(this.apiUrls);
@@ -473,6 +497,9 @@ var HomePage = (function () {
     HomePage.prototype.ionViewWillEnter = function () {
         this.alive = true;
         this.networkFlag = this.api.networkFlag;
+        if (!this.firstEntryFlag && this.networkFlag && this.apiUrls == undefined) {
+            this.ngOnInit();
+        }
         // console.log("Home page -View Entered", this.alive);
     };
     HomePage.prototype.doRefresh = function (refresher) {
@@ -481,10 +508,6 @@ var HomePage = (function () {
         this.networkFlag = this.api.networkFlag;
         // console.log("Refresh Network Flag " + this.networkFlag);
         if (this.networkFlag) {
-            if (this.updateFlag) {
-                this.setApiUrl();
-                this.updateFlag = false;
-            }
             this.populateView();
             setTimeout(function () {
                 _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["p" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["s" /* TOP */]);
@@ -1546,7 +1569,10 @@ var ApiDataProvider = (function () {
         var _this = this;
         // console.log("GET - api url storage");
         return this.storage.ready().then(function () {
-            return _this.storage.get(_this.apiUrlStore);
+            return _this.storage.get(_this.apiUrlStore).then(function (res) {
+                _this.apiUrls = res;
+                return _this.apiUrls;
+            });
         });
     };
     ApiDataProvider.prototype.getConstantApiUrl = function () {
@@ -1609,6 +1635,7 @@ var ApiDataProvider = (function () {
         else {
             if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
                 this.koinexData.lock = true;
+                console.log("koinex api urls", this.apiUrls);
                 return this.http.get(this.apiUrls.exchange.Koinex.api).map(function (res) {
                     // console.log(res);
                     // console.log("FETCHED - koinex data", res);
