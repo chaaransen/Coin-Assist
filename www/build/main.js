@@ -55,6 +55,7 @@ var QuantityCalcPage = (function () {
         this.alertCtrl = alertCtrl;
         this.selCoin = new __WEBPACK_IMPORTED_MODULE_4__models_coin_detail__["a" /* CoinDetail */]();
         this.apis = {};
+        this.apiUrls = {};
         this.amount = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.actualAmount = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.buyerFees = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
@@ -62,7 +63,7 @@ var QuantityCalcPage = (function () {
         this.quantity = new __WEBPACK_IMPORTED_MODULE_5__models_value_detail__["a" /* ValueDetail */]();
         this.percent = 0.05;
         this.pageName = "quantity-calc page";
-        this.networkFlag = false;
+        this.networkFlag = true;
         // console.log("1 qty constructor called");
         this.selExchange = this.navParam.get("exchange");
         this.selCoin.coinName = this.navParam.get("coin");
@@ -75,9 +76,9 @@ var QuantityCalcPage = (function () {
         var _this = this;
         this.networkFlag = this.api.networkFlag;
         if (this.networkFlag) {
-            // console.log("Api Urls in quantity page", this.api.apiUrls);
+            console.log("Api Urls in quantity page", this.api.apiUrls);
             this.apis = this.api.apiUrls.exchange;
-            // console.log("Exchange values", this.apis);
+            console.log("Exchange values", this.apis);
             this.exchanges = Object.keys(this.apis);
             if (this.selExchange == undefined) {
                 this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["g" /* KOINEX */];
@@ -96,15 +97,18 @@ var QuantityCalcPage = (function () {
             this.api.fetchService("points").then(function (points) {
                 // console.log("QTY fetched points", points);
                 _this.points = points;
-                if (_this.points == 2) {
-                    _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["i" /* LAST_POINT_DESC */]);
-                }
                 if (_this.points > 0) {
-                    _this.points = _this.points - 1;
+                    if (!_this.api.usedFlag) {
+                        _this.points = _this.points - 1;
+                        _this.api.usedFlag = true;
+                    }
                     _this.enable = true;
                 }
                 else {
                     _this.enable = false;
+                }
+                if (_this.points == 1) {
+                    _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["i" /* LAST_POINT_DESC */]);
                 }
                 // console.log("Storing new Points", this.points);
                 _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["m" /* POINTS */], _this.points);
@@ -418,6 +422,7 @@ var HomePage = (function () {
         this.platform = platform;
         this.pageName = "home page";
         this.updateFlag = false;
+        this.networkFlag = true;
         this.alive = true;
     }
     HomePage.prototype.ngOnInit = function () {
@@ -425,7 +430,7 @@ var HomePage = (function () {
         // console.log("ngOnInit - home called");
         this.api.checkNetworkConnection().then(function (val) {
             _this.networkFlag = val;
-            if (val) {
+            if (_this.networkFlag) {
                 _this.api.logAnalytics(_this.pageName);
                 _this.setApiUrl();
                 _this.api.instructionToast(_this.pageName, 0);
@@ -1382,7 +1387,7 @@ var ApiDataProvider = (function () {
         this.apiUrlStore = "apiUrls";
         this.koinexData = {};
         this.zebpayData = {};
-        this.networkFlag = false;
+        this.usedFlag = false;
         // ******************************************************************************
         this.coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
         this.koinexTest = false;

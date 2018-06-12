@@ -21,7 +21,7 @@ export class HomePage {
   alive: boolean;
   pageName: string = "home page";
   updateFlag: boolean = false;
-  networkFlag: boolean;
+  networkFlag: boolean = true;
 
   constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
     // console.log("Constructor - Home page");
@@ -33,7 +33,7 @@ export class HomePage {
     // console.log("ngOnInit - home called");
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
-      if (val) {
+      if (this.networkFlag) {
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);

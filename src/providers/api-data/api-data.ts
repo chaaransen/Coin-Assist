@@ -31,7 +31,8 @@ export class ApiDataProvider {
   apiUrlStore = "apiUrls";
   koinexData: any = {};
   zebpayData: any = {};
-  networkFlag = false;
+  networkFlag: boolean;
+  usedFlag = false;
 
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";

@@ -19,6 +19,7 @@ export class QuantityCalcPage {
   selExchange: any;
   public selCoin: CoinDetail = new CoinDetail();
   apis: any = {};
+  apiUrls: any = {};
   public amount: ValueDetail = new ValueDetail();
   public actualAmount: ValueDetail = new ValueDetail();
   public buyerFees: ValueDetail = new ValueDetail();
@@ -30,7 +31,7 @@ export class QuantityCalcPage {
   pageName: string = "quantity-calc page";
   reward: boolean;
   enable: boolean;
-  networkFlag: boolean = false;
+  networkFlag: boolean = true;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
@@ -46,10 +47,10 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
-      // console.log("Api Urls in quantity page", this.api.apiUrls);
+      console.log("Api Urls in quantity page", this.api.apiUrls);
 
       this.apis = this.api.apiUrls.exchange;
-      // console.log("Exchange values", this.apis);
+      console.log("Exchange values", this.apis);
 
       this.exchanges = Object.keys(this.apis);
 
@@ -75,16 +76,20 @@ export class QuantityCalcPage {
 
         this.points = points;
 
-        if (this.points == 2) {
-          this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-        }
-
         if (this.points > 0) {
-          this.points = this.points - 1;
+          if (!this.api.usedFlag) {
+            this.points = this.points - 1;
+            this.api.usedFlag = true;
+          }
           this.enable = true;
+
         } else {
           this.enable = false;
         }
+        if (this.points == 1) {
+          this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+        }
+
 
         // console.log("Storing new Points", this.points);
         this.api.storeService(Constants.POINTS, this.points);
