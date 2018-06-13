@@ -80,6 +80,7 @@ export class ApiDataProvider {
       if (res) {
         if (show) {
           console.log("Video Ad Already Ready - calling Show!");
+      console.log("prepared Video ad - ready response", res);
 
           this.showVideoAd();
           show = false;
@@ -176,7 +177,9 @@ export class ApiDataProvider {
     // console.log("Logging page: " + pageName);
     this.platform.ready().then(() => {
       this.firebaseAnalytics.logEvent(pageName, null)
-        .then((res: any) => console.log(res))
+        .then((res: any) => {
+          // console.log("Analytics logging ", res);
+        })
         .catch((error: any) => console.error(error));
     })
 
@@ -305,7 +308,7 @@ export class ApiDataProvider {
     else {
       if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
         this.koinexData.lock = true;
-        console.log("koinex api urls", this.apiUrls);
+        // console.log("koinex api urls", this.apiUrls);
 
         return this.http.get(this.apiUrls.exchange.Koinex.api).map(res => {
           // console.log(res);

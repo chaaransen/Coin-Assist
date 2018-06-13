@@ -444,7 +444,7 @@ var HomePage = (function () {
     }
     HomePage.prototype.ngOnInit = function () {
         var _this = this;
-        console.log("ngOnInit - home called");
+        // console.log("ngOnInit - home called");
         this.firstEntryFlag = false;
         this.api.checkNetworkConnection().then(function (val) {
             _this.networkFlag = val;
@@ -466,11 +466,11 @@ var HomePage = (function () {
             else {
                 // console.log("constant Api urls called");
                 _this.api.fetchApiUrl().then(function (res) {
-                    console.log("fetching Api urls called", res);
+                    // console.log("fetching Api urls called", res);
                     _this.apiUrls = res;
                     _this.api.storeApiUrl(_this.apiUrls);
                 }).catch(function (err) {
-                    console.log("constant Api urls called", err);
+                    // console.log("constant Api urls called", err);
                     _this.apiUrls = _this.api.getConstantApiUrl();
                 });
             }
@@ -1446,6 +1446,7 @@ var ApiDataProvider = (function () {
             if (res) {
                 if (show) {
                     console.log("Video Ad Already Ready - calling Show!");
+                    console.log("prepared Video ad - ready response", res);
                     _this.showVideoAd();
                     show = false;
                 }
@@ -1528,7 +1529,9 @@ var ApiDataProvider = (function () {
         // console.log("Logging page: " + pageName);
         this.platform.ready().then(function () {
             _this.firebaseAnalytics.logEvent(pageName, null)
-                .then(function (res) { return console.log(res); })
+                .then(function (res) {
+                // console.log("Analytics logging ", res);
+            })
                 .catch(function (error) { return console.error(error); });
         });
     };
@@ -1635,7 +1638,7 @@ var ApiDataProvider = (function () {
         else {
             if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
                 this.koinexData.lock = true;
-                console.log("koinex api urls", this.apiUrls);
+                // console.log("koinex api urls", this.apiUrls);
                 return this.http.get(this.apiUrls.exchange.Koinex.api).map(function (res) {
                     // console.log(res);
                     // console.log("FETCHED - koinex data", res);
@@ -2137,12 +2140,12 @@ var XLM = "Stellar";
 //Messages
 var PRICE_REFRESH = "Latest Price Refreshed";
 var PRICE_REFRESH_FAIL = "Failed to Refresh - No Network Connection";
-var REWARD_POINTS = "5 Reward points Added!";
+var REWARD_POINTS = "Reward points Added!";
 var TOP = "top";
 var BOTTOM = "bottom";
 //Quantity Page
 var INSUF_POINTS_MSG = "Insufficient Use Points";
-var INSUF_POINTS_DESC = "Get 5 Use Points by watching Video Ad";
+var INSUF_POINTS_DESC = "Get Use Points by watching Video Ad";
 var LAST_POINT_MSG = "1 Use Point remaining!";
 var LAST_POINT_DESC = "Watch Video Ad to refill Use points";
 var POINTS_MSG = "Info:";

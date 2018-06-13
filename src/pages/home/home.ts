@@ -29,7 +29,7 @@ export class HomePage {
   }
 
   ngOnInit() {
-    console.log("ngOnInit - home called");
+    // console.log("ngOnInit - home called");
     this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
@@ -51,11 +51,11 @@ export class HomePage {
       else {
         // console.log("constant Api urls called");
         this.api.fetchApiUrl().then(res => {
-          console.log("fetching Api urls called", res);
+          // console.log("fetching Api urls called", res);
           this.apiUrls = res;
           this.api.storeApiUrl(this.apiUrls);
         }).catch(err => {
-          console.log("constant Api urls called", err);
+          // console.log("constant Api urls called", err);
           this.apiUrls = this.api.getConstantApiUrl();
         });
       }

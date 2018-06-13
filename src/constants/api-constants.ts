@@ -25,13 +25,13 @@ export const XLM: string = "Stellar";
 //Messages
 export const PRICE_REFRESH: string = "Latest Price Refreshed";
 export const PRICE_REFRESH_FAIL: string = "Failed to Refresh - No Network Connection";
-export const REWARD_POINTS: string = "5 Reward points Added!";
+export const REWARD_POINTS: string = "Reward points Added!";
 export const TOP: string = "top";
 export const BOTTOM: string = "bottom";
 
 //Quantity Page
 export const INSUF_POINTS_MSG: string = "Insufficient Use Points";
-export const INSUF_POINTS_DESC: string = "Get 5 Use Points by watching Video Ad";
+export const INSUF_POINTS_DESC: string = "Get Use Points by watching Video Ad";
 
 export const LAST_POINT_MSG: string = "1 Use Point remaining!";
 export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
