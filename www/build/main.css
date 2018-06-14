@@ -25926,6 +25926,13 @@ page-home * {
   font-size: 1.6rem;
 }
 
+page-home .coinSpinner {
+  margin-top: 45%;
+  margin-left: 45%;
+  height: 60px;
+  width: 60px;
+}
+
 page-home ion-label,
 page-home ion-select {
   font-size: 1.8rem;

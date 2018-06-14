@@ -33,7 +33,8 @@ export class ApiDataProvider {
   zebpayData: any = {};
   networkFlag: boolean;
   usedFlag = false;
-
+  adRetryCounter = 2;
+  adRetryLock = false;
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
@@ -80,7 +81,7 @@ export class ApiDataProvider {
       if (res) {
         if (show) {
           console.log("Video Ad Already Ready - calling Show!");
-      console.log("prepared Video ad - ready response", res);
+          console.log("prepared Video ad - ready response", res);
 
           this.showVideoAd();
           show = false;
@@ -97,12 +98,26 @@ export class ApiDataProvider {
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
           console.log("AD failed to Load - new", res);
-          if (show) {
+          console.log("AD Retries Left", this.adRetryCounter);
+
+          if (show && this.adRetryCounter == 0) {
+            console.log("retry depletion with show");
+
             this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
+          } else if (show && this.adRetryCounter > 0) {
+            console.log("Show retry , retry count ", this.adRetryCounter);
+
+            this.adRetryCounter -= 1;
+            this.prepareVideoAd(true);
+          } else if (this.adRetryCounter > 0) {
+            console.log("No show retry");
+            this.adRetryCounter -= 1;
+            this.prepareVideoAd();
           }
         });
 
         this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
+          this.adRetryCounter = 2;
           console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
@@ -115,42 +130,65 @@ export class ApiDataProvider {
   }
 
   showVideoAd() {
-    this.admobFree.rewardVideo.isReady().then(res => {
-      if (res) {
-        this.admobFree.rewardVideo.show().then(res => {
-          console.log("Video Ad is Showing", res);
+    if (!this.adRetryLock) {
+      this.admobFree.rewardVideo.isReady().then(res => {
+        if (res) {
+          this.adRetryCounter = 2;
+          this.admobFree.rewardVideo.show().then(res => {
+            console.log("Video Ad is Showing", res);
 
-          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-            console.log("Reward Video value return ", res);
-            console.log(res.rewardAmount);
-            var refillPoints = res.rewardAmount;
-            this.fetchService(Constants.POINTS).then(points => {
+            this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+              console.log("Reward Video value return ", res);
+              // console.log(res.rewardAmount);
+              var refillPoints = res.rewardAmount;
+              this.fetchService(Constants.POINTS).then(points => {
 
-              let newPoints: number = points;
-              newPoints += refillPoints;
-              this.storeService(Constants.POINTS, newPoints);
-              // console.log("Earned New points", newPoints);
+                let newPoints: number = points;
+                newPoints += refillPoints;
+                this.storeService(Constants.POINTS, newPoints);
+                console.log("Earned New points", newPoints);
+              });
+              // console.log("Successful view - reward", res);
+
             });
-            // console.log("Successful view - reward", res);
 
+            this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+
+              this.prepareVideoAd();
+              // console.log("AD closed", res);
+            });
+
+          }).catch(err => {
+            console.log("Unable to show Video Ad", err);
           });
+        } else {
+          console.log("Video not ready, preparing and showing");
+          console.log("ad retry counter - showing method", this.adRetryCounter);
 
-          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-            this.prepareVideoAd();
-            // console.log("AD closed", res);
-          });
+          if (this.adRetryCounter > 0) {
+            this.adRetryCounter -= 1;
+            console.log("reducing retry, count value ", this.adRetryCounter);
 
-        }).catch(err => {
-          console.log("Unable to show Video Ad", err);
-        });
-      } else {
-        console.log("Video not ready, preparing and showing");
+            this.prepareVideoAd(true);
+          } else {
+            this.adRetryLock = true;
+            var resetRetry = Observable.timer(15000);
+            resetRetry.subscribe(res => {
+              this.adRetryLock = false;
+              this.adRetryCounter = 2;
+              console.log("Ad retry lock DISABLED", this.adRetryLock);
+              console.log("Ad retry counter Reset ", this.adRetryCounter);
 
-        this.prepareVideoAd(true);
-      }
-    }).catch(err => {
-      console.log("Exception thrown - ready", err);
-    });
+
+            });
+          }
+        }
+      }).catch(err => {
+        console.log("Exception thrown - ready", err);
+      });
+    } else {
+      this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
+    }
   }
 
   setApiUrl(apiUrl: any): any {
@@ -445,80 +483,91 @@ export class ApiDataProvider {
   // TO BE TESTED
   koinexProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
     // console.log("Koinex Exchange data", exchangeData);
+    try {
+      var processedKoinexData = [];
+      var coinList = this.apiUrls.exchange.Koinex.coinList;
+      var tempKoinexData = exchangeData.stats.inr;
+      // console.log(coinMarketCapData, "coinmarket cap data- processor");
+      // console.log("temp koinex data full", tempKoinexData);
 
-    var processedKoinexData = [];
-    var coinList = this.apiUrls.exchange.Koinex.coinList;
-    var tempKoinexData = exchangeData.stats.inr;
-    // console.log(coinMarketCapData, "coinmarket cap data- processor");
-    // console.log("temp koinex data full", tempKoinexData);
-
-    // console.log(coinList, "before");
-    if (coinMarketCapData != undefined) {
-      if (coinMarketCapData.length == 1) {
-        // console.log(coinMarketCapData);
-
-        // console.log(coinList[coinMarketCapData[0].symbol]);
-
-
-        coinList = [coinMarketCapData[0].symbol];
-        // console.log(coinList, "after");
-
-      }
-    }
-    for (let coin in coinList) {
-
-      // var processedCoin: any = {};
-      // console.log(coinList[coin], "coin value");
-
-      var processedCoin: CoinDetail = new CoinDetail();
-      var coinCode = coinList[coin].toUpperCase();
-      // console.log("Coin Code", coinCode);
-
-      processedCoin.coinCode = coinCode;
-      processedCoin.coinName = this.getCoinName(coinCode);
-      // console.log("processed coin before", processedCoin);
-      // console.log("Coin name", processedCoin.coinName);
-
-      processedCoin = this.injectCoinImage(processedCoin);
-      // console.log("temp koinex data", tempKoinexData[coinCode]);
-
-      processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
-      processedCoin.buy.no = +tempKoinexData[coinCode].lowest_ask;
-      processedCoin.sell.no = +tempKoinexData[coinCode].highest_bid;
-      processedCoin.min.no = +tempKoinexData[coinCode].min_24hrs;
-      processedCoin.max.no = +tempKoinexData[coinCode].max_24hrs;
-      let diff = processedCoin.max.no - processedCoin.min.no;
-      let average = diff / 2;
-      processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
-
-      processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-
-      // console.log(coinMarketCapData, "coin market data null check");
+      // console.log(coinList, "before");
       if (coinMarketCapData != undefined) {
-        processedCoin = this.injectGlobalStats(coinCode, processedCoin, coinMarketCapData, coinDeskData);
-      }
+        if (coinMarketCapData.length == 1) {
+          // console.log(coinMarketCapData);
 
-      processedCoin = this.coinDetailFormatter(processedCoin);
-      // console.log(processedCoin);
-      processedKoinexData.push(processedCoin);
+          // console.log(coinList[coinMarketCapData[0].symbol]);
+
+
+          coinList = [coinMarketCapData[0].symbol];
+          // console.log(coinList, "after");
+
+        }
+      }
+      for (let coin in coinList) {
+
+        // var processedCoin: any = {};
+        // console.log(coinList[coin], "coin value");
+
+        var processedCoin: CoinDetail = new CoinDetail();
+        var coinCode = coinList[coin].toUpperCase();
+        // console.log("Coin Code", coinCode);
+
+        processedCoin.coinCode = coinCode;
+        processedCoin.coinName = this.getCoinName(coinCode);
+        // console.log("processed coin before", processedCoin);
+        // console.log("Coin name", processedCoin.coinName);
+
+        processedCoin = this.injectCoinImage(processedCoin);
+        // console.log("temp koinex data", tempKoinexData[coinCode]);
+
+        processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
+        processedCoin.buy.no = +tempKoinexData[coinCode].lowest_ask;
+        processedCoin.sell.no = +tempKoinexData[coinCode].highest_bid;
+        processedCoin.min.no = +tempKoinexData[coinCode].min_24hrs;
+        processedCoin.max.no = +tempKoinexData[coinCode].max_24hrs;
+        let diff = processedCoin.max.no - processedCoin.min.no;
+        let average = diff / 2;
+        processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
+
+        processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+
+        // console.log(coinMarketCapData, "coin market data null check");
+        if (coinMarketCapData != undefined) {
+          processedCoin = this.injectGlobalStats(coinCode, processedCoin, coinMarketCapData, coinDeskData);
+        }
+
+        processedCoin = this.coinDetailFormatter(processedCoin);
+        // console.log(processedCoin);
+        processedKoinexData.push(processedCoin);
+      }
+      return processedKoinexData;
     }
-    return processedKoinexData;
+    catch (e) {
+      console.log("Koinex Processor Exception", e);
+
+    }
   }
 
   coinDetailFormatter(processedCoin: any) {
-    processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
-    processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
-    processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
-    if (processedCoin.min.no != undefined) {
-      processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
-      processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
+    try {
+      processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
+      processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
+      processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
+      if (processedCoin.min.no != undefined) {
+        processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
+        processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
+      }
+      if (processedCoin.global.INR.no != undefined) {
+        processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
+        processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+        processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
+      }
+      return processedCoin;
     }
-    if (processedCoin.global.INR.no != undefined) {
-      processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
-      processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-      processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
+    catch (e) {
+      console.log("Error Formatting Coin Details", e);
+
     }
-    return processedCoin;
   }
 
   plusMinusPercent(ObjectTarget = undefined, market, percent: number): any {
@@ -583,7 +632,7 @@ export class ApiDataProvider {
       }
     }
     catch (e) {
-      console.log(e);
+      console.log("Coin Global Stats Exception", e);
 
     }
   }
@@ -618,63 +667,74 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   zebpayProcessor(exchangeData: any, coinMarketCapData: any, coinDeskData: any): any {
-    var processedZebpayData = [];
-    var zebpayData = {};
-    zebpayData = this.zebpayObjectCreator(exchangeData);
-    // console.log("unprocessed", zebpayData);
-
-    if (coinMarketCapData != undefined) {
-      if (coinMarketCapData.length == 1) {
-        var singleCoin = {}
-        // console.log("Coin market cap data", coinMarketCapData);
-
-        singleCoin[coinMarketCapData[0].symbol] = zebpayData[coinMarketCapData[0].symbol.toLowerCase()];
-        zebpayData = singleCoin;
-        // console.log(zebpayData, "after");
-
-      }
-    }
-
-    for (let coin in zebpayData) {
-      var processedCoin: CoinDetail = new CoinDetail();
-      // console.log("Data inside zebpay data", zebpayData[coin]);
-
-      // console.log("inside processer assigner");
-
-
-
-      processedCoin.coinCode = zebpayData[coin].virtualCurrency;
-      processedCoin.coinCode = processedCoin.coinCode.toUpperCase();
-      processedCoin.coinName = this.getCoinName(processedCoin.coinCode);
-      processedCoin = this.injectCoinImage(processedCoin);
-      // console.log("coin image url", processedCoin.coinImage);
-
-      // console.log("Coin name is", processedCoin.coinName);
-      // console.log("Coin code is", processedCoin.coinCode);
-      processedCoin.market.no = +zebpayData[coin].market;
-      processedCoin.buy.no = +zebpayData[coin].buy;
-      processedCoin.sell.no = +zebpayData[coin].sell;
-      processedCoin.min.no = undefined;
-      processedCoin.max.no = undefined;
-
-      processedCoin.price_index = this.getPriceIndexZebpay(processedCoin.buy.no, processedCoin.sell.no);
+    try {
+      var processedZebpayData = [];
+      var zebpayData = {};
+      zebpayData = this.zebpayObjectCreator(exchangeData);
+      // console.log("unprocessed", zebpayData);
 
       if (coinMarketCapData != undefined) {
-        processedCoin = this.injectGlobalStats(processedCoin.coinCode, processedCoin, coinMarketCapData, coinDeskData);
+        if (coinMarketCapData.length == 1) {
+          var singleCoin = {}
+          // console.log("Coin market cap data", coinMarketCapData);
+
+          singleCoin[coinMarketCapData[0].symbol] = zebpayData[coinMarketCapData[0].symbol.toLowerCase()];
+          zebpayData = singleCoin;
+          // console.log(zebpayData, "after");
+
+        }
       }
-      processedCoin = this.coinDetailFormatter(processedCoin);
-      // console.log("processed coin", processedCoin);
-      processedZebpayData.push(processedCoin);
+
+      for (let coin in zebpayData) {
+        var processedCoin: CoinDetail = new CoinDetail();
+        // console.log("Data inside zebpay data", zebpayData[coin]);
+
+        // console.log("inside processer assigner");
+
+
+
+        processedCoin.coinCode = zebpayData[coin].virtualCurrency;
+        processedCoin.coinCode = processedCoin.coinCode.toUpperCase();
+        processedCoin.coinName = this.getCoinName(processedCoin.coinCode);
+        processedCoin = this.injectCoinImage(processedCoin);
+        // console.log("coin image url", processedCoin.coinImage);
+
+        // console.log("Coin name is", processedCoin.coinName);
+        // console.log("Coin code is", processedCoin.coinCode);
+        processedCoin.market.no = +zebpayData[coin].market;
+        processedCoin.buy.no = +zebpayData[coin].buy;
+        processedCoin.sell.no = +zebpayData[coin].sell;
+        processedCoin.min.no = undefined;
+        processedCoin.max.no = undefined;
+
+        processedCoin.price_index = this.getPriceIndexZebpay(processedCoin.buy.no, processedCoin.sell.no);
+
+        if (coinMarketCapData != undefined) {
+          processedCoin = this.injectGlobalStats(processedCoin.coinCode, processedCoin, coinMarketCapData, coinDeskData);
+        }
+        processedCoin = this.coinDetailFormatter(processedCoin);
+        // console.log("processed coin", processedCoin);
+        processedZebpayData.push(processedCoin);
+
+      }
+      return processedZebpayData;
+    }
+    catch (e) {
+      console.log("Zebpay Processor Exception", e);
 
     }
-    return processedZebpayData;
   }
 
   injectCoinImage(processedCoin: CoinDetail): CoinDetail {
     // console.log("processedCoin inside", processedCoin);
+    try {
+      processedCoin.coinImage = this.apiUrls.coins[processedCoin.coinCode].imageUrl;
+      return processedCoin;
+    }
+    catch (e) {
+      console.log("Error injecting Coin Image", e);
 
-    processedCoin.coinImage = this.apiUrls.coins[processedCoin.coinCode].imageUrl;
-    return processedCoin;
+    }
   }
 
   injectGlobalStats(coinCode: string, processedCoin: CoinDetail, coinMarketCapData, coinDeskData): any {
@@ -698,7 +758,7 @@ export class ApiDataProvider {
       return processedCoin;
     }
     catch (e) {
-      console.log(e);
+      console.log("Injecting Global Stats Exception", e);
 
     }
   }
@@ -716,7 +776,13 @@ export class ApiDataProvider {
 
   // TO BE TESTED
   getCoindeskData(): any {
-    return this.http.get(this.apiUrls.global.coindesk.api);
+    try {
+      return this.http.get(this.apiUrls.global.coindesk.api);
+    }
+    catch (e) {
+      console.log("Error Getting CoinDesk data", e);
+
+    }
   }
 
   // TO BE TESTED
@@ -740,23 +806,29 @@ export class ApiDataProvider {
   }
 
   generateCoinMarketCapURL(coinList: Array<string>): any {
-    let coinRequestUrls: Array<Observable<Object>> = new Array<Observable<Object>>();
-    var coinHolder = "COINNAME";
-    // console.log("Coin list to fetch - coin Market cap", coinList);
+    try {
+      let coinRequestUrls: Array<Observable<Object>> = new Array<Observable<Object>>();
+      var coinHolder = "COINNAME";
+      // console.log("Coin list to fetch - coin Market cap", coinList);
 
-    for (let coin in coinList) {
-      // console.log("Coin CMC", coinList[coin]);
+      for (let coin in coinList) {
+        // console.log("Coin CMC", coinList[coin]);
 
-      let coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
-      // console.log("coin name", coinName);
+        let coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
+        // console.log("coin name", coinName);
 
-      let url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
-      // console.log("URL CMC", url);
+        let url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
+        // console.log("URL CMC", url);
 
-      coinRequestUrls.push(this.http.get(url));
+        coinRequestUrls.push(this.http.get(url));
+      }
+
+      return coinRequestUrls;
     }
+    catch (e) {
+      console.log("Error Generating CoinMarketcap URL", e);
 
-    return coinRequestUrls;
+    }
   }
   // TO BE TESTED
   processExchangeData(exchange: any, exchangeData: any, coinMarketCapData?: any, coinDeskData?: any): any {
@@ -777,7 +849,7 @@ export class ApiDataProvider {
       }
     }
     catch (e) {
-      console.log(e);
+      console.log("Processing Exchange Data Error", e);
 
     }
   }
@@ -788,7 +860,7 @@ export class ApiDataProvider {
       return Observable.forkJoin([this.getExchangeData(sel, dataFlag), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
     }
     catch (e) {
-      console.log(e);
+      console.log("Error Getting market overview", e);
 
     }
 

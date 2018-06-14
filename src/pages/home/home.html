@@ -26,6 +26,7 @@
   </ion-item>
 
   <ion-list *ngIf="networkFlag">
+    <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>
     <!-- <ion-card>
       <ion-grid>
         <ion-row>

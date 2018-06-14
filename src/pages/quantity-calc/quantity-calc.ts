@@ -351,7 +351,8 @@ export class QuantityCalcPage {
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {
-        // console.log("Fetching Points on Enter");
+     
+        console.log("Ad Closed");
 
         this.points = points;
         if (this.points > 0) {
@@ -361,12 +362,12 @@ export class QuantityCalcPage {
             this.reward = false;
           }
         }
-        // console.log("Naya Points", this.points);
-
       });
     });
 
     this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+      console.log("Quant Reward Called");
+
       this.reward = true;
     });
   }

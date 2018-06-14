@@ -335,7 +335,7 @@ var QuantityCalcPage = (function () {
         this.api.showVideoAd();
         this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
             _this.api.fetchService("points").then(function (points) {
-                // console.log("Fetching Points on Enter");
+                console.log("Ad Closed");
                 _this.points = points;
                 if (_this.points > 0) {
                     _this.enable = true;
@@ -344,10 +344,10 @@ var QuantityCalcPage = (function () {
                         _this.reward = false;
                     }
                 }
-                // console.log("Naya Points", this.points);
             });
         });
         this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
+            console.log("Quant Reward Called");
             _this.reward = true;
         });
     };
@@ -548,7 +548,7 @@ var HomePage = (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button type="button" ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Market View</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content padding pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-item *ngIf="networkFlag">\n\n    <ion-label>Exchange:</ion-label>\n\n    <ion-select [(ngModel)]="selExchange" interface="popover" (ngModelChange)="selectedExchange(selExchange)">\n\n      <ion-option *ngFor="let exchange of exchanges">{{exchange}}</ion-option>\n\n    </ion-select>\n\n\n\n  </ion-item>\n\n\n\n  <ion-list *ngIf="networkFlag">\n\n    <!-- <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-4>Cryptos</ion-col>\n\n          <ion-col col-4>\n\n            Market Price\n\n          </ion-col>\n\n          <ion-col col-2>Change\n\n            <br>%</ion-col>\n\n          <ion-col col-2>Price Index</ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card> -->\n\n    <ion-card *ngFor="let coin of coins" (click)="navCoinDetailPage(coin)">\n\n      <ion-item detail-push>\n\n        <ion-grid>\n\n          <ion-row>\n\n            <ion-col col-3>\n\n              <ion-thumbnail item-start>\n\n                <img src="{{coin.coinImage}}">\n\n                <div class="coinName weight500">{{coin.coinName}}\n\n                  <br> ({{coin.coinCode}})\n\n                </div>\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-8>\n\n              <ion-row>\n\n                <ion-col col-8>\n\n                  <ion-row class="price">\n\n                    {{coin.market.formatted}}\n\n                  </ion-row>\n\n                </ion-col>\n\n                <ion-col col-4 class="boldTextValue">\n\n                  <div *ngIf="coin.change.day >= 0" class="greenColor weight500">\n\n                    <span class="size1rem7">&#9650;</span>+{{coin.change.day}}%\n\n                  </div>\n\n                  <div *ngIf="coin.change.day < 0" class="redColor weight500">\n\n                    <span class="size1rem7">&#9660;</span>{{coin.change.day}}%\n\n                  </div>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row>\n\n                <ion-col col-6 *ngIf="coin.volatility">\n\n                  <span class="riseFallSymbol weight500 size1rem9">&#8645;</span>\n\n                  <span class="weight500"> {{coin.volatility}}% </span>\n\n                </ion-col>\n\n                <ion-col col-6>\n\n                  Price:\n\n                  <span [ngClass]="coin.price_index">{{coin.price_index}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row *ngIf="coin.max.no">\n\n                <ion-col col-12>\n\n                  <span>High: </span>\n\n                  <span class="greenColor weight500">{{coin.max.formatted}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row *ngIf="coin.min.no">\n\n                <ion-col col-12>\n\n                  <span>Low: </span>\n\n                  <span class="redColor weight500">{{coin.min.formatted}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n\n\n              <ion-row>\n\n                <ion-col col-12>\n\n                  <div *ngIf="coin.globalDiff.percent >= 0">\n\n                    Global.Diff(%):\n\n                    <span class="greenColor weight500">{{coin.globalDiff.percent}}%</span>\n\n                  </div>\n\n                  <div *ngIf="coin.globalDiff.percent < 0">\n\n                    Global.Diff(%):\n\n                    <span class="redColor weight500">{{coin.globalDiff.percent}}%</span>\n\n                  </div>\n\n                </ion-col>\n\n              </ion-row>\n\n            </ion-col>\n\n            <ion-col col-1 class="vertical-align-content">\n\n              <span class="weight500 nextButton">></span>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n\n\n      </ion-item>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button type="button" ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Market View</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content padding pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <ion-item *ngIf="networkFlag">\n\n    <ion-label>Exchange:</ion-label>\n\n    <ion-select [(ngModel)]="selExchange" interface="popover" (ngModelChange)="selectedExchange(selExchange)">\n\n      <ion-option *ngFor="let exchange of exchanges">{{exchange}}</ion-option>\n\n    </ion-select>\n\n\n\n  </ion-item>\n\n\n\n  <ion-list *ngIf="networkFlag">\n\n    <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>\n\n    <!-- <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-4>Cryptos</ion-col>\n\n          <ion-col col-4>\n\n            Market Price\n\n          </ion-col>\n\n          <ion-col col-2>Change\n\n            <br>%</ion-col>\n\n          <ion-col col-2>Price Index</ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card> -->\n\n    <ion-card *ngFor="let coin of coins" (click)="navCoinDetailPage(coin)">\n\n      <ion-item detail-push>\n\n        <ion-grid>\n\n          <ion-row>\n\n            <ion-col col-3>\n\n              <ion-thumbnail item-start>\n\n                <img src="{{coin.coinImage}}">\n\n                <div class="coinName weight500">{{coin.coinName}}\n\n                  <br> ({{coin.coinCode}})\n\n                </div>\n\n              </ion-thumbnail>\n\n            </ion-col>\n\n            <ion-col col-8>\n\n              <ion-row>\n\n                <ion-col col-8>\n\n                  <ion-row class="price">\n\n                    {{coin.market.formatted}}\n\n                  </ion-row>\n\n                </ion-col>\n\n                <ion-col col-4 class="boldTextValue">\n\n                  <div *ngIf="coin.change.day >= 0" class="greenColor weight500">\n\n                    <span class="size1rem7">&#9650;</span>+{{coin.change.day}}%\n\n                  </div>\n\n                  <div *ngIf="coin.change.day < 0" class="redColor weight500">\n\n                    <span class="size1rem7">&#9660;</span>{{coin.change.day}}%\n\n                  </div>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row>\n\n                <ion-col col-6 *ngIf="coin.volatility">\n\n                  <span class="riseFallSymbol weight500 size1rem9">&#8645;</span>\n\n                  <span class="weight500"> {{coin.volatility}}% </span>\n\n                </ion-col>\n\n                <ion-col col-6>\n\n                  Price:\n\n                  <span [ngClass]="coin.price_index">{{coin.price_index}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row *ngIf="coin.max.no">\n\n                <ion-col col-12>\n\n                  <span>High: </span>\n\n                  <span class="greenColor weight500">{{coin.max.formatted}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n              <ion-row *ngIf="coin.min.no">\n\n                <ion-col col-12>\n\n                  <span>Low: </span>\n\n                  <span class="redColor weight500">{{coin.min.formatted}}</span>\n\n                </ion-col>\n\n              </ion-row>\n\n\n\n              <ion-row>\n\n                <ion-col col-12>\n\n                  <div *ngIf="coin.globalDiff.percent >= 0">\n\n                    Global.Diff(%):\n\n                    <span class="greenColor weight500">{{coin.globalDiff.percent}}%</span>\n\n                  </div>\n\n                  <div *ngIf="coin.globalDiff.percent < 0">\n\n                    Global.Diff(%):\n\n                    <span class="redColor weight500">{{coin.globalDiff.percent}}%</span>\n\n                  </div>\n\n                </ion-col>\n\n              </ion-row>\n\n            </ion-col>\n\n            <ion-col col-1 class="vertical-align-content">\n\n              <span class="weight500 nextButton">></span>\n\n            </ion-col>\n\n          </ion-row>\n\n        </ion-grid>\n\n\n\n      </ion-item>\n\n    </ion-card>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Platform */]])
     ], HomePage);
@@ -1411,6 +1411,8 @@ var ApiDataProvider = (function () {
         this.koinexData = {};
         this.zebpayData = {};
         this.usedFlag = false;
+        this.adRetryCounter = 2;
+        this.adRetryLock = false;
         // ******************************************************************************
         this.coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
         this.koinexTest = false;
@@ -1460,11 +1462,24 @@ var ApiDataProvider = (function () {
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(function (res) {
                     console.log("AD failed to Load - new", res);
-                    if (show) {
+                    console.log("AD Retries Left", _this.adRetryCounter);
+                    if (show && _this.adRetryCounter == 0) {
+                        console.log("retry depletion with show");
                         _this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* TOP */]);
+                    }
+                    else if (show && _this.adRetryCounter > 0) {
+                        console.log("Show retry , retry count ", _this.adRetryCounter);
+                        _this.adRetryCounter -= 1;
+                        _this.prepareVideoAd(true);
+                    }
+                    else if (_this.adRetryCounter > 0) {
+                        console.log("No show retry");
+                        _this.adRetryCounter -= 1;
+                        _this.prepareVideoAd();
                     }
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(function (res) {
+                    _this.adRetryCounter = 2;
                     console.log("AD loadded - new", res);
                     if (show) {
                         _this.showVideoAd();
@@ -1476,37 +1491,58 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.showVideoAd = function () {
         var _this = this;
-        this.admobFree.rewardVideo.isReady().then(function (res) {
-            if (res) {
-                _this.admobFree.rewardVideo.show().then(function (res) {
-                    console.log("Video Ad is Showing", res);
-                    _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
-                        console.log("Reward Video value return ", res);
-                        console.log(res.rewardAmount);
-                        var refillPoints = res.rewardAmount;
-                        _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */]).then(function (points) {
-                            var newPoints = points;
-                            newPoints += refillPoints;
-                            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */], newPoints);
-                            // console.log("Earned New points", newPoints);
+        if (!this.adRetryLock) {
+            this.admobFree.rewardVideo.isReady().then(function (res) {
+                if (res) {
+                    _this.adRetryCounter = 2;
+                    _this.admobFree.rewardVideo.show().then(function (res) {
+                        console.log("Video Ad is Showing", res);
+                        _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
+                            console.log("Reward Video value return ", res);
+                            // console.log(res.rewardAmount);
+                            var refillPoints = res.rewardAmount;
+                            _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */]).then(function (points) {
+                                var newPoints = points;
+                                newPoints += refillPoints;
+                                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["m" /* POINTS */], newPoints);
+                                console.log("Earned New points", newPoints);
+                            });
+                            // console.log("Successful view - reward", res);
                         });
-                        // console.log("Successful view - reward", res);
+                        _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
+                            _this.prepareVideoAd();
+                            // console.log("AD closed", res);
+                        });
+                    }).catch(function (err) {
+                        console.log("Unable to show Video Ad", err);
                     });
-                    _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
-                        _this.prepareVideoAd();
-                        // console.log("AD closed", res);
-                    });
-                }).catch(function (err) {
-                    console.log("Unable to show Video Ad", err);
-                });
-            }
-            else {
-                console.log("Video not ready, preparing and showing");
-                _this.prepareVideoAd(true);
-            }
-        }).catch(function (err) {
-            console.log("Exception thrown - ready", err);
-        });
+                }
+                else {
+                    console.log("Video not ready, preparing and showing");
+                    console.log("ad retry counter - showing method", _this.adRetryCounter);
+                    if (_this.adRetryCounter > 0) {
+                        _this.adRetryCounter -= 1;
+                        console.log("reducing retry, count value ", _this.adRetryCounter);
+                        _this.prepareVideoAd(true);
+                    }
+                    else {
+                        _this.adRetryLock = true;
+                        var resetRetry = __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].timer(15000);
+                        resetRetry.subscribe(function (res) {
+                            _this.adRetryLock = false;
+                            _this.adRetryCounter = 2;
+                            console.log("Ad retry lock DISABLED", _this.adRetryLock);
+                            console.log("Ad retry counter Reset ", _this.adRetryCounter);
+                        });
+                    }
+                }
+            }).catch(function (err) {
+                console.log("Exception thrown - ready", err);
+            });
+        }
+        else {
+            this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* TOP */]);
+        }
     };
     ApiDataProvider.prototype.setApiUrl = function (apiUrl) {
         this.apiUrls = apiUrl;
@@ -1757,65 +1793,75 @@ var ApiDataProvider = (function () {
     // TO BE TESTED
     ApiDataProvider.prototype.koinexProcessor = function (exchangeData, coinMarketCapData, coinDeskData) {
         // console.log("Koinex Exchange data", exchangeData);
-        var processedKoinexData = [];
-        var coinList = this.apiUrls.exchange.Koinex.coinList;
-        var tempKoinexData = exchangeData.stats.inr;
-        // console.log(coinMarketCapData, "coinmarket cap data- processor");
-        // console.log("temp koinex data full", tempKoinexData);
-        // console.log(coinList, "before");
-        if (coinMarketCapData != undefined) {
-            if (coinMarketCapData.length == 1) {
-                // console.log(coinMarketCapData);
-                // console.log(coinList[coinMarketCapData[0].symbol]);
-                coinList = [coinMarketCapData[0].symbol];
-                // console.log(coinList, "after");
-            }
-        }
-        for (var coin in coinList) {
-            // var processedCoin: any = {};
-            // console.log(coinList[coin], "coin value");
-            var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
-            var coinCode = coinList[coin].toUpperCase();
-            // console.log("Coin Code", coinCode);
-            processedCoin.coinCode = coinCode;
-            processedCoin.coinName = this.getCoinName(coinCode);
-            // console.log("processed coin before", processedCoin);
-            // console.log("Coin name", processedCoin.coinName);
-            processedCoin = this.injectCoinImage(processedCoin);
-            // console.log("temp koinex data", tempKoinexData[coinCode]);
-            processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
-            processedCoin.buy.no = +tempKoinexData[coinCode].lowest_ask;
-            processedCoin.sell.no = +tempKoinexData[coinCode].highest_bid;
-            processedCoin.min.no = +tempKoinexData[coinCode].min_24hrs;
-            processedCoin.max.no = +tempKoinexData[coinCode].max_24hrs;
-            var diff = processedCoin.max.no - processedCoin.min.no;
-            var average = diff / 2;
-            processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
-            processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
-            // console.log(coinMarketCapData, "coin market data null check");
+        try {
+            var processedKoinexData = [];
+            var coinList = this.apiUrls.exchange.Koinex.coinList;
+            var tempKoinexData = exchangeData.stats.inr;
+            // console.log(coinMarketCapData, "coinmarket cap data- processor");
+            // console.log("temp koinex data full", tempKoinexData);
+            // console.log(coinList, "before");
             if (coinMarketCapData != undefined) {
-                processedCoin = this.injectGlobalStats(coinCode, processedCoin, coinMarketCapData, coinDeskData);
+                if (coinMarketCapData.length == 1) {
+                    // console.log(coinMarketCapData);
+                    // console.log(coinList[coinMarketCapData[0].symbol]);
+                    coinList = [coinMarketCapData[0].symbol];
+                    // console.log(coinList, "after");
+                }
             }
-            processedCoin = this.coinDetailFormatter(processedCoin);
-            // console.log(processedCoin);
-            processedKoinexData.push(processedCoin);
+            for (var coin in coinList) {
+                // var processedCoin: any = {};
+                // console.log(coinList[coin], "coin value");
+                var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
+                var coinCode = coinList[coin].toUpperCase();
+                // console.log("Coin Code", coinCode);
+                processedCoin.coinCode = coinCode;
+                processedCoin.coinName = this.getCoinName(coinCode);
+                // console.log("processed coin before", processedCoin);
+                // console.log("Coin name", processedCoin.coinName);
+                processedCoin = this.injectCoinImage(processedCoin);
+                // console.log("temp koinex data", tempKoinexData[coinCode]);
+                processedCoin.market.no = +tempKoinexData[coinCode].last_traded_price;
+                processedCoin.buy.no = +tempKoinexData[coinCode].lowest_ask;
+                processedCoin.sell.no = +tempKoinexData[coinCode].highest_bid;
+                processedCoin.min.no = +tempKoinexData[coinCode].min_24hrs;
+                processedCoin.max.no = +tempKoinexData[coinCode].max_24hrs;
+                var diff = processedCoin.max.no - processedCoin.min.no;
+                var average = diff / 2;
+                processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
+                processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
+                // console.log(coinMarketCapData, "coin market data null check");
+                if (coinMarketCapData != undefined) {
+                    processedCoin = this.injectGlobalStats(coinCode, processedCoin, coinMarketCapData, coinDeskData);
+                }
+                processedCoin = this.coinDetailFormatter(processedCoin);
+                // console.log(processedCoin);
+                processedKoinexData.push(processedCoin);
+            }
+            return processedKoinexData;
         }
-        return processedKoinexData;
+        catch (e) {
+            console.log("Koinex Processor Exception", e);
+        }
     };
     ApiDataProvider.prototype.coinDetailFormatter = function (processedCoin) {
-        processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
-        processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
-        processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
-        if (processedCoin.min.no != undefined) {
-            processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
-            processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
+        try {
+            processedCoin.market.formatted = this.utility.currencyFormatter(processedCoin.market.no);
+            processedCoin.buy.formatted = this.utility.currencyFormatter(processedCoin.buy.no);
+            processedCoin.sell.formatted = this.utility.currencyFormatter(processedCoin.sell.no);
+            if (processedCoin.min.no != undefined) {
+                processedCoin.min.formatted = this.utility.currencyFormatter(processedCoin.min.no);
+                processedCoin.max.formatted = this.utility.currencyFormatter(processedCoin.max.no);
+            }
+            if (processedCoin.global.INR.no != undefined) {
+                processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
+                processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
+                processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
+            }
+            return processedCoin;
         }
-        if (processedCoin.global.INR.no != undefined) {
-            processedCoin.global.INR.formatted = this.utility.currencyFormatter(processedCoin.global.INR.no);
-            processedCoin.global.USD.formatted = this.utility.currencyFormatter(processedCoin.global.USD.no, 'en-US', 'USD');
-            processedCoin.globalDiff.val.formatted = this.utility.currencyFormatter(processedCoin.globalDiff.val.no);
+        catch (e) {
+            console.log("Error Formatting Coin Details", e);
         }
-        return processedCoin;
     };
     ApiDataProvider.prototype.plusMinusPercent = function (ObjectTarget, market, percent) {
         if (ObjectTarget === void 0) { ObjectTarget = undefined; }
@@ -1870,7 +1916,7 @@ var ApiDataProvider = (function () {
             }
         }
         catch (e) {
-            console.log(e);
+            console.log("Coin Global Stats Exception", e);
         }
     };
     // TO BE TESTED
@@ -1900,49 +1946,59 @@ var ApiDataProvider = (function () {
     };
     // TO BE TESTED
     ApiDataProvider.prototype.zebpayProcessor = function (exchangeData, coinMarketCapData, coinDeskData) {
-        var processedZebpayData = [];
-        var zebpayData = {};
-        zebpayData = this.zebpayObjectCreator(exchangeData);
-        // console.log("unprocessed", zebpayData);
-        if (coinMarketCapData != undefined) {
-            if (coinMarketCapData.length == 1) {
-                var singleCoin = {};
-                // console.log("Coin market cap data", coinMarketCapData);
-                singleCoin[coinMarketCapData[0].symbol] = zebpayData[coinMarketCapData[0].symbol.toLowerCase()];
-                zebpayData = singleCoin;
-                // console.log(zebpayData, "after");
-            }
-        }
-        for (var coin in zebpayData) {
-            var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
-            // console.log("Data inside zebpay data", zebpayData[coin]);
-            // console.log("inside processer assigner");
-            processedCoin.coinCode = zebpayData[coin].virtualCurrency;
-            processedCoin.coinCode = processedCoin.coinCode.toUpperCase();
-            processedCoin.coinName = this.getCoinName(processedCoin.coinCode);
-            processedCoin = this.injectCoinImage(processedCoin);
-            // console.log("coin image url", processedCoin.coinImage);
-            // console.log("Coin name is", processedCoin.coinName);
-            // console.log("Coin code is", processedCoin.coinCode);
-            processedCoin.market.no = +zebpayData[coin].market;
-            processedCoin.buy.no = +zebpayData[coin].buy;
-            processedCoin.sell.no = +zebpayData[coin].sell;
-            processedCoin.min.no = undefined;
-            processedCoin.max.no = undefined;
-            processedCoin.price_index = this.getPriceIndexZebpay(processedCoin.buy.no, processedCoin.sell.no);
+        try {
+            var processedZebpayData = [];
+            var zebpayData = {};
+            zebpayData = this.zebpayObjectCreator(exchangeData);
+            // console.log("unprocessed", zebpayData);
             if (coinMarketCapData != undefined) {
-                processedCoin = this.injectGlobalStats(processedCoin.coinCode, processedCoin, coinMarketCapData, coinDeskData);
+                if (coinMarketCapData.length == 1) {
+                    var singleCoin = {};
+                    // console.log("Coin market cap data", coinMarketCapData);
+                    singleCoin[coinMarketCapData[0].symbol] = zebpayData[coinMarketCapData[0].symbol.toLowerCase()];
+                    zebpayData = singleCoin;
+                    // console.log(zebpayData, "after");
+                }
             }
-            processedCoin = this.coinDetailFormatter(processedCoin);
-            // console.log("processed coin", processedCoin);
-            processedZebpayData.push(processedCoin);
+            for (var coin in zebpayData) {
+                var processedCoin = new __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__["a" /* CoinDetail */]();
+                // console.log("Data inside zebpay data", zebpayData[coin]);
+                // console.log("inside processer assigner");
+                processedCoin.coinCode = zebpayData[coin].virtualCurrency;
+                processedCoin.coinCode = processedCoin.coinCode.toUpperCase();
+                processedCoin.coinName = this.getCoinName(processedCoin.coinCode);
+                processedCoin = this.injectCoinImage(processedCoin);
+                // console.log("coin image url", processedCoin.coinImage);
+                // console.log("Coin name is", processedCoin.coinName);
+                // console.log("Coin code is", processedCoin.coinCode);
+                processedCoin.market.no = +zebpayData[coin].market;
+                processedCoin.buy.no = +zebpayData[coin].buy;
+                processedCoin.sell.no = +zebpayData[coin].sell;
+                processedCoin.min.no = undefined;
+                processedCoin.max.no = undefined;
+                processedCoin.price_index = this.getPriceIndexZebpay(processedCoin.buy.no, processedCoin.sell.no);
+                if (coinMarketCapData != undefined) {
+                    processedCoin = this.injectGlobalStats(processedCoin.coinCode, processedCoin, coinMarketCapData, coinDeskData);
+                }
+                processedCoin = this.coinDetailFormatter(processedCoin);
+                // console.log("processed coin", processedCoin);
+                processedZebpayData.push(processedCoin);
+            }
+            return processedZebpayData;
         }
-        return processedZebpayData;
+        catch (e) {
+            console.log("Zebpay Processor Exception", e);
+        }
     };
     ApiDataProvider.prototype.injectCoinImage = function (processedCoin) {
         // console.log("processedCoin inside", processedCoin);
-        processedCoin.coinImage = this.apiUrls.coins[processedCoin.coinCode].imageUrl;
-        return processedCoin;
+        try {
+            processedCoin.coinImage = this.apiUrls.coins[processedCoin.coinCode].imageUrl;
+            return processedCoin;
+        }
+        catch (e) {
+            console.log("Error injecting Coin Image", e);
+        }
     };
     ApiDataProvider.prototype.injectGlobalStats = function (coinCode, processedCoin, coinMarketCapData, coinDeskData) {
         try {
@@ -1962,7 +2018,7 @@ var ApiDataProvider = (function () {
             return processedCoin;
         }
         catch (e) {
-            console.log(e);
+            console.log("Injecting Global Stats Exception", e);
         }
     };
     ApiDataProvider.prototype.getPriceIndexZebpay = function (buy, sell) {
@@ -1979,7 +2035,12 @@ var ApiDataProvider = (function () {
     };
     // TO BE TESTED
     ApiDataProvider.prototype.getCoindeskData = function () {
-        return this.http.get(this.apiUrls.global.coindesk.api);
+        try {
+            return this.http.get(this.apiUrls.global.coindesk.api);
+        }
+        catch (e) {
+            console.log("Error Getting CoinDesk data", e);
+        }
     };
     // TO BE TESTED
     ApiDataProvider.prototype.getCoinMarketCapData = function (coinList) {
@@ -2000,18 +2061,23 @@ var ApiDataProvider = (function () {
         });
     };
     ApiDataProvider.prototype.generateCoinMarketCapURL = function (coinList) {
-        var coinRequestUrls = new Array();
-        var coinHolder = "COINNAME";
-        // console.log("Coin list to fetch - coin Market cap", coinList);
-        for (var coin in coinList) {
-            // console.log("Coin CMC", coinList[coin]);
-            var coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
-            // console.log("coin name", coinName);
-            var url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
-            // console.log("URL CMC", url);
-            coinRequestUrls.push(this.http.get(url));
+        try {
+            var coinRequestUrls = new Array();
+            var coinHolder = "COINNAME";
+            // console.log("Coin list to fetch - coin Market cap", coinList);
+            for (var coin in coinList) {
+                // console.log("Coin CMC", coinList[coin]);
+                var coinName = this.getCoinName(coinList[coin].toUpperCase()).replace(/\s/g, "-").toLowerCase();
+                // console.log("coin name", coinName);
+                var url = this.apiUrls.global.coinmarketcap.api.replace(coinHolder, coinName);
+                // console.log("URL CMC", url);
+                coinRequestUrls.push(this.http.get(url));
+            }
+            return coinRequestUrls;
         }
-        return coinRequestUrls;
+        catch (e) {
+            console.log("Error Generating CoinMarketcap URL", e);
+        }
     };
     // TO BE TESTED
     ApiDataProvider.prototype.processExchangeData = function (exchange, exchangeData, coinMarketCapData, coinDeskData) {
@@ -2031,7 +2097,7 @@ var ApiDataProvider = (function () {
             }
         }
         catch (e) {
-            console.log(e);
+            console.log("Processing Exchange Data Error", e);
         }
     };
     // TO BE TESTED
@@ -2041,7 +2107,7 @@ var ApiDataProvider = (function () {
             return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].forkJoin([this.getExchangeData(sel, dataFlag), this.getCoinMarketCapData(coin), this.getCoindeskData()]);
         }
         catch (e) {
-            console.log(e);
+            console.log("Error Getting market overview", e);
         }
     };
     ApiDataProvider.prototype.setExchangeData = function (exchange, exchangeData) {

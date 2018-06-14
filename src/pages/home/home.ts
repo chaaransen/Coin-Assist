@@ -131,6 +131,7 @@ export class HomePage {
       // console.log("second data - coin market Cap data", res[1]);
       // console.log("third data - coindesk data", res[2]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
+
       // console.log("processed exchange data");
       // console.log(this.coins);
 
