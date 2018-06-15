@@ -29,11 +29,13 @@ export class HomePage {
   }
 
   ngOnInit() {
-    // console.log("ngOnInit - home called");
+    console.log("ngOnInit - home called");
     this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
       if (this.networkFlag) {
+        console.log("network present - fetching api");
+
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);
@@ -42,27 +44,28 @@ export class HomePage {
   }
 
   setApiUrl() {
+    console.log("Setting api urls");
+
     this.api.getApiUrlStorage().then(res => {
-      // console.log("Stored Url value");
-      // console.log(res);
+      console.log("Fetching api urls from storage ", res);
+
       if (res != null) {
+        console.log("Setting fetched from storage");
+
         this.apiUrls = res;
       }
       else {
-        // console.log("constant Api urls called");
+        console.log("Api url null so fetching from cloud");
+
         this.api.fetchApiUrl().then(res => {
-          // console.log("fetching Api urls called", res);
+          console.log("Fetched api urls", res);
           this.apiUrls = res;
           this.api.storeApiUrl(this.apiUrls);
         }).catch(err => {
-          // console.log("constant Api urls called", err);
+          console.log("constant Api urls called ", err);
           this.apiUrls = this.api.getConstantApiUrl();
         });
       }
-      // console.log("Home Compo Value return");
-
-      // console.log(this.apiUrls);
-
       this.api.setApiUrl(this.apiUrls);
 
       this.populateView();

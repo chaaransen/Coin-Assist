@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { Utilities } from '../../providers/utilities/utilities';
 import { ProfitCalc } from '../../models/profit-calc';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
+import * as Constants from '../../constants/api-constants';
 
 @Component({
   selector: 'page-profit-calc',

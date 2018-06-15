@@ -134,6 +134,12 @@ export class QuantityCalcPage {
     this.networkFlag = this.api.networkFlag;
     // console.log("Home page -View Entered", this.alive);
   }
+  ionViewDidEnter() {
+    if (this.api.rewardNotif) {
+      this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
+      this.api.rewardNotif = false;
+    }
+  }
 
   infoAlert() {
 
@@ -351,7 +357,7 @@ export class QuantityCalcPage {
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {
-     
+
         console.log("Ad Closed");
 
         this.points = points;

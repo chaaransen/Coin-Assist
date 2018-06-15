@@ -38,6 +38,7 @@ export class ApiDataProvider {
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
+  rewardNotif: boolean = false;
   // private coinAssistApis = "http://localhost:3000/apis";
 
   constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network) {
