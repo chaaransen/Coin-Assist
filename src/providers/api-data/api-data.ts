@@ -52,26 +52,26 @@ export class ApiDataProvider {
   getApiUrl(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getApiUrlStorage().then(res => {
-        console.log("Fetching api urls from storage ", res);
+        // console.log("Fetching api urls from storage ", res);
 
         if (res != null) {
-          console.log("Setting fetched from storage");
+          // console.log("Setting fetched from storage");
           this.apiUrls = res;
           resolve(this.apiUrls);
         }
         else {
-          console.log("Api url null so fetching from cloud");
+          // console.log("Api url null so fetching from cloud");
 
           this.fetchApiUrl().then(res => {
-            console.log("Fetched api urls", res);
+            // console.log("Fetched api urls", res);
             this.generateZebpayApis(res).subscribe(generated => {
-              console.log("generated urls passed for store", generated);
+              // console.log("generated urls passed for store", generated);
               this.apiUrls = generated
               this.storeApiUrl(this.apiUrls);
               resolve(this.apiUrls);
             });
           }).catch(err => {
-            console.log("constant Api urls called ", err);
+            // console.log("constant Api urls called ", err);
             this.apiUrls = this.getConstantApiUrl();
             resolve(this.apiUrls);
           });
@@ -112,37 +112,37 @@ export class ApiDataProvider {
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
-          console.log("Video Ad Already Ready - calling Show!");
-          console.log("prepared Video ad - ready response", res);
+          // console.log("Video Ad Already Ready - calling Show!");
+          // console.log("prepared Video ad - ready response", res);
 
           this.showVideoAd();
           show = false;
         }
       } else {
-        console.log("AD not ready - Preparing...");
+        // console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
-          console.log("Reward Video Prepared", res);
+          // console.log("Reward Video Prepared", res);
 
         }).catch(err => {
-          console.log("Unable to prepare", err);
+          // console.log("Unable to prepare", err);
 
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
-          console.log("AD failed to Load - new", res);
-          console.log("AD Retries Left", this.adRetryCounter);
+          // console.log("AD failed to Load - new", res);
+          // console.log("AD Retries Left", this.adRetryCounter);
 
           if (show && this.adRetryCounter == 0) {
-            console.log("retry depletion with show");
+            // console.log("retry depletion with show");
 
             this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
           } else if (show && this.adRetryCounter > 0) {
-            console.log("Show retry , retry count ", this.adRetryCounter);
+            // console.log("Show retry , retry count ", this.adRetryCounter);
 
             this.adRetryCounter -= 1;
             this.prepareVideoAd(true);
           } else if (this.adRetryCounter > 0) {
-            console.log("No show retry");
+            // console.log("No show retry");
             this.adRetryCounter -= 1;
             this.prepareVideoAd();
           }
@@ -150,7 +150,7 @@ export class ApiDataProvider {
 
         this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
           this.adRetryCounter = 2;
-          console.log("AD loadded - new", res);
+          // console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
             show = false;
@@ -167,10 +167,10 @@ export class ApiDataProvider {
         if (res) {
           this.adRetryCounter = 2;
           this.admobFree.rewardVideo.show().then(res => {
-            console.log("Video Ad is Showing", res);
+            // console.log("Video Ad is Showing", res);
 
             this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-              console.log("Reward Video value return ", res);
+              // console.log("Reward Video value return ", res);
               // console.log(res.rewardAmount);
               var refillPoints = res.rewardAmount;
               this.fetchService(Constants.POINTS).then(points => {
@@ -178,7 +178,7 @@ export class ApiDataProvider {
                 let newPoints: number = points;
                 newPoints += refillPoints;
                 this.storeService(Constants.POINTS, newPoints);
-                console.log("Earned New points", newPoints);
+                // console.log("Earned New points", newPoints);
               });
               // console.log("Successful view - reward", res);
 
@@ -191,15 +191,15 @@ export class ApiDataProvider {
             });
 
           }).catch(err => {
-            console.log("Unable to show Video Ad", err);
+            // console.log("Unable to show Video Ad", err);
           });
         } else {
-          console.log("Video not ready, preparing and showing");
-          console.log("ad retry counter - showing method", this.adRetryCounter);
+          // console.log("Video not ready, preparing and showing");
+          // console.log("ad retry counter - showing method", this.adRetryCounter);
 
           if (this.adRetryCounter > 0) {
             this.adRetryCounter -= 1;
-            console.log("reducing retry, count value ", this.adRetryCounter);
+            // console.log("reducing retry, count value ", this.adRetryCounter);
 
             this.prepareVideoAd(true);
           } else {
@@ -208,8 +208,8 @@ export class ApiDataProvider {
             resetRetry.subscribe(res => {
               this.adRetryLock = false;
               this.adRetryCounter = 2;
-              console.log("Ad retry lock DISABLED", this.adRetryLock);
-              console.log("Ad retry counter Reset ", this.adRetryCounter);
+              // console.log("Ad retry lock DISABLED", this.adRetryLock);
+              // console.log("Ad retry counter Reset ", this.adRetryCounter);
 
 
             });
@@ -315,7 +315,7 @@ export class ApiDataProvider {
     this.storage.set(key, value).then(res => {
     },
       err => {
-        console.log("Storage Error");
+        // console.log("Storage Error");
         console.log(err);
       });
   }
@@ -323,7 +323,7 @@ export class ApiDataProvider {
   fetchService(key: string): any {
     return this.storage.ready().then(() => {
       return this.storage.get(key).catch(err => {
-        console.log("Error fetching data from storage");
+        // console.log("Error fetching data from storage");
 
       });
     });
@@ -338,7 +338,7 @@ export class ApiDataProvider {
 
     },
       err => {
-        console.log("Storage Error");
+        // console.log("Storage Error");
         console.log(err);
       });
   }
