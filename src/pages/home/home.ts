@@ -29,12 +29,12 @@ export class HomePage {
   }
 
   ngOnInit() {
-    console.log("ngOnInit - home called");
+    // console.log("ngOnInit - home called");
     this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
       if (this.networkFlag) {
-        console.log("network present - fetching api");
+        // console.log("network present - fetching api");
 
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
@@ -44,10 +44,10 @@ export class HomePage {
   }
 
   setApiUrl() {
-    console.log("Setting api urls");
+    // console.log("Setting api urls");
 
     this.api.getApiUrl().then(apiUrl => {
-      console.log("Response API url ", apiUrl);
+      // console.log("Response API url ", apiUrl);
 
       this.apiUrls = apiUrl;
       this.populateView();
