@@ -25922,7 +25922,7 @@ page-home .item-md ion-avatar[item-left],
 page-home .item-md ion-thumbnail[item-left],
 page-home .item-md ion-avatar[item-start],
 page-home .item-md ion-thumbnail[item-start] {
-  margin: 8px 0px 8px 0;
+  margin: 20px 0px 2px 5px;
 }
 
 page-home .text-center {

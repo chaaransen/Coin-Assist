@@ -455,7 +455,7 @@ var HomePage = (function () {
             _this.apiUrls = apiUrl;
             _this.populateView();
             //Automatic fetching of new data every 20 seconds
-            var refresher = __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__["IntervalObservable"].create(20000);
+            var refresher = __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__["IntervalObservable"].create(20000000);
             refresher.takeWhile(function () { return _this.alive; }) // only fires when component is alive
                 .subscribe(function () {
                 _this.networkFlag = _this.api.networkFlag;
