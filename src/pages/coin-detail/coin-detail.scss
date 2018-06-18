@@ -1,0 +1,31 @@
+page-coin-detail {
+    // * {
+    //     text-transform: none;
+    //     font-size: 1.4rem;
+    //     font-weight: 400;
+    // }
+    ion-avatar img,
+    ion-thumbnail img {
+        height: 8rem;
+        width: 8rem;
+    }
+    img {
+        height: 7.5rem;
+        width: 7.5rem;
+        float: right;
+    }
+    .priceDetail {
+        font-size: 2.5rem;
+        font-weight: 500;
+        color: #909090;
+    }
+    ion-row {
+        margin-bottom: 0.2rem;
+    }
+    .padding2rem5 {
+        padding: 2.5rem;
+    }
+    * {
+        font-size: 1.6rem;
+    }
+}
