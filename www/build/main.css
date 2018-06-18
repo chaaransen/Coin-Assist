@@ -25758,6 +25758,13 @@ ion-navbar.toolbar {
   padding: 10px;
 }
 
+.coinSpinner {
+  margin-top: 45%;
+  margin-left: 45%;
+  height: 60px;
+  width: 60px;
+}
+
 .boldTextValue {
   font-weight: 500;
   font-size: 1.5rem;
@@ -25924,13 +25931,6 @@ page-home .text-center {
 
 page-home * {
   font-size: 1.6rem;
-}
-
-page-home .coinSpinner {
-  margin-top: 45%;
-  margin-left: 45%;
-  height: 60px;
-  width: 60px;
 }
 
 page-home ion-label,

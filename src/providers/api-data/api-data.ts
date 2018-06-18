@@ -49,6 +49,37 @@ export class ApiDataProvider {
 
   }
 
+  getApiUrl(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.getApiUrlStorage().then(res => {
+        console.log("Fetching api urls from storage ", res);
+
+        if (res != null) {
+          console.log("Setting fetched from storage");
+          this.apiUrls = res;
+          resolve(this.apiUrls);
+        }
+        else {
+          console.log("Api url null so fetching from cloud");
+
+          this.fetchApiUrl().then(res => {
+            console.log("Fetched api urls", res);
+            this.generateZebpayApis(res).subscribe(generated => {
+              console.log("generated urls passed for store", generated);
+              this.apiUrls = generated
+              this.storeApiUrl(this.apiUrls);
+              resolve(this.apiUrls);
+            });
+          }).catch(err => {
+            console.log("constant Api urls called ", err);
+            this.apiUrls = this.getConstantApiUrl();
+            resolve(this.apiUrls);
+          });
+        }
+      });
+    });
+  }
+
   checkNetworkConnection(): Promise<boolean> {
 
     return this.platform.ready().then(() => {
@@ -199,7 +230,7 @@ export class ApiDataProvider {
   fetchApiUrl(): any {
     // console.log("GET - api urls");
 
-    return this.http.get(this.coinAssistApis);
+    return this.http.get(this.coinAssistApis).toPromise();
 
   }
 

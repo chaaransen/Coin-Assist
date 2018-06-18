@@ -46,28 +46,10 @@ export class HomePage {
   setApiUrl() {
     console.log("Setting api urls");
 
-    this.api.getApiUrlStorage().then(res => {
-      console.log("Fetching api urls from storage ", res);
+    this.api.getApiUrl().then(apiUrl => {
+      console.log("Response API url ", apiUrl);
 
-      if (res != null) {
-        console.log("Setting fetched from storage");
-
-        this.apiUrls = res;
-      }
-      else {
-        console.log("Api url null so fetching from cloud");
-
-        this.api.fetchApiUrl().then(res => {
-          console.log("Fetched api urls", res);
-          this.apiUrls = res;
-          this.api.storeApiUrl(this.apiUrls);
-        }).catch(err => {
-          console.log("constant Api urls called ", err);
-          this.apiUrls = this.api.getConstantApiUrl();
-        });
-      }
-      this.api.setApiUrl(this.apiUrls);
-
+      this.apiUrls = apiUrl;
       this.populateView();
 
       //Automatic fetching of new data every 20 seconds
@@ -80,7 +62,9 @@ export class HomePage {
             this.populateView();
           }
         });
+
     });
+
   }
 
   ionViewDidLeave() {

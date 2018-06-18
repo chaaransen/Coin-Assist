@@ -48,29 +48,10 @@ export class QuantityCalcPage {
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
 
-      this.api.getApiUrlStorage().then(res => {
+      this.api.getApiUrl().then(apiUrl => {
+        console.log("Response API url ", apiUrl);
 
-
-        if (res != null) {
-          // console.log("Stored Url value", res);
-          this.apiUrls = res;
-        }
-        else {
-
-          this.api.fetchApiUrl().then(res => {
-            // console.log("fetching Api urls called", res);
-            this.apiUrls = res;
-            this.api.storeApiUrl(this.apiUrls);
-          }).catch(err => {
-            // console.log("constant Api urls called", err);
-            this.apiUrls = this.api.getConstantApiUrl();
-          });
-
-        }
-
-        // console.log("Init Done");
-      }).then(res => {
-        // console.log("Api Urls in quantity page", this.apiUrls);
+        this.apiUrls = apiUrl;
 
         this.apis = this.apiUrls.exchange;
         // console.log("Exchange values", this.apis);
@@ -125,7 +106,6 @@ export class QuantityCalcPage {
           }
           // console.log("Existing points", this.points);
         });
-
       });
     }
   }

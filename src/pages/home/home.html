@@ -59,7 +59,7 @@
                     {{coin.market.formatted}}
                   </ion-row>
                 </ion-col>
-                <ion-col col-4 class="boldTextValue">
+                <ion-col col-4 class="boldTextValue" *ngIf="coin.change != undefined">
                   <div *ngIf="coin.change.day >= 0" class="greenColor weight500">
                     <span class="size1rem7">&#9650;</span>+{{coin.change.day}}%
                   </div>
@@ -92,7 +92,7 @@
               </ion-row>
 
               <ion-row>
-                <ion-col col-12>
+                <ion-col col-12 *ngIf="coin.globalDiff != undefined">
                   <div *ngIf="coin.globalDiff.percent >= 0">
                     Global.Diff(%):
                     <span class="greenColor weight500">{{coin.globalDiff.percent}}%</span>

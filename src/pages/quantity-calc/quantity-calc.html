@@ -18,45 +18,48 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="networkFlag">
-    <div class="size2rem center">
-      <span class="size2rem3 weight500">{{points}}</span>
-      <span class="padding1rem">: Uses Left
+    <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>
+    <div class="size2rem center" *ngIf="coins != undefined">
+      <span class=" size2rem3 weight500 ">{{points}}</span>
+      <span class="padding1rem ">: Uses Left
       </span>
-      <button class="padding1rem getPoints" (click)="showAd()" ion-button color="dark">Refill Use</button>
+      <button class="padding1rem getPoints " (click)="showAd() " ion-button color="dark">Refill Use</button>
     </div>
 
   </div>
   <hr>
-  <div *ngIf="enable && networkFlag">
-    <ion-card-header class="weight500 size1rem8  paddingTop0">
+  <div *ngIf="enable && networkFlag && coins != undefined">
+    <ion-card-header class="weight500 size1rem8 paddingTop0 ">
       Enter Coin Detail
     </ion-card-header>
     <ion-list>
 
       <ion-item>
         <ion-label fixed>Exchange</ion-label>
-        <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="exchangeChanged(selExchange)">
+        <ion-select [(ngModel)]="selExchange " *ngIf="selExchange " interface="popover " (ngModelChange)="exchangeChanged(selExchange) ">
           <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>Crypto-Coin</ion-label>
-        <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">
-          <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
+        <ion-select [(ngModel)]="selCoin.coinName " interface="popover " (ngModelChange)="populateView() ">
+          <ion-option *ngFor=" let coin of coins " [value]="coin.coinName ">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>Coin Rate</ion-label>
-        <ion-input type="number" placeholder="(e.g) 3000" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>
+        <ion-input type="number " placeholder="(e.g) 3000 " [(ngModel)]="selCoin.range.rate.no " clearInput="true
+      " (ngModelChange)="coinRateChanged($event) "></ion-input>
       </ion-item>
       <ion-item>
         &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})
       </ion-item>
       <!-- <ion-item>
-      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"
-        (ionChange)="rangeChanged($event)">
+      <ion-range [min]="selCoin.range.minusPercent.no " [max]="selCoin.range.plusPercent.no " step="selCoin.step
+      " snaps="true " [(ngModel)]="rangeValue "
+        (ionChange)="rangeChanged($event) ">
         <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>
         <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>
       </ion-range>
@@ -64,23 +67,25 @@
 
       <ion-item>
         <ion-label fixed>Amount &#8377;</ion-label>
-        <ion-input type="number" placeholder="(e.g) 1000" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
+        <ion-input type="number " placeholder="(e.g) 1000 " clearInput="true " [(ngModel)]="amount.no " max="9
+      " (ngModelChange)="amountChanged($event) "></ion-input>
       </ion-item>
-      <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->
+      <!-- <div *ngIf="amountFlag ">*Amount exceeding Limit</div> -->
       <ion-item>
         <ion-label fixed>Quantity</ion-label>
-        <ion-input type="number" placeholder="(e.g) 0.0001" clearInput="true" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>
+        <ion-input type="number " placeholder="(e.g) 0.0001 " clearInput="true " [(ngModel)]="quantity.no
+      " (ngModelChange)="calcAmount($event) "></ion-input>
       </ion-item>
     </ion-list>
-    <ion-card-header class="weight500 size1rem8">
+    <ion-card-header class="weight500 size1rem8 ">
       Summary
     </ion-card-header>
     <ion-card>
       <ion-grid>
         <ion-row>
-          <ion-col col-6 class="center">
+          <ion-col col-6 class="center ">
             <ion-row>
-              <ion-col col-12 class="weight500 size2rem8">
+              <ion-col col-12 class="weight500 size2rem8 ">
                 {{quantity.formatted}}
 
               </ion-col>
@@ -92,7 +97,7 @@
             </ion-row>
           </ion-col>
           <ion-col col-6>
-            <img class="center" src="{{selCoin.coinImage}}">
+            <img class="center " src="{{selCoin.coinImage}} ">
           </ion-col>
         </ion-row>
 
@@ -116,7 +121,7 @@
           <ion-col col-6>
             Buy Fees:({{buyerFeesPercent}}%)
           </ion-col>
-          <ion-col col-6 class="redColor">
+          <ion-col col-6 class="redColor ">
             {{buyerFees.formatted}}
           </ion-col>
         </ion-row>
@@ -124,7 +129,7 @@
           <ion-col col-6>
             Total Amount:
           </ion-col>
-          <ion-col col-6 class="weight500">
+          <ion-col col-6 class="weight500 ">
             {{amount.formatted}}
           </ion-col>
         </ion-row>

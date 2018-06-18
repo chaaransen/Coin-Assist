@@ -35,19 +35,7 @@ export class MyApp {
   }
 
   ngOnInit() {
-    console.log("Ng oninit Called - app component");
-    this.api.fetchApiUrl().subscribe(res => {
-      // console.log("fetched in app component");
-      // console.log(res);
-      this.api.generateZebpayApis(res).subscribe(generated => {
-        // console.log("generated urls passed for store", generated);
-        this.api.storeApiUrl(generated);
-      });
-    },
-      err => {
-        // console.log("App component - error fetching data", err);
-
-      });
+    // console.log("Ng oninit Called - app component");
 
     this.api.fetchService(Constants.POINTS).then(points => {
       // console.log("Points", points);
@@ -57,7 +45,7 @@ export class MyApp {
     });
 
     this.api.fetchService(Constants.RATED).then(rateFlag => {
-      console.log("Rate Flag ", rateFlag);
+      // console.log("Rate Flag ", rateFlag);
       if (rateFlag == undefined) {
         this.rateFlag = false;
         this.api.storeService(Constants.RATED, this.rateFlag);
@@ -68,16 +56,16 @@ export class MyApp {
     });
 
     this.api.fetchService(Constants.RATE_USES_UNTIL).then(rateUsesLeft => {
-      console.log("USES UNTIL LEFT", rateUsesLeft);
+      // console.log("USES UNTIL LEFT", rateUsesLeft);
       if (rateUsesLeft == null) {
         let defaultLeft = Constants.DEFAULT_USES_UNTIL;
         this.usesUntilPrompt = defaultLeft;
         this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
-        console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
+        // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
 
       } else {
         this.usesUntilPrompt = rateUsesLeft;
-        console.log("Fetched Uses Until left ", this.usesUntilPrompt);
+        // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
 
       }
     });
@@ -103,10 +91,10 @@ export class MyApp {
       });
 
       this.platform.registerBackButtonAction(() => {
-        console.log("Backbutton pressed ", this.rateFlag);
+        // console.log("Backbutton pressed ", this.rateFlag);
 
         if (!this.rateFlag) {
-          console.log("Not yet Rated checking rating dialog display");
+          // console.log("Not yet Rated checking rating dialog display");
 
           let listNav = this.app.getActiveNavs();
           // console.log("Active navs", activeNav);
@@ -114,12 +102,12 @@ export class MyApp {
           let activeNav = listNav[0];
           if (!activeNav.canGoBack()) {
             if (this.usesUntilPrompt > 0) {
-              console.log("Uses Until prompt ", this.usesUntilPrompt);
+              // console.log("Uses Until prompt ", this.usesUntilPrompt);
               this.usesUntilPrompt -= 1;
               this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
               this.platform.exitApp();
             } else if (this.usesUntilPrompt == 0) {
-              console.log("Showing rate dialog,Uses until prompt ", this.usesUntilPrompt);
+              // console.log("Showing rate dialog,Uses until prompt ", this.usesUntilPrompt);
               this.likeAppDialog();
             }
           }
@@ -127,7 +115,7 @@ export class MyApp {
             activeNav.pop();
           }
         } else {
-          console.log("Already Rated Exiting", this.rateFlag);
+          // console.log("Already Rated Exiting", this.rateFlag);
 
           this.platform.exitApp();
         }
@@ -143,7 +131,7 @@ export class MyApp {
         {
           text: 'No',
           handler: () => {
-            console.log('No dont like the App');
+            // console.log('No dont like the App');
             this.usesUntilPrompt = Constants.DONT_LIKE;
             this.api.storeService(Constants.RATE_USES_UNTIL, Constants.DONT_LIKE);
             this.platform.exitApp();
@@ -152,7 +140,7 @@ export class MyApp {
         {
           text: 'Yes',
           handler: () => {
-            console.log("Yes Like the App");
+            // console.log("Yes Like the App");
             this.rateDialog();
           }
         }
@@ -169,7 +157,7 @@ export class MyApp {
         {
           text: 'Later',
           handler: () => {
-            console.log('Remind Later clicked');
+            // console.log('Remind Later clicked');
             this.usesUntilPrompt = Constants.LATER_LIKE;
             this.api.storeService(Constants.RATE_USES_UNTIL, Constants.LATER_LIKE);
             this.platform.exitApp();
@@ -178,7 +166,7 @@ export class MyApp {
         {
           text: 'Rate!',
           handler: () => {
-            console.log('Rating and getting 5 points');
+            // console.log('Rating and getting 5 points');
             this.api.rewardNotif = true;
             window.open(Constants.RATE_LINK, '_system', 'location=yes');
             this.usesUntilPrompt = Constants.RATE_REWARD;
@@ -188,7 +176,7 @@ export class MyApp {
             });
             this.rateFlag = true;
             this.api.storeService(Constants.RATED, this.rateFlag);
-            console.log("Rated Flag set", this.rateFlag);
+            // console.log("Rated Flag set", this.rateFlag);
 
           }
         }

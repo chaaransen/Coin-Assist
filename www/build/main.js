@@ -76,24 +76,9 @@ var QuantityCalcPage = (function () {
         var _this = this;
         this.networkFlag = this.api.networkFlag;
         if (this.networkFlag) {
-            this.api.getApiUrlStorage().then(function (res) {
-                if (res != null) {
-                    // console.log("Stored Url value", res);
-                    _this.apiUrls = res;
-                }
-                else {
-                    _this.api.fetchApiUrl().then(function (res) {
-                        // console.log("fetching Api urls called", res);
-                        _this.apiUrls = res;
-                        _this.api.storeApiUrl(_this.apiUrls);
-                    }).catch(function (err) {
-                        // console.log("constant Api urls called", err);
-                        _this.apiUrls = _this.api.getConstantApiUrl();
-                    });
-                }
-                // console.log("Init Done");
-            }).then(function (res) {
-                // console.log("Api Urls in quantity page", this.apiUrls);
+            this.api.getApiUrl().then(function (apiUrl) {
+                console.log("Response API url ", apiUrl);
+                _this.apiUrls = apiUrl;
                 _this.apis = _this.apiUrls.exchange;
                 // console.log("Exchange values", this.apis);
                 _this.exchanges = Object.keys(_this.apis);
@@ -359,7 +344,7 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <div *ngIf="networkFlag">\n\n    <div class="size2rem center">\n\n      <span class="size2rem3 weight500">{{points}}</span>\n\n      <span class="padding1rem">: Uses Left\n\n      </span>\n\n      <button class="padding1rem getPoints" (click)="showAd()" ion-button color="dark">Refill Use</button>\n\n    </div>\n\n\n\n  </div>\n\n  <hr>\n\n  <div *ngIf="enable && networkFlag">\n\n    <ion-card-header class="weight500 size1rem8  paddingTop0">\n\n      Enter Coin Detail\n\n    </ion-card-header>\n\n    <ion-list>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Exchange</ion-label>\n\n        <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="exchangeChanged(selExchange)">\n\n          <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n        </ion-select>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Crypto-Coin</ion-label>\n\n        <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">\n\n          <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n        </ion-select>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Coin Rate</ion-label>\n\n        <ion-input type="number" placeholder="(e.g) 3000" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event)"></ion-input>\n\n      </ion-item>\n\n      <ion-item>\n\n        &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})\n\n      </ion-item>\n\n      <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no" [max]="selCoin.range.plusPercent.no" step="selCoin.step" snaps="true" [(ngModel)]="rangeValue"\n\n        (ionChange)="rangeChanged($event)">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Amount &#8377;</ion-label>\n\n        <ion-input type="number" placeholder="(e.g) 1000" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>\n\n      </ion-item>\n\n      <!-- <div *ngIf="amountFlag">*Amount exceeding Limit</div> -->\n\n      <ion-item>\n\n        <ion-label fixed>Quantity</ion-label>\n\n        <ion-input type="number" placeholder="(e.g) 0.0001" clearInput="true" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>\n\n      </ion-item>\n\n    </ion-list>\n\n    <ion-card-header class="weight500 size1rem8">\n\n      Summary\n\n    </ion-card-header>\n\n    <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-6 class="center">\n\n            <ion-row>\n\n              <ion-col col-12 class="weight500 size2rem8">\n\n                {{quantity.formatted}}\n\n\n\n              </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n              <ion-col col-12>\n\n                {{selCoin.coinName}}(s) ({{selCoin.coinCode}})\n\n              </ion-col>\n\n            </ion-row>\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            <img class="center" src="{{selCoin.coinImage}}">\n\n          </ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Coin Rate:\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            {{selCoin.range.rate.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Amount:\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            {{actualAmount.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Buy Fees:({{buyerFeesPercent}}%)\n\n          </ion-col>\n\n          <ion-col col-6 class="redColor">\n\n            {{buyerFees.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Total Amount:\n\n          </ion-col>\n\n          <ion-col col-6 class="weight500">\n\n            {{amount.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card>\n\n  </div>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
+            selector: 'page-quantity-calc',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Quantity / Amount Calculator</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n  <div *ngIf="networkFlag">\n\n    <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>\n\n    <div class="size2rem center" *ngIf="coins != undefined">\n\n      <span class=" size2rem3 weight500 ">{{points}}</span>\n\n      <span class="padding1rem ">: Uses Left\n\n      </span>\n\n      <button class="padding1rem getPoints " (click)="showAd() " ion-button color="dark">Refill Use</button>\n\n    </div>\n\n\n\n  </div>\n\n  <hr>\n\n  <div *ngIf="enable && networkFlag && coins != undefined">\n\n    <ion-card-header class="weight500 size1rem8 paddingTop0 ">\n\n      Enter Coin Detail\n\n    </ion-card-header>\n\n    <ion-list>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Exchange</ion-label>\n\n        <ion-select [(ngModel)]="selExchange " *ngIf="selExchange " interface="popover " (ngModelChange)="exchangeChanged(selExchange) ">\n\n          <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>\n\n        </ion-select>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Crypto-Coin</ion-label>\n\n        <ion-select [(ngModel)]="selCoin.coinName " interface="popover " (ngModelChange)="populateView() ">\n\n          <ion-option *ngFor=" let coin of coins " [value]="coin.coinName ">{{coin.coinName}} ({{coin.coinCode}})</ion-option>\n\n        </ion-select>\n\n      </ion-item>\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Coin Rate</ion-label>\n\n        <ion-input type="number " placeholder="(e.g) 3000 " [(ngModel)]="selCoin.range.rate.no " clearInput="true\n\n      " (ngModelChange)="coinRateChanged($event) "></ion-input>\n\n      </ion-item>\n\n      <ion-item>\n\n        &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})\n\n      </ion-item>\n\n      <!-- <ion-item>\n\n      <ion-range [min]="selCoin.range.minusPercent.no " [max]="selCoin.range.plusPercent.no " step="selCoin.step\n\n      " snaps="true " [(ngModel)]="rangeValue "\n\n        (ionChange)="rangeChanged($event) ">\n\n        <ion-label range-left>{{selCoin.range.minusPercent.formatted}}</ion-label>\n\n        <ion-label range-right>{{selCoin.range.plusPercent.formatted}}</ion-label>\n\n      </ion-range>\n\n    </ion-item> -->\n\n\n\n      <ion-item>\n\n        <ion-label fixed>Amount &#8377;</ion-label>\n\n        <ion-input type="number " placeholder="(e.g) 1000 " clearInput="true " [(ngModel)]="amount.no " max="9\n\n      " (ngModelChange)="amountChanged($event) "></ion-input>\n\n      </ion-item>\n\n      <!-- <div *ngIf="amountFlag ">*Amount exceeding Limit</div> -->\n\n      <ion-item>\n\n        <ion-label fixed>Quantity</ion-label>\n\n        <ion-input type="number " placeholder="(e.g) 0.0001 " clearInput="true " [(ngModel)]="quantity.no\n\n      " (ngModelChange)="calcAmount($event) "></ion-input>\n\n      </ion-item>\n\n    </ion-list>\n\n    <ion-card-header class="weight500 size1rem8 ">\n\n      Summary\n\n    </ion-card-header>\n\n    <ion-card>\n\n      <ion-grid>\n\n        <ion-row>\n\n          <ion-col col-6 class="center ">\n\n            <ion-row>\n\n              <ion-col col-12 class="weight500 size2rem8 ">\n\n                {{quantity.formatted}}\n\n\n\n              </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n              <ion-col col-12>\n\n                {{selCoin.coinName}}(s) ({{selCoin.coinCode}})\n\n              </ion-col>\n\n            </ion-row>\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            <img class="center " src="{{selCoin.coinImage}} ">\n\n          </ion-col>\n\n        </ion-row>\n\n\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Coin Rate:\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            {{selCoin.range.rate.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Amount:\n\n          </ion-col>\n\n          <ion-col col-6>\n\n            {{actualAmount.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Buy Fees:({{buyerFeesPercent}}%)\n\n          </ion-col>\n\n          <ion-col col-6 class="redColor ">\n\n            {{buyerFees.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n        <ion-row>\n\n          <ion-col col-6>\n\n            Total Amount:\n\n          </ion-col>\n\n          <ion-col col-6 class="weight500 ">\n\n            {{amount.formatted}}\n\n          </ion-col>\n\n        </ion-row>\n\n      </ion-grid>\n\n    </ion-card>\n\n  </div>\n\n</ion-content>'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\quantity-calc\quantity-calc.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_6__providers_utilities_utilities__["a" /* Utilities */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]])
     ], QuantityCalcPage);
@@ -465,24 +450,9 @@ var HomePage = (function () {
     HomePage.prototype.setApiUrl = function () {
         var _this = this;
         console.log("Setting api urls");
-        this.api.getApiUrlStorage().then(function (res) {
-            console.log("Fetching api urls from storage ", res);
-            if (res != null) {
-                console.log("Setting fetched from storage");
-                _this.apiUrls = res;
-            }
-            else {
-                console.log("Api url null so fetching from cloud");
-                _this.api.fetchApiUrl().then(function (res) {
-                    console.log("Fetched api urls", res);
-                    _this.apiUrls = res;
-                    _this.api.storeApiUrl(_this.apiUrls);
-                }).catch(function (err) {
-                    console.log("constant Api urls called ", err);
-                    _this.apiUrls = _this.api.getConstantApiUrl();
-                });
-            }
-            _this.api.setApiUrl(_this.apiUrls);
+        this.api.getApiUrl().then(function (apiUrl) {
+            console.log("Response API url ", apiUrl);
+            _this.apiUrls = apiUrl;
             _this.populateView();
             //Automatic fetching of new data every 20 seconds
             var refresher = __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__["IntervalObservable"].create(20000);
@@ -1150,18 +1120,8 @@ var MyApp = (function () {
         ];
     }
     MyApp.prototype.ngOnInit = function () {
+        // console.log("Ng oninit Called - app component");
         var _this = this;
-        console.log("Ng oninit Called - app component");
-        this.api.fetchApiUrl().subscribe(function (res) {
-            // console.log("fetched in app component");
-            // console.log(res);
-            _this.api.generateZebpayApis(res).subscribe(function (generated) {
-                // console.log("generated urls passed for store", generated);
-                _this.api.storeApiUrl(generated);
-            });
-        }, function (err) {
-            // console.log("App component - error fetching data", err);
-        });
         this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["s" /* POINTS */]).then(function (points) {
             // console.log("Points", points);
             if (points == undefined) {
@@ -1169,7 +1129,7 @@ var MyApp = (function () {
             }
         });
         this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["x" /* RATED */]).then(function (rateFlag) {
-            console.log("Rate Flag ", rateFlag);
+            // console.log("Rate Flag ", rateFlag);
             if (rateFlag == undefined) {
                 _this.rateFlag = false;
                 _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["x" /* RATED */], _this.rateFlag);
@@ -1179,16 +1139,16 @@ var MyApp = (function () {
             }
         });
         this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */]).then(function (rateUsesLeft) {
-            console.log("USES UNTIL LEFT", rateUsesLeft);
+            // console.log("USES UNTIL LEFT", rateUsesLeft);
             if (rateUsesLeft == null) {
                 var defaultLeft = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["e" /* DEFAULT_USES_UNTIL */];
                 _this.usesUntilPrompt = defaultLeft;
                 _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
-                console.log("UsesUntilLeft Null so default ", _this.usesUntilPrompt);
+                // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
             }
             else {
                 _this.usesUntilPrompt = rateUsesLeft;
-                console.log("Fetched Uses Until left ", _this.usesUntilPrompt);
+                // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
             }
         });
     };
@@ -1213,22 +1173,22 @@ var MyApp = (function () {
                 ;
             });
             _this.platform.registerBackButtonAction(function () {
-                console.log("Backbutton pressed ", _this.rateFlag);
+                // console.log("Backbutton pressed ", this.rateFlag);
                 if (!_this.rateFlag) {
-                    console.log("Not yet Rated checking rating dialog display");
+                    // console.log("Not yet Rated checking rating dialog display");
                     var listNav = _this.app.getActiveNavs();
                     // console.log("Active navs", activeNav);
                     // console.log("can go back", activeNav[0].canGoBack());
                     var activeNav = listNav[0];
                     if (!activeNav.canGoBack()) {
                         if (_this.usesUntilPrompt > 0) {
-                            console.log("Uses Until prompt ", _this.usesUntilPrompt);
+                            // console.log("Uses Until prompt ", this.usesUntilPrompt);
                             _this.usesUntilPrompt -= 1;
                             _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
                             _this.platform.exitApp();
                         }
                         else if (_this.usesUntilPrompt == 0) {
-                            console.log("Showing rate dialog,Uses until prompt ", _this.usesUntilPrompt);
+                            // console.log("Showing rate dialog,Uses until prompt ", this.usesUntilPrompt);
                             _this.likeAppDialog();
                         }
                     }
@@ -1237,7 +1197,7 @@ var MyApp = (function () {
                     }
                 }
                 else {
-                    console.log("Already Rated Exiting", _this.rateFlag);
+                    // console.log("Already Rated Exiting", this.rateFlag);
                     _this.platform.exitApp();
                 }
             });
@@ -1252,7 +1212,7 @@ var MyApp = (function () {
                 {
                     text: 'No',
                     handler: function () {
-                        console.log('No dont like the App');
+                        // console.log('No dont like the App');
                         _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["f" /* DONT_LIKE */];
                         _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["f" /* DONT_LIKE */]);
                         _this.platform.exitApp();
@@ -1261,7 +1221,7 @@ var MyApp = (function () {
                 {
                     text: 'Yes',
                     handler: function () {
-                        console.log("Yes Like the App");
+                        // console.log("Yes Like the App");
                         _this.rateDialog();
                     }
                 }
@@ -1278,7 +1238,7 @@ var MyApp = (function () {
                 {
                     text: 'Later',
                     handler: function () {
-                        console.log('Remind Later clicked');
+                        // console.log('Remind Later clicked');
                         _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["n" /* LATER_LIKE */];
                         _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["n" /* LATER_LIKE */]);
                         _this.platform.exitApp();
@@ -1287,7 +1247,7 @@ var MyApp = (function () {
                 {
                     text: 'Rate!',
                     handler: function () {
-                        console.log('Rating and getting 5 points');
+                        // console.log('Rating and getting 5 points');
                         _this.api.rewardNotif = true;
                         window.open(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["A" /* RATE_LINK */], '_system', 'location=yes');
                         _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["B" /* RATE_REWARD */];
@@ -1297,7 +1257,7 @@ var MyApp = (function () {
                         });
                         _this.rateFlag = true;
                         _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["x" /* RATED */], _this.rateFlag);
-                        console.log("Rated Flag set", _this.rateFlag);
+                        // console.log("Rated Flag set", this.rateFlag);
                     }
                 }
             ]
@@ -1541,6 +1501,35 @@ var ApiDataProvider = (function () {
     }
     ApiDataProvider.prototype.ngOnInit = function () {
     };
+    ApiDataProvider.prototype.getApiUrl = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.getApiUrlStorage().then(function (res) {
+                console.log("Fetching api urls from storage ", res);
+                if (res != null) {
+                    console.log("Setting fetched from storage");
+                    _this.apiUrls = res;
+                    resolve(_this.apiUrls);
+                }
+                else {
+                    console.log("Api url null so fetching from cloud");
+                    _this.fetchApiUrl().then(function (res) {
+                        console.log("Fetched api urls", res);
+                        _this.generateZebpayApis(res).subscribe(function (generated) {
+                            console.log("generated urls passed for store", generated);
+                            _this.apiUrls = generated;
+                            _this.storeApiUrl(_this.apiUrls);
+                            resolve(_this.apiUrls);
+                        });
+                    }).catch(function (err) {
+                        console.log("constant Api urls called ", err);
+                        _this.apiUrls = _this.getConstantApiUrl();
+                        resolve(_this.apiUrls);
+                    });
+                }
+            });
+        });
+    };
     ApiDataProvider.prototype.checkNetworkConnection = function () {
         var _this = this;
         return this.platform.ready().then(function () {
@@ -1671,7 +1660,7 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.fetchApiUrl = function () {
         // console.log("GET - api urls");
-        return this.http.get(this.coinAssistApis);
+        return this.http.get(this.coinAssistApis).toPromise();
     };
     ApiDataProvider.prototype.showToast = function (message, position, duration) {
         if (duration === void 0) { duration = 1500; }
@@ -2366,8 +2355,8 @@ var ALL = "ALL";
 //Rating Dialog
 var LIKE_DIALOG_HEAD = "Like?";
 var LIKE_DIALOG_DESC = "Do you Like the App?";
-var RATE_DIALOG_HEAD = "Rating :)";
-var RATE_DIALOG_DESC = "Give us a Rating! get 5 Refill Points";
+var RATE_DIALOG_HEAD = "Rate & Get 5 Refill Points!";
+var RATE_DIALOG_DESC = "Give us a 5 start rating if you like the app! :)";
 var RATE_USES_UNTIL = "rateUsesLeft";
 var RATE_REWARD_MSG = "5 Reward Points added for Rating!";
 var DEFAULT_USES_UNTIL = 2;
