@@ -19,6 +19,7 @@ export class QuantityCalcPage {
   selExchange: any;
   public selCoin: CoinDetail = new CoinDetail();
   apis: any = {};
+  apiUrls: any = {};
   public amount: ValueDetail = new ValueDetail();
   public actualAmount: ValueDetail = new ValueDetail();
   public buyerFees: ValueDetail = new ValueDetail();
@@ -30,7 +31,7 @@ export class QuantityCalcPage {
   pageName: string = "quantity-calc page";
   reward: boolean;
   enable: boolean;
-  networkFlag: boolean = false;
+  networkFlag: boolean = true;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
     // console.log("1 qty constructor called");
@@ -46,62 +47,78 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
-      // console.log("Api Urls in quantity page", this.api.apiUrls);
 
-      this.apis = this.api.apiUrls.exchange;
-      // console.log("Exchange values", this.apis);
+      this.api.getApiUrl().then(apiUrl => {
+        console.log("Response API url ", apiUrl);
 
-      this.exchanges = Object.keys(this.apis);
+        this.apiUrls = apiUrl;
 
-      if (this.selExchange == undefined) {
-        this.selExchange = Constants.KOINEX;
-      }
-      if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-      }
-      this.populateView();
+        this.apis = this.apiUrls.exchange;
+        // console.log("Exchange values", this.apis);
 
-      // this.api.trackPage(this.pageName);
-      this.api.logAnalytics(this.pageName);
+        this.exchanges = Object.keys(this.apis);
 
-      this.api.fetchService(this.pageName).then(lock => {
-        if (lock != true) {
-          this.infoAlert();
+        if (this.selExchange == undefined) {
+          this.selExchange = Constants.KOINEX;
         }
+        if (this.selCoin.coinName == undefined) {
+          this.selCoin.coinName = this.apiUrls.coins.BTC.name;
+        }
+
+
+        this.populateView();
+
+        // this.api.trackPage(this.pageName);
+        this.api.logAnalytics(this.pageName);
+
+        this.api.fetchService(this.pageName).then(lock => {
+          if (lock != true) {
+            this.infoAlert();
+          }
+        });
+
+        this.api.fetchService("points").then(points => {
+          // console.log("QTY fetched points", points);
+
+          this.points = points;
+
+          if (this.points > 0) {
+            if (!this.api.usedFlag) {
+              this.points = this.points - 1;
+              this.api.usedFlag = true;
+            }
+            this.enable = true;
+
+          } else {
+            this.enable = false;
+          }
+          if (this.points == 1) {
+            this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+          }
+
+
+          // console.log("Storing new Points", this.points);
+          this.api.storeService(Constants.POINTS, this.points);
+
+
+          if (!this.enable) {
+            this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
+          }
+          // console.log("Existing points", this.points);
+        });
       });
-
-      this.api.fetchService("points").then(points => {
-        // console.log("QTY fetched points", points);
-
-        this.points = points;
-
-        if (this.points == 2) {
-          this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-        }
-
-        if (this.points > 0) {
-          this.points = this.points - 1;
-          this.enable = true;
-        } else {
-          this.enable = false;
-        }
-
-        // console.log("Storing new Points", this.points);
-        this.api.storeService(Constants.POINTS, this.points);
-
-
-        if (!this.enable) {
-          this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
-        }
-        // console.log("Existing points", this.points);
-      });
-      // console.log("Init Done");
     }
   }
 
   ionViewWillEnter() {
     this.networkFlag = this.api.networkFlag;
     // console.log("Home page -View Entered", this.alive);
+  }
+  ionViewDidEnter() {
+    if (this.api.rewardNotif) {
+      this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
+      this.api.rewardNotif = false;
+    }
   }
 
   infoAlert() {
@@ -131,13 +148,13 @@ export class QuantityCalcPage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
           text: 'Watch Ad',
           handler: () => {
-            console.log('Watch Ad clicked');
+            // console.log('Watch Ad clicked');
             this.showAd();
           }
         }
@@ -320,7 +337,8 @@ export class QuantityCalcPage {
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {
-        // console.log("Fetching Points on Enter");
+
+        console.log("Ad Closed");
 
         this.points = points;
         if (this.points > 0) {
@@ -330,12 +348,12 @@ export class QuantityCalcPage {
             this.reward = false;
           }
         }
-        // console.log("Naya Points", this.points);
-
       });
     });
 
     this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+      console.log("Quant Reward Called");
+
       this.reward = true;
     });
   }

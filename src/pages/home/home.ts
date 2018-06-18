@@ -20,20 +20,22 @@ export class HomePage {
   selExchange: any;
   alive: boolean;
   pageName: string = "home page";
-  updateFlag: boolean = false;
-  networkFlag: boolean;
+  networkFlag: boolean = true;
+  firstEntryFlag: boolean = true;
 
   constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
     // console.log("Constructor - Home page");
-
     this.alive = true;
   }
 
   ngOnInit() {
-    // console.log("ngOnInit - home called");
+    console.log("ngOnInit - home called");
+    this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
       this.networkFlag = val;
-      if (val) {
+      if (this.networkFlag) {
+        console.log("network present - fetching api");
+
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);
@@ -42,23 +44,12 @@ export class HomePage {
   }
 
   setApiUrl() {
-    this.api.getApiUrlStorage().then(res => {
-      // console.log("Stored Url value");
-      // console.log(res);
-      if (res != null) {
-        this.apiUrls = res;
-      }
-      else {
-        // console.log("constant Api urls called");
-        this.updateFlag = true;
-        this.apiUrls = this.api.getConstantApiUrl();
-      }
-      // console.log("Home Compo Value return");
+    console.log("Setting api urls");
 
-      // console.log(this.apiUrls);
+    this.api.getApiUrl().then(apiUrl => {
+      console.log("Response API url ", apiUrl);
 
-      this.api.setApiUrl(this.apiUrls);
-
+      this.apiUrls = apiUrl;
       this.populateView();
 
       //Automatic fetching of new data every 20 seconds
@@ -71,7 +62,9 @@ export class HomePage {
             this.populateView();
           }
         });
+
     });
+
   }
 
   ionViewDidLeave() {
@@ -83,6 +76,9 @@ export class HomePage {
   ionViewWillEnter() {
     this.alive = true;
     this.networkFlag = this.api.networkFlag;
+    if (!this.firstEntryFlag && this.networkFlag && this.apiUrls == undefined) {
+      this.ngOnInit();
+    }
     // console.log("Home page -View Entered", this.alive);
   }
 
@@ -91,10 +87,6 @@ export class HomePage {
     this.networkFlag = this.api.networkFlag;
     // console.log("Refresh Network Flag " + this.networkFlag);
     if (this.networkFlag) {
-      if (this.updateFlag) {
-        this.setApiUrl();
-        this.updateFlag = false;
-      }
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
@@ -126,6 +118,7 @@ export class HomePage {
       // console.log("second data - coin market Cap data", res[1]);
       // console.log("third data - coindesk data", res[2]);
       this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
+
       // console.log("processed exchange data");
       // console.log(this.coins);
 

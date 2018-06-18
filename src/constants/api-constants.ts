@@ -25,13 +25,13 @@ export const XLM: string = "Stellar";
 //Messages
 export const PRICE_REFRESH: string = "Latest Price Refreshed";
 export const PRICE_REFRESH_FAIL: string = "Failed to Refresh - No Network Connection";
-export const REWARD_POINTS: string = "5 Reward points Added!";
+export const REWARD_POINTS: string = "Reward points Added!";
 export const TOP: string = "top";
 export const BOTTOM: string = "bottom";
 
 //Quantity Page
 export const INSUF_POINTS_MSG: string = "Insufficient Use Points";
-export const INSUF_POINTS_DESC: string = "Get 5 Use Points by watching Video Ad";
+export const INSUF_POINTS_DESC: string = "Get Use Points by watching Video Ad";
 
 export const LAST_POINT_MSG: string = "1 Use Point remaining!";
 export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
@@ -46,6 +46,7 @@ export const ZEBPAY: string = "Zebpay";
 export const KOINEX: string = "Koinex";
 
 export const POINTS: string = "points";
+export const DEFAULT_POINT: number = 3;
 
 //Generic
 export const LIGHT: string = "light";
@@ -53,6 +54,23 @@ export const DARK: string = "dark";
 export const INR: string = "INR";
 export const USD: string = "USD";
 export const ALL: string = "ALL";
+
+//Rating Dialog
+export const LIKE_DIALOG_HEAD: string = "Like?";
+export const LIKE_DIALOG_DESC: string = "Do you Like the App?";
+export const RATE_DIALOG_HEAD: string = "Rate & Get 5 Refill Points!";
+export const RATE_DIALOG_DESC: string = "Give us a 5 start rating if you like the app! :)";
+export const RATE_USES_UNTIL: string = "rateUsesLeft";
+export const RATE_REWARD_MSG: string = "5 Reward Points added for Rating!";
+export const DEFAULT_USES_UNTIL: number = 2;
+export const RATE_LINK: string = "market://details?id=in.extendsapk.beaky.android";
+export const DONT_LIKE: number = 10;
+export const LATER_LIKE: number = 5;
+export const RATE_REWARD: number = 5;
+export const RATED: string = "rated";
+
+
+
 
 
 
