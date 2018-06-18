@@ -2,11 +2,7 @@
   "name": "coin-assist",
   "app_id": "",
   "type": "ionic-angular",
-<<<<<<< HEAD
-  "integrations": {}
-=======
   "integrations": {
     "cordova": {}
   }
->>>>>>> temp
 }

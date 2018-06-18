@@ -435,12 +435,12 @@ var HomePage = (function () {
     }
     HomePage.prototype.ngOnInit = function () {
         var _this = this;
-        console.log("ngOnInit - home called");
+        // console.log("ngOnInit - home called");
         this.firstEntryFlag = false;
         this.api.checkNetworkConnection().then(function (val) {
             _this.networkFlag = val;
             if (_this.networkFlag) {
-                console.log("network present - fetching api");
+                // console.log("network present - fetching api");
                 _this.api.logAnalytics(_this.pageName);
                 _this.setApiUrl();
                 _this.api.instructionToast(_this.pageName, 0);
@@ -448,10 +448,10 @@ var HomePage = (function () {
         });
     };
     HomePage.prototype.setApiUrl = function () {
+        // console.log("Setting api urls");
         var _this = this;
-        console.log("Setting api urls");
         this.api.getApiUrl().then(function (apiUrl) {
-            console.log("Response API url ", apiUrl);
+            // console.log("Response API url ", apiUrl);
             _this.apiUrls = apiUrl;
             _this.populateView();
             //Automatic fetching of new data every 20 seconds
@@ -1505,24 +1505,24 @@ var ApiDataProvider = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.getApiUrlStorage().then(function (res) {
-                console.log("Fetching api urls from storage ", res);
+                // console.log("Fetching api urls from storage ", res);
                 if (res != null) {
-                    console.log("Setting fetched from storage");
+                    // console.log("Setting fetched from storage");
                     _this.apiUrls = res;
                     resolve(_this.apiUrls);
                 }
                 else {
-                    console.log("Api url null so fetching from cloud");
+                    // console.log("Api url null so fetching from cloud");
                     _this.fetchApiUrl().then(function (res) {
-                        console.log("Fetched api urls", res);
+                        // console.log("Fetched api urls", res);
                         _this.generateZebpayApis(res).subscribe(function (generated) {
-                            console.log("generated urls passed for store", generated);
+                            // console.log("generated urls passed for store", generated);
                             _this.apiUrls = generated;
                             _this.storeApiUrl(_this.apiUrls);
                             resolve(_this.apiUrls);
                         });
                     }).catch(function (err) {
-                        console.log("constant Api urls called ", err);
+                        // console.log("constant Api urls called ", err);
                         _this.apiUrls = _this.getConstantApiUrl();
                         resolve(_this.apiUrls);
                     });
@@ -1558,40 +1558,40 @@ var ApiDataProvider = (function () {
         this.admobFree.rewardVideo.isReady().then(function (res) {
             if (res) {
                 if (show) {
-                    console.log("Video Ad Already Ready - calling Show!");
-                    console.log("prepared Video ad - ready response", res);
+                    // console.log("Video Ad Already Ready - calling Show!");
+                    // console.log("prepared Video ad - ready response", res);
                     _this.showVideoAd();
                     show = false;
                 }
             }
             else {
-                console.log("AD not ready - Preparing...");
+                // console.log("AD not ready - Preparing...");
                 _this.admobFree.rewardVideo.prepare().then(function (res) {
-                    console.log("Reward Video Prepared", res);
+                    // console.log("Reward Video Prepared", res);
                 }).catch(function (err) {
-                    console.log("Unable to prepare", err);
+                    // console.log("Unable to prepare", err);
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(function (res) {
-                    console.log("AD failed to Load - new", res);
-                    console.log("AD Retries Left", _this.adRetryCounter);
+                    // console.log("AD failed to Load - new", res);
+                    // console.log("AD Retries Left", this.adRetryCounter);
                     if (show && _this.adRetryCounter == 0) {
-                        console.log("retry depletion with show");
+                        // console.log("retry depletion with show");
                         _this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["r" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["F" /* TOP */]);
                     }
                     else if (show && _this.adRetryCounter > 0) {
-                        console.log("Show retry , retry count ", _this.adRetryCounter);
+                        // console.log("Show retry , retry count ", this.adRetryCounter);
                         _this.adRetryCounter -= 1;
                         _this.prepareVideoAd(true);
                     }
                     else if (_this.adRetryCounter > 0) {
-                        console.log("No show retry");
+                        // console.log("No show retry");
                         _this.adRetryCounter -= 1;
                         _this.prepareVideoAd();
                     }
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(function (res) {
                     _this.adRetryCounter = 2;
-                    console.log("AD loadded - new", res);
+                    // console.log("AD loadded - new", res);
                     if (show) {
                         _this.showVideoAd();
                         show = false;
@@ -1607,16 +1607,16 @@ var ApiDataProvider = (function () {
                 if (res) {
                     _this.adRetryCounter = 2;
                     _this.admobFree.rewardVideo.show().then(function (res) {
-                        console.log("Video Ad is Showing", res);
+                        // console.log("Video Ad is Showing", res);
                         _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
-                            console.log("Reward Video value return ", res);
+                            // console.log("Reward Video value return ", res);
                             // console.log(res.rewardAmount);
                             var refillPoints = res.rewardAmount;
                             _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */]).then(function (points) {
                                 var newPoints = points;
                                 newPoints += refillPoints;
                                 _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */], newPoints);
-                                console.log("Earned New points", newPoints);
+                                // console.log("Earned New points", newPoints);
                             });
                             // console.log("Successful view - reward", res);
                         });
@@ -1625,15 +1625,15 @@ var ApiDataProvider = (function () {
                             // console.log("AD closed", res);
                         });
                     }).catch(function (err) {
-                        console.log("Unable to show Video Ad", err);
+                        // console.log("Unable to show Video Ad", err);
                     });
                 }
                 else {
-                    console.log("Video not ready, preparing and showing");
-                    console.log("ad retry counter - showing method", _this.adRetryCounter);
+                    // console.log("Video not ready, preparing and showing");
+                    // console.log("ad retry counter - showing method", this.adRetryCounter);
                     if (_this.adRetryCounter > 0) {
                         _this.adRetryCounter -= 1;
-                        console.log("reducing retry, count value ", _this.adRetryCounter);
+                        // console.log("reducing retry, count value ", this.adRetryCounter);
                         _this.prepareVideoAd(true);
                     }
                     else {
@@ -1642,8 +1642,8 @@ var ApiDataProvider = (function () {
                         resetRetry.subscribe(function (res) {
                             _this.adRetryLock = false;
                             _this.adRetryCounter = 2;
-                            console.log("Ad retry lock DISABLED", _this.adRetryLock);
-                            console.log("Ad retry counter Reset ", _this.adRetryCounter);
+                            // console.log("Ad retry lock DISABLED", this.adRetryLock);
+                            // console.log("Ad retry counter Reset ", this.adRetryCounter);
                         });
                     }
                 }
@@ -1733,7 +1733,7 @@ var ApiDataProvider = (function () {
         // console.log("value", value);
         this.storage.set(key, value).then(function (res) {
         }, function (err) {
-            console.log("Storage Error");
+            // console.log("Storage Error");
             console.log(err);
         });
     };
@@ -1741,7 +1741,7 @@ var ApiDataProvider = (function () {
         var _this = this;
         return this.storage.ready().then(function () {
             return _this.storage.get(key).catch(function (err) {
-                console.log("Error fetching data from storage");
+                // console.log("Error fetching data from storage");
             });
         });
     };
@@ -1752,7 +1752,7 @@ var ApiDataProvider = (function () {
             // console.log("Stored Successfully");
             // console.log(res);
         }, function (err) {
-            console.log("Storage Error");
+            // console.log("Storage Error");
             console.log(err);
         });
     };
