@@ -17,13 +17,13 @@ import { AdMobFree, AdMobFreeRewardVideoConfig, AdMobFreeInterstitialConfig } fr
 import { Network } from '@ionic-native/network';
 
 const videoConfig: AdMobFreeRewardVideoConfig = {
-  id: "ca-app-pub-4512084985073909/9656600655",
+  id: "ca-app-pub-4512084985073909/4639923138",
   isTesting: false,
   autoShow: false
 };
 
 const interstitialConfig: AdMobFreeInterstitialConfig = {
-  id: "ca-app-pub-4512084985073909/3055346907",
+  id: "ca-app-pub-4512084985073909/1939390564",
   isTesting: false,
   autoShow: false
 };

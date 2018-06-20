@@ -63,7 +63,7 @@ export const RATE_DIALOG_DESC: string = "Give us a 5 start rating if you like th
 export const RATE_USES_UNTIL: string = "rateUsesLeft";
 export const RATE_REWARD_MSG: string = "5 Reward Points added for Rating!";
 export const DEFAULT_USES_UNTIL: number = 15;
-export const RATE_LINK: string = "market://details?id=com.extendsapk.coinassist";
+export const RATE_LINK: string = "market://details?id=in.extendsapk.coinassist";
 export const DONT_LIKE: number = 10;
 export const LATER_LIKE: number = 5;
 export const RATE_REWARD: number = 5;

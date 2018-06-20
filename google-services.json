@@ -1,31 +1,31 @@
 {
   "project_info": {
-    "project_number": "1040319281132",
-    "firebase_url": "https://coin-assist-13ebe.firebaseio.com",
-    "project_id": "coin-assist-13ebe",
-    "storage_bucket": "coin-assist-13ebe.appspot.com"
+    "project_number": "505601012575",
+    "firebase_url": "https://coin-assist-5e130.firebaseio.com",
+    "project_id": "coin-assist-5e130",
+    "storage_bucket": "coin-assist-5e130.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1040319281132:android:b3db602888465ce8",
+        "mobilesdk_app_id": "1:505601012575:android:12ad754ec2068836",
         "android_client_info": {
-          "package_name": "com.extendsapk.coinassist"
+          "package_name": "in.extendsapk.coinassist"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1040319281132-sq9a05fu30h7ngm5sqhlmitd6f8vb2c4.apps.googleusercontent.com",
+          "client_id": "505601012575-d61cj88hpn56b9sheunm035n6rbolbts.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "1040319281132-sq9a05fu30h7ngm5sqhlmitd6f8vb2c4.apps.googleusercontent.com",
+          "client_id": "505601012575-d61cj88hpn56b9sheunm035n6rbolbts.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAiRuuxdb59eK8R_xnEiWyfxh1x_HXu3rg"
+          "current_key": "AIzaSyCCLU9Riww6rWmNwJmxEyOi5S1hJonURPE"
         }
       ],
       "services": {
