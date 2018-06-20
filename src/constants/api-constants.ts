@@ -71,6 +71,8 @@ export const GRACE_POINTS: number = 1;
 export const RATED: string = "rated";
 export const INTERSTITIAL_AD_REWARD: number = 2;
 
+export const NO_INTERNET: string = "Network not Connected. Try Again."
+
 
 
 

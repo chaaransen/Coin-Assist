@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="centerNetwork" *ngIf="!networkFlag">
+  <div class="centerNetwork" *ngIf="networkFlag == false && networkFlag != undefined">
     <b>Network connection unavailable.</b> Please connect to a network.
     <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
   </div>

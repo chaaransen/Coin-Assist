@@ -108,6 +108,8 @@ export class QuantityCalcPage {
           // console.log("Existing points", this.points);
         });
       });
+    } else {
+      this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
     }
   }
 

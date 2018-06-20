@@ -86,29 +86,34 @@ export class ApiDataProvider {
     });
   }
 
-  checkNetworkConnection(): Promise<boolean> {
+  checkNetworkConnection(): Promise<any> {
 
     return this.platform.ready().then(() => {
       // console.log("platform ready - api data");
+      return new Promise((resolve, reject) => {
+        if (this.network.type != 'none') {
+          console.log(this.network.type);
+          // console.log("network flag set as true");
+          this.networkFlag = true;
+          resolve(this.networkFlag);
+        } else {
+          this.networkFlag = false;
+          resolve(this.networkFlag);
+        }
+        // console.log("checking network connection");
 
-      if (this.network.type != 'none') {
-        // console.log(this.network.type);
-        // console.log("network flag set as true");
-        this.networkFlag = true;
-      }
-      // console.log("checking network connection");
+        let connectSubscription = this.network.onConnect().subscribe(() => {
+          // console.log('network connected!');
+          this.networkFlag = true;
+        });
 
-      let connectSubscription = this.network.onConnect().subscribe(() => {
-        // console.log('network connected!');
-        this.networkFlag = true;
+        let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+          // console.log('network was disconnected :-(');
+          this.networkFlag = false;
+        });
+
       });
 
-      let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-        // console.log('network was disconnected :-(');
-        this.networkFlag = false;
-      });
-
-      return this.networkFlag;
     });
   }
 

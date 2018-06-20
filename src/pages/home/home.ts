@@ -41,6 +41,8 @@ export class HomePage {
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);
+      } else {
+        this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
       }
     });
   }
