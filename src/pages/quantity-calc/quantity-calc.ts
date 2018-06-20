@@ -335,7 +335,7 @@ export class QuantityCalcPage {
 
   public showAd() {
     // this.api.showVideoAd();
-    this.api.showInterstitialAd();
+    this.api.showVideoAd();
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {

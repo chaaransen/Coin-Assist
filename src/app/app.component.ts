@@ -37,38 +37,40 @@ export class MyApp {
 
   ngOnInit() {
     // console.log("Ng oninit Called - app component");
+    this.platform.ready().then(() => {
+      this.api.fetchService(Constants.POINTS).then(points => {
+        // console.log("Points App component", points);
+        if (points == null) {
+          // console.log("Points is undefined ", points);
+          this.api.storeService(Constants.POINTS, Constants.DEFAULT_POINT);
+        }
+      });
 
-    this.api.fetchService(Constants.POINTS).then(points => {
-      console.log("Points App component", points);
-      if (points == undefined) {
-        this.api.storeService(Constants.POINTS, Constants.DEFAULT_POINT);
-      }
-    });
+      this.api.fetchService(Constants.RATED).then(rateFlag => {
+        // console.log("Rate Flag ", rateFlag);
+        if (rateFlag == null) {
+          this.rateFlag = false;
+          this.api.storeService(Constants.RATED, this.rateFlag);
+        } else {
+          this.rateFlag = rateFlag;
+        }
 
-    this.api.fetchService(Constants.RATED).then(rateFlag => {
-      // console.log("Rate Flag ", rateFlag);
-      if (rateFlag == undefined) {
-        this.rateFlag = false;
-        this.api.storeService(Constants.RATED, this.rateFlag);
-      } else {
-        this.rateFlag = rateFlag;
-      }
+      });
 
-    });
+      this.api.fetchService(Constants.RATE_USES_UNTIL).then(rateUsesLeft => {
+        // console.log("USES UNTIL LEFT", rateUsesLeft);
+        if (rateUsesLeft == null) {
+          let defaultLeft = Constants.DEFAULT_USES_UNTIL;
+          this.usesUntilPrompt = defaultLeft;
+          this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
+          // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
 
-    this.api.fetchService(Constants.RATE_USES_UNTIL).then(rateUsesLeft => {
-      // console.log("USES UNTIL LEFT", rateUsesLeft);
-      if (rateUsesLeft == null) {
-        let defaultLeft = Constants.DEFAULT_USES_UNTIL;
-        this.usesUntilPrompt = defaultLeft;
-        this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
-        // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
+        } else {
+          this.usesUntilPrompt = rateUsesLeft;
+          // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
 
-      } else {
-        this.usesUntilPrompt = rateUsesLeft;
-        // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
-
-      }
+        }
+      });
     });
   }
 

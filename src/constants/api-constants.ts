@@ -67,6 +67,7 @@ export const RATE_LINK: string = "market://details?id=com.extendsapk.coinassist"
 export const DONT_LIKE: number = 10;
 export const LATER_LIKE: number = 5;
 export const RATE_REWARD: number = 5;
+export const GRACE_POINTS: number = 1;
 export const RATED: string = "rated";
 export const INTERSTITIAL_AD_REWARD: number = 2;
 

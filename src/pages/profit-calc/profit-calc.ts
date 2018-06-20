@@ -18,22 +18,25 @@ export class ProfitCalcPage {
 
   ngOnInit() {
     // this.api.trackPage(this.pageName);
+    this.profitCalc.quantity.no = 1;
     this.api.logAnalytics(this.pageName);
   }
 
   public checkRequiredFields() {
     // console.log("Check Required fields", this.quantity.no.no, this.amount);
 
-    // console.log("Quantity" + this.profitCalc.quantity.no);
-    if (this.profitCalc.quantity.no != 0) {
-      // console.log("inside quantity");
-      this.profitCalc.quantity.no = this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4);
-      this.calcAmount();
-      if (this.checkMandatoryFields()) {
-        // console.log("Manadatory passed");
-        this.calcProfit();
-      }
+    console.log("Quantity", this.profitCalc.quantity.no);
+    if (this.profitCalc.quantity.no <= 0) {
+      this.profitCalc.quantity.no = 1;
     }
+    // console.log("inside quantity");
+    this.profitCalc.quantity.no = this.utilities.trimToDecimal(+this.profitCalc.quantity.no, 4);
+    this.calcAmount();
+    if (this.checkMandatoryFields()) {
+      // console.log("Manadatory passed");
+      this.calcProfit();
+    }
+
     this.formatDataValues();
     // console.log("Exited");
   }
@@ -105,21 +108,6 @@ export class ProfitCalcPage {
     }
     // console.log("Final value", this.finalValue.no);
 
-  }
-
-  updateSellPrice() {
-
-    if (this.profitCalc.profitLoss.no != 0) {
-      this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
-      this.profitCalc.toValue.no = (this.profitCalc.profitLoss.no * this.profitCalc.fromValue.no + this.profitCalc.fromValue.no * this.profitCalc.fromValue.no) / this.profitCalc.amount.no;
-      this.profitCalc.toValue.no = this.utilities.trimToDecimal(+this.profitCalc.toValue.no, 2);
-      // console.log("Sell Value" + this.toValue.no.no);
-      // console.log("before", this.profitLoss.no.no);
-      this.calcFinalvalue();
-      this.profitCalc.profitLoss.no = this.utilities.trimToDecimal(+this.profitCalc.profitLoss.no, 2);
-      // console.log("after", this.profitLoss.no.no);
-    }
-    this.formatDataValues();
   }
 
   formatDataValues() {

@@ -48,33 +48,31 @@ export class ApiDataProvider {
   }
 
   ngOnInit() {
-    this.admobFree.rewardVideo.config(videoConfig);
-    this.admobFree.interstitial.config(interstitialConfig);
   }
 
   getApiUrl(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getApiUrlStorage().then(res => {
-        // console.log("Fetching api urls from storage ", res);
+        console.log("Fetching api urls from storage ", res);
 
         if (res != null) {
-          // console.log("Setting fetched from storage");
+          console.log("Setting fetched from storage");
           this.apiUrls = res;
           resolve(this.apiUrls);
         }
         else {
-          // console.log("Api url null so fetching from cloud");
+          console.log("Api url null so fetching from cloud");
 
           this.fetchApiUrl().then(res => {
             // console.log("Fetched api urls", res);
             this.generateZebpayApis(res).subscribe(generated => {
-              // console.log("generated urls passed for store", generated);
+              console.log("generated urls passed for store", generated);
               this.apiUrls = generated
               this.storeApiUrl(this.apiUrls);
               resolve(this.apiUrls);
             });
           }).catch(err => {
-            // console.log("constant Api urls called ", err);
+            console.log("constant Api urls called ", err);
             this.apiUrls = this.getConstantApiUrl();
             resolve(this.apiUrls);
           });
@@ -110,7 +108,7 @@ export class ApiDataProvider {
   }
 
   prepareVideoAd(show: boolean = false) {
-
+    this.admobFree.rewardVideo.config(videoConfig);
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
@@ -143,7 +141,6 @@ export class ApiDataProvider {
           console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
-            show = false;
           }
         });
 
@@ -152,25 +149,30 @@ export class ApiDataProvider {
   }
 
   prepareInterstitialAd(show: boolean = false) {
+    this.admobFree.interstitial.config(interstitialConfig);
     this.admobFree.interstitial.isReady().then(res => {
       if (res) {
         if (show) {
           console.log("Interstitial Ad Already Ready - calling Show!");
           this.showInterstitialAd();
-          show = false;
         }
       } else {
         console.log("Interstitial AD not ready - Preparing...");
 
         this.admobFree.interstitial.prepare().then(res => {
           console.log("interstitial Ad Prepared", res);
+          if (show) {
+            this.showInterstitialAd();
+          }
         }).catch(err => {
+          this.addGracePoints();
           console.log("Unable to prepare interstitial Ad", err);
           console.log("Giving 1 free point showing toast try later no ADs");
         });
         this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
           console.log("Interstitial AD failed to Load - new", res);
           if (show) {
+            this.addGracePoints();
             console.log("Unable to prepare interstitial Ad", res);
             console.log("Giving 1 free point showing toast try later no ADs");
           }
@@ -181,9 +183,7 @@ export class ApiDataProvider {
           console.log("Interstitial show value Outside", show);
           if (show) {
             console.log("Interstitial show value ", show);
-
             this.showInterstitialAd();
-            show = false;
           }
         });
 
@@ -192,11 +192,12 @@ export class ApiDataProvider {
   }
 
   addGracePoints() {
+    this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
     this.fetchService(Constants.POINTS).then(points => {
       console.log("Fetch service old points before ", points);
 
       let newPoints: number = points;
-      newPoints += 1;
+      newPoints += Constants.GRACE_POINTS;
       this.storeService(Constants.POINTS, newPoints);
       console.log("Added Grace Points", newPoints);
     });
@@ -263,7 +264,7 @@ export class ApiDataProvider {
 
         }).catch(err => {
           console.log("Unable to show Video Ad", err);
-          this.showVideoAd();
+          this.showInterstitialAd();
         });
       } else {
         console.log("Video Ad not ready - Showing Interstitial Ads");
@@ -374,9 +375,11 @@ export class ApiDataProvider {
   }
 
   fetchService(key: string): any {
-    return this.storage.ready().then(() => {
+    return this.storage.ready().then(res => {
+      // console.log("Storage Ready response ", res);
+
       return this.storage.get(key).catch(err => {
-        // console.log("Error fetching data from storage");
+        console.log("Error fetching data from storage");
 
       });
     });
