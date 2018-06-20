@@ -13,14 +13,18 @@ import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ToastController, AlertController, Platform } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
-import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
+import { AdMobFree, AdMobFreeRewardVideoConfig, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free';
 import { Network } from '@ionic-native/network';
 
 const videoConfig: AdMobFreeRewardVideoConfig = {
-  // add your config here
-  // for the sake of this example we will just use the test config
-  // id: "ca-app-pub-4512084985073909/9656600655",
-  isTesting: true,
+  id: "ca-app-pub-4512084985073909/9656600655",
+  isTesting: false,
+  autoShow: false
+};
+
+const interstitialConfig: AdMobFreeInterstitialConfig = {
+  id: "ca-app-pub-4512084985073909/3055346907",
+  isTesting: false,
   autoShow: false
 };
 
@@ -33,8 +37,6 @@ export class ApiDataProvider {
   zebpayData: any = {};
   networkFlag: boolean;
   usedFlag = false;
-  adRetryCounter = 2;
-  adRetryLock = false;
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
@@ -46,7 +48,8 @@ export class ApiDataProvider {
   }
 
   ngOnInit() {
-
+    this.admobFree.rewardVideo.config(videoConfig);
+    this.admobFree.interstitial.config(interstitialConfig);
   }
 
   getApiUrl(): Promise<any> {
@@ -107,50 +110,37 @@ export class ApiDataProvider {
   }
 
   prepareVideoAd(show: boolean = false) {
-    this.admobFree.rewardVideo.config(videoConfig);
 
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
-          // console.log("Video Ad Already Ready - calling Show!");
-          // console.log("prepared Video ad - ready response", res);
+          console.log("Video Ad Already Ready - calling Show!");
+          console.log("prepared Video ad - ready response", res);
 
           this.showVideoAd();
           show = false;
         }
       } else {
-        // console.log("AD not ready - Preparing...");
+        console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
-          // console.log("Reward Video Prepared", res);
+          console.log("Reward Video Prepared", res);
 
         }).catch(err => {
-          // console.log("Unable to prepare", err);
+          console.log("Unable to prepare", err);
 
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
-          // console.log("AD failed to Load - new", res);
-          // console.log("AD Retries Left", this.adRetryCounter);
+          console.log("AD failed to Load - new", res);
+          if (show) {
 
-          if (show && this.adRetryCounter == 0) {
-            // console.log("retry depletion with show");
+          } else {
 
-            this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
-          } else if (show && this.adRetryCounter > 0) {
-            // console.log("Show retry , retry count ", this.adRetryCounter);
-
-            this.adRetryCounter -= 1;
-            this.prepareVideoAd(true);
-          } else if (this.adRetryCounter > 0) {
-            // console.log("No show retry");
-            this.adRetryCounter -= 1;
-            this.prepareVideoAd();
           }
         });
 
         this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
-          this.adRetryCounter = 2;
-          // console.log("AD loadded - new", res);
+          console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
             show = false;
@@ -161,66 +151,111 @@ export class ApiDataProvider {
     });
   }
 
-  showVideoAd() {
-    if (!this.adRetryLock) {
-      this.admobFree.rewardVideo.isReady().then(res => {
-        if (res) {
-          this.adRetryCounter = 2;
-          this.admobFree.rewardVideo.show().then(res => {
-            // console.log("Video Ad is Showing", res);
-
-            this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-              // console.log("Reward Video value return ", res);
-              // console.log(res.rewardAmount);
-              var refillPoints = res.rewardAmount;
-              this.fetchService(Constants.POINTS).then(points => {
-
-                let newPoints: number = points;
-                newPoints += refillPoints;
-                this.storeService(Constants.POINTS, newPoints);
-                // console.log("Earned New points", newPoints);
-              });
-              // console.log("Successful view - reward", res);
-
-            });
-
-            this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-
-              this.prepareVideoAd();
-              // console.log("AD closed", res);
-            });
-
-          }).catch(err => {
-            // console.log("Unable to show Video Ad", err);
-          });
-        } else {
-          // console.log("Video not ready, preparing and showing");
-          // console.log("ad retry counter - showing method", this.adRetryCounter);
-
-          if (this.adRetryCounter > 0) {
-            this.adRetryCounter -= 1;
-            // console.log("reducing retry, count value ", this.adRetryCounter);
-
-            this.prepareVideoAd(true);
-          } else {
-            this.adRetryLock = true;
-            var resetRetry = Observable.timer(15000);
-            resetRetry.subscribe(res => {
-              this.adRetryLock = false;
-              this.adRetryCounter = 2;
-              // console.log("Ad retry lock DISABLED", this.adRetryLock);
-              // console.log("Ad retry counter Reset ", this.adRetryCounter);
-
-
-            });
-          }
+  prepareInterstitialAd(show: boolean = false) {
+    this.admobFree.interstitial.isReady().then(res => {
+      if (res) {
+        if (show) {
+          console.log("Interstitial Ad Already Ready - calling Show!");
+          this.showInterstitialAd();
+          show = false;
         }
-      }).catch(err => {
-        console.log("Exception thrown - ready", err);
-      });
-    } else {
-      this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
-    }
+      } else {
+        console.log("Interstitial AD not ready - Preparing...");
+
+        this.admobFree.interstitial.prepare().then(res => {
+          console.log("interstitial Ad Prepared", res);
+        }).catch(err => {
+          console.log("Unable to prepare interstitial Ad", err);
+          console.log("Giving 1 free point showing toast try later no ADs");
+        });
+        this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
+          console.log("Interstitial AD failed to Load - new", res);
+          if (show) {
+            console.log("Unable to prepare interstitial Ad", res);
+            console.log("Giving 1 free point showing toast try later no ADs");
+          }
+        });
+
+        this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
+          console.log("Interstitial AD loaded - new ", res);
+          if (show) {
+            this.showInterstitialAd();
+            show = false;
+          }
+        });
+
+      }
+    });
+  }
+
+  showInterstitialAd() {
+    console.log("bla bla bla");
+
+    console.log("Showing interstitial");
+    this.admobFree.interstitial.isReady().then(res => {
+      if (res) {
+        this.admobFree.interstitial.show().then(res => {
+          console.log("Interstitial Ad showing ", res);
+
+          this.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
+            console.log("Interstitial Ad Closed ", res);
+            this.fetchService(Constants.POINTS).then(points => {
+              console.log("Fetch service old points before ", points);
+
+              let newPoints: number = points;
+              newPoints += Constants.INTERSTITIAL_AD_REWARD;
+              this.storeService(Constants.POINTS, newPoints);
+              console.log("Earned New points (interstitial Ads) ", newPoints);
+            });
+          });
+        });
+      } else {
+        console.log("Interstitial Ad not ready, preparing and showing");
+        this.prepareInterstitialAd(true);
+      }
+
+    }).catch(err => {
+      console.log("Exception thrown Ready ", err);
+    });
+  }
+
+  showVideoAd() {
+    this.admobFree.rewardVideo.isReady().then(res => {
+      if (res) {
+        this.admobFree.rewardVideo.show().then(res => {
+          console.log("Video Ad is Showing", res);
+
+          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+            console.log("Reward Video value return ", res);
+            console.log(res.rewardAmount);
+            var refillPoints = res.rewardAmount;
+            this.fetchService(Constants.POINTS).then(points => {
+
+              let newPoints: number = points;
+              newPoints += refillPoints;
+              this.storeService(Constants.POINTS, newPoints);
+              console.log("Earned New points", newPoints);
+            });
+            console.log("Successful view - reward", res);
+
+          });
+
+          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+
+            this.prepareVideoAd();
+            console.log("AD closed", res);
+          });
+
+        }).catch(err => {
+          console.log("Unable to show Video Ad", err);
+        });
+      } else {
+        console.log("Video Ad not ready - Showing Interstitial Ads");
+      }
+    }).catch(err => {
+      console.log("Exception thrown - ready", err);
+    });
+
   }
 
   setApiUrl(apiUrl: any): any {
