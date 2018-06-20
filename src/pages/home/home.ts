@@ -61,6 +61,7 @@ export class HomePage {
           this.networkFlag = this.api.networkFlag;
           // console.log("Auto Refresh Network Flag " + this.networkFlag);
           if (this.networkFlag) {
+            this.apiUrls = this.api.apiUrls;
             this.populateView();
           }
         });
@@ -91,6 +92,7 @@ export class HomePage {
     this.networkFlag = this.api.networkFlag;
     // console.log("Refresh Network Flag " + this.networkFlag);
     if (this.networkFlag) {
+      this.apiUrls = this.api.apiUrls;
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
@@ -111,12 +113,17 @@ export class HomePage {
       // console.log("Selected Exchange", this.selExchange);
 
     }
-    this.selectedExchange(this.selExchange);
+    this.populateForExchange(this.selExchange);
   }
 
   public selectedExchange(sel: any) {
-    // console.log("Coin List", this.apiUrls.exchange[sel].coinList);
+    this.coins = undefined;
+    this.populateForExchange(sel);
+  }
 
+
+  public populateForExchange(sel: any) {
+    // console.log("Coin List", this.apiUrls.exchange[sel].coinList);
     this.api.getMarketOverviewData(sel, this.apiUrls.exchange[sel].coinList).subscribe(res => {
       // console.log("first data - exchange data", res[0]);
       // console.log("second data - coin market Cap data", res[1]);

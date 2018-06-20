@@ -72,7 +72,7 @@
         <ion-col col-5>
           Profit / Loss:
         </ion-col>
-        <ion-col col-7 class="weight500" [ngClass]="{'greenColor': this.profitCalc.profitLoss.no>0, 'redColor': this.profitCalc.profitLoss.no<0}">
+        <ion-col col-7 class="weight500 size2rem" [ngClass]="{'greenColor': this.profitCalc.profitLoss.no>0, 'redColor': this.profitCalc.profitLoss.no<0}">
           {{this.profitCalc.profitLoss.formatted}}
         </ion-col>
       </ion-row>
@@ -80,7 +80,7 @@
         <ion-col col-5>
           Net Amount:
         </ion-col>
-        <ion-col col-7 class="weight500 size2rem" [ngClass]="{'greenColor': this.profitCalc.profitLoss.no>0, 'redColor': this.profitCalc.profitLoss.no<0}">
+        <ion-col col-7 class="weight500" [ngClass]="{'greenColor': this.profitCalc.profitLoss.no>0, 'redColor': this.profitCalc.profitLoss.no<0}">
           {{this.profitCalc.finalValue.formatted}}
         </ion-col>
       </ion-row>

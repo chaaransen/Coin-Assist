@@ -69,13 +69,18 @@ export class ApiDataProvider {
               console.log("generated urls passed for store", generated);
               this.apiUrls = generated
               this.storeApiUrl(this.apiUrls);
-              resolve(this.apiUrls);
             });
           }).catch(err => {
-            console.log("constant Api urls called ", err);
-            this.apiUrls = this.getConstantApiUrl();
+            console.log("Error Fetching API Urls ", err);
+          });
+
+          this.generateZebpayApis(this.getConstantApiUrl()).subscribe(generated => {
+            console.log("Constant API Urls Used");
+
+            this.apiUrls = generated
             resolve(this.apiUrls);
           });
+
         }
       });
     });

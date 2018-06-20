@@ -168,6 +168,7 @@ export class QuantityCalcPage {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
+      this.apiUrls = this.api.apiUrls;
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
