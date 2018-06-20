@@ -116,26 +116,26 @@ export class ApiDataProvider {
         if (show) {
           console.log("Video Ad Already Ready - calling Show!");
           console.log("prepared Video ad - ready response", res);
-
           this.showVideoAd();
-          show = false;
         }
       } else {
         console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
           console.log("Reward Video Prepared", res);
-
+          if (show) {
+            this.showVideoAd();
+          }
         }).catch(err => {
           console.log("Unable to prepare", err);
-
+          if (show) {
+            this.prepareInterstitialAd(true);
+          }
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
           console.log("AD failed to Load - new", res);
           if (show) {
-
-          } else {
-
+            this.prepareInterstitialAd(true);
           }
         });
 
@@ -168,7 +168,7 @@ export class ApiDataProvider {
           console.log("Unable to prepare interstitial Ad", err);
           console.log("Giving 1 free point showing toast try later no ADs");
         });
-        this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
+        this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
           console.log("Interstitial AD failed to Load - new", res);
           if (show) {
             console.log("Unable to prepare interstitial Ad", res);
@@ -176,9 +176,12 @@ export class ApiDataProvider {
           }
         });
 
-        this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
+        this.admobFree.on("admob.interstitial.events.LOAD").subscribe(res => {
           console.log("Interstitial AD loaded - new ", res);
+          console.log("Interstitial show value Outside", show);
           if (show) {
+            console.log("Interstitial show value ", show);
+
             this.showInterstitialAd();
             show = false;
           }
@@ -188,26 +191,37 @@ export class ApiDataProvider {
     });
   }
 
-  showInterstitialAd() {
-    console.log("bla bla bla");
+  addGracePoints() {
+    this.fetchService(Constants.POINTS).then(points => {
+      console.log("Fetch service old points before ", points);
 
+      let newPoints: number = points;
+      newPoints += 1;
+      this.storeService(Constants.POINTS, newPoints);
+      console.log("Added Grace Points", newPoints);
+    });
+  }
+
+  showInterstitialAd() {
     console.log("Showing interstitial");
     this.admobFree.interstitial.isReady().then(res => {
       if (res) {
         this.admobFree.interstitial.show().then(res => {
+
           console.log("Interstitial Ad showing ", res);
+          this.fetchService(Constants.POINTS).then(points => {
+            console.log("Fetch service old points before ", points);
 
-          this.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
-            console.log("Interstitial Ad Closed ", res);
-            this.fetchService(Constants.POINTS).then(points => {
-              console.log("Fetch service old points before ", points);
-
-              let newPoints: number = points;
-              newPoints += Constants.INTERSTITIAL_AD_REWARD;
-              this.storeService(Constants.POINTS, newPoints);
-              console.log("Earned New points (interstitial Ads) ", newPoints);
-            });
+            let newPoints: number = points;
+            newPoints += Constants.INTERSTITIAL_AD_REWARD;
+            this.storeService(Constants.POINTS, newPoints);
+            console.log("Earned New points (interstitial Ads) ", newPoints);
+          }).catch(err => {
+            console.log("Error Fetching old points ", err);
           });
+        }).catch(err => {
+          console.log("Error showing interstitial Ads");
+          this.addGracePoints();
         });
       } else {
         console.log("Interstitial Ad not ready, preparing and showing");
@@ -216,6 +230,7 @@ export class ApiDataProvider {
 
     }).catch(err => {
       console.log("Exception thrown Ready ", err);
+      this.addGracePoints();
     });
   }
 
@@ -248,12 +263,15 @@ export class ApiDataProvider {
 
         }).catch(err => {
           console.log("Unable to show Video Ad", err);
+          this.showVideoAd();
         });
       } else {
         console.log("Video Ad not ready - Showing Interstitial Ads");
+        this.showInterstitialAd();
       }
     }).catch(err => {
       console.log("Exception thrown - ready", err);
+      this.showInterstitialAd();
     });
 
   }
@@ -633,6 +651,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Error Formatting Coin Details", e);
+      return processedCoin;
 
     }
   }
@@ -700,6 +719,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Coin Global Stats Exception", e);
+      return false;
 
     }
   }
@@ -812,16 +832,17 @@ export class ApiDataProvider {
       processedCoin.coinCode = coinCode;
       let coinGlobalStats: any = this.getCoinGlobalStats(coinCode, coinMarketCapData, coinDeskData);
 
-      processedCoin.global.INR.no = +coinGlobalStats.globalINR;
-      processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
+      if (coinGlobalStats != false) {
+        processedCoin.global.INR.no = +coinGlobalStats.globalINR;
+        processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
 
-      processedCoin.change.hour = +coinGlobalStats.changeHour;
-      processedCoin.change.day = +coinGlobalStats.changeDay;
-      processedCoin.change.week = +coinGlobalStats.changeWeek;
-      processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
-      processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
-      // console.log(processedCoin.globalDiff.percent);
-
+        processedCoin.change.hour = +coinGlobalStats.changeHour;
+        processedCoin.change.day = +coinGlobalStats.changeDay;
+        processedCoin.change.week = +coinGlobalStats.changeWeek;
+        processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
+        processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
+        // console.log(processedCoin.globalDiff.percent);
+      }
       return processedCoin;
     }
     catch (e) {

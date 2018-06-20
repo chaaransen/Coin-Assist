@@ -71,6 +71,7 @@ export class QuantityCalcPage {
         // this.api.trackPage(this.pageName);
         this.api.logAnalytics(this.pageName);
 
+
         this.api.fetchService(this.pageName).then(lock => {
           if (lock != true) {
             this.infoAlert();
@@ -333,7 +334,8 @@ export class QuantityCalcPage {
   }
 
   public showAd() {
-    this.api.showVideoAd();
+    // this.api.showVideoAd();
+    this.api.showInterstitialAd();
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {
@@ -349,6 +351,29 @@ export class QuantityCalcPage {
           }
         }
       });
+    });
+
+    this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(res => {
+      console.log("Interstitial close - Quant page");
+
+      this.api.fetchService(Constants.POINTS).then(points => {
+
+        console.log("Interstitial Ad Closed");
+
+        this.points = points;
+        if (this.points > 0) {
+          this.enable = true;
+          if (this.reward) {
+            this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+            this.reward = false;
+          }
+        }
+      });
+    });
+
+    this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
+      console.log("Interstitial open - Quant page");
+      this.reward = true;
     });
 
     this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {

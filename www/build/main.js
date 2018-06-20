@@ -83,7 +83,7 @@ var QuantityCalcPage = (function () {
                 // console.log("Exchange values", this.apis);
                 _this.exchanges = Object.keys(_this.apis);
                 if (_this.selExchange == undefined) {
-                    _this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* KOINEX */];
+                    _this.selExchange = __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["k" /* KOINEX */];
                 }
                 if (_this.selCoin.coinName == undefined) {
                     _this.selCoin.coinName = _this.apiUrls.coins.BTC.name;
@@ -110,7 +110,7 @@ var QuantityCalcPage = (function () {
                         _this.enable = false;
                     }
                     if (_this.points == 1) {
-                        _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["m" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["l" /* LAST_POINT_DESC */]);
+                        _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["n" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["m" /* LAST_POINT_DESC */]);
                     }
                     // console.log("Storing new Points", this.points);
                     _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["s" /* POINTS */], _this.points);
@@ -323,7 +323,8 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage.prototype.showAd = function () {
         var _this = this;
-        this.api.showVideoAd();
+        // this.api.showVideoAd();
+        this.api.showInterstitialAd();
         this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
             _this.api.fetchService("points").then(function (points) {
                 console.log("Ad Closed");
@@ -336,6 +337,24 @@ var QuantityCalcPage = (function () {
                     }
                 }
             });
+        });
+        this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(function (res) {
+            console.log("Interstitial close - Quant page");
+            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["s" /* POINTS */]).then(function (points) {
+                console.log("Interstitial Ad Closed");
+                _this.points = points;
+                if (_this.points > 0) {
+                    _this.enable = true;
+                    if (_this.reward) {
+                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["E" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["F" /* TOP */], 2000);
+                        _this.reward = false;
+                    }
+                }
+            });
+        });
+        this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(function (res) {
+            console.log("Interstitial open - Quant page");
+            _this.reward = true;
         });
         this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
             console.log("Quant Reward Called");
@@ -398,9 +417,9 @@ webpackEmptyAsyncContext.id = 161;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__coin_detail_coin_detail__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__ = __webpack_require__(313);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__ = __webpack_require__(314);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__ = __webpack_require__(315);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__ = __webpack_require__(216);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__);
@@ -438,6 +457,7 @@ var HomePage = (function () {
         // console.log("ngOnInit - home called");
         this.firstEntryFlag = false;
         this.api.checkNetworkConnection().then(function (val) {
+            console.log("Network flag - Home page ", _this.networkFlag);
             _this.networkFlag = val;
             if (_this.networkFlag) {
                 // console.log("network present - fetching api");
@@ -455,7 +475,7 @@ var HomePage = (function () {
             _this.apiUrls = apiUrl;
             _this.populateView();
             //Automatic fetching of new data every 20 seconds
-            var refresher = __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__["IntervalObservable"].create(20000000);
+            var refresher = __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__["IntervalObservable"].create(20000);
             refresher.takeWhile(function () { return _this.alive; }) // only fires when component is alive
                 .subscribe(function () {
                 _this.networkFlag = _this.api.networkFlag;
@@ -477,6 +497,7 @@ var HomePage = (function () {
             this.ngOnInit();
         }
         // console.log("Home page -View Entered", this.alive);
+        console.log("Home page view will enter ", this.networkFlag);
     };
     HomePage.prototype.doRefresh = function (refresher) {
         var _this = this;
@@ -729,7 +750,7 @@ var CoinDetailPage = (function () {
     };
     CoinDetailPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-card *ngIf="networkFlag">\n\n    <ion-card-header class="size2rem weight500">\n\n      <span class="greyColor size1rem7">Exchange -</span>\n\n      {{exchange}}\n\n    </ion-card-header>\n\n    <hr class="hrBottomMargin">\n\n    <ion-grid>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n\n\n          <img src="{{coinDetail.coinImage}}">\n\n\n\n        </ion-col>\n\n        <ion-col col-7 class="vertical-align-content">\n\n\n\n          <div class="weight500 size2rem marginLeft3rem">{{coinDetail.coinName}}\n\n            <br>({{coinDetail.coinCode}})</div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-8 class="priceDetail center">\n\n          {{coinDetail.market.formatted}}\n\n        </ion-col>\n\n        <ion-col col-4 class="boldTextValue left size1rem6 center" *ngIf="coinDetail.change">\n\n          <div *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">\n\n            <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%\n\n          </div>\n\n          <div *ngIf="coinDetail.change.day < 0" class="redColor weight500">\n\n            <span class="size1rem7">&#9660;</span>{{coinDetail.change.day}}%\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row class="marginBotton0rem5">\n\n        <ion-col col-6 class="center">Buy:\n\n          <span class="boldTextValue price">{{coinDetail.buy.formatted}}</span>\n\n        </ion-col>\n\n        <ion-col col-6 class="center">Sell:\n\n          <span class="boldTextValue price">{{coinDetail.sell.formatted}}</span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row class="marginBottom0">\n\n        <hr>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (1h):\n\n        </ion-col>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (24h):\n\n        </ion-col>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (1w):\n\n        </ion-col>\n\n        <hr>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.hour}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.hour < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.hour}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n        <ion-col col-4 class="center padding0 marginBotton0rem5" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.day < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.day}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.week >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.week}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.week < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.week}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row *ngIf="coinDetail.volatility">\n\n        <ion-col col-6 class="center paddingBottom0">\n\n          <span>High: </span>\n\n          <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>\n\n        </ion-col>\n\n\n\n        <ion-col col-6 class="center">\n\n          Price Index:\n\n          <span [ngClass]="coinDetail.price_index">{{coinDetail.price_index}}</span>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <ion-row *ngIf="coinDetail.volatility">\n\n        <ion-col col-6 class="center paddingBottom0">\n\n          <span>Low: </span>\n\n          <span class="redColor weight500">{{coinDetail.min.formatted}}</span>\n\n        </ion-col>\n\n        <ion-col col-6 class="center">\n\n          Volatility:\n\n          <span class="riseFallSymbol weight500 size1rem9"> &#8645;</span>\n\n          <span class="weight500"> {{coinDetail.volatility}}% </span>\n\n        </ion-col>\n\n\n\n      </ion-row>\n\n    </ion-grid>\n\n    <hr>\n\n    <ion-grid>\n\n      <ion-card-header class="size1rem7 greyColor padding1rem">Global price -\n\n      </ion-card-header>\n\n      <ion-row>\n\n        <ion-col col-6 class="right">\n\n          <span class="price">{{coinDetail.global.INR.formatted}} </span>\n\n        </ion-col>\n\n\n\n        <ion-col col-6 class="left">\n\n          <span class="price">({{coinDetail.global.USD.formatted}})</span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Global Diff(%):\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <div *ngIf="coinDetail.globalDiff.percent >= 0">\n\n            <span class="greenColor weight500">{{coinDetail.globalDiff.percent}}%</span>\n\n          </div>\n\n          <div *ngIf="coinDetail.globalDiff.percent < 0">\n\n            <span class="redColor weight500">{{coinDetail.globalDiff.percent}}%</span>\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Global Price Diff:\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <div *ngIf="coinDetail.globalDiff.val.no >= 0">\n\n            <span class="greenColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>\n\n          </div>\n\n          <div *ngIf="coinDetail.globalDiff.val.no < 0">\n\n            <span class="redColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          <button (click)="gotoCalcQuantityPage()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">\n\n            Calculate Quantity</button>\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <button (click)="openReferralLink()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">Buy / Sell</button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-grid>\n\n  </ion-card>\n\n</ion-content>\n\n\n\n<!-- Rage for setting price alert -->\n\n\n\n<!-- <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item> -->\n\n\n\n<!-- Alert Button -->\n\n\n\n<!-- <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item> -->'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
+            selector: 'page-coin-detail',template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Coin Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <div class="centerNetwork" *ngIf="!networkFlag">\n\n    <b>Network connection unavailable.</b> Please connect to a network.\n\n    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>\n\n  </div>\n\n\n\n  <ion-refresher (ionRefresh)="doRefresh($event)">\n\n    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">\n\n    </ion-refresher-content>\n\n  </ion-refresher>\n\n\n\n  <ion-card *ngIf="networkFlag">\n\n    <ion-card-header class="size2rem weight500">\n\n      <span class="greyColor size1rem7">Exchange -</span>\n\n      {{exchange}}\n\n    </ion-card-header>\n\n    <hr class="hrBottomMargin">\n\n    <ion-grid>\n\n      <ion-row>\n\n        <ion-col col-5>\n\n\n\n          <img src="{{coinDetail.coinImage}}">\n\n\n\n        </ion-col>\n\n        <ion-col col-7 class="vertical-align-content">\n\n\n\n          <div class="weight500 size2rem marginLeft3rem">{{coinDetail.coinName}}\n\n            <br>({{coinDetail.coinCode}})</div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-8 class="priceDetail center">\n\n          {{coinDetail.market.formatted}}\n\n        </ion-col>\n\n        <ion-col col-4 class="boldTextValue left size1rem6 center" *ngIf="coinDetail.change != undefined">\n\n          <div *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">\n\n            <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%\n\n          </div>\n\n          <div *ngIf="coinDetail.change.day < 0" class="redColor weight500">\n\n            <span class="size1rem7">&#9660;</span>{{coinDetail.change.day}}%\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row class="marginBotton0rem5">\n\n        <ion-col col-6 class="center">Buy:\n\n          <span class="boldTextValue price">{{coinDetail.buy.formatted}}</span>\n\n        </ion-col>\n\n        <ion-col col-6 class="center">Sell:\n\n          <span class="boldTextValue price">{{coinDetail.sell.formatted}}</span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row class="marginBottom0" *ngIf="coinDetail.change != undefined">\n\n        <hr>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (1h):\n\n        </ion-col>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (24h):\n\n        </ion-col>\n\n        <ion-col col-4 class="center marginBottom0 padding1">\n\n          (1w):\n\n        </ion-col>\n\n        <hr>\n\n      </ion-row>\n\n      <ion-row *ngIf="coinDetail.change != undefined">\n\n        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.hour}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.hour < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.hour}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n        <ion-col col-4 class="center padding0 marginBotton0rem5" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.day < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.day}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n        <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">\n\n          <span class="boldTextValue">\n\n            <span *ngIf="coinDetail.change.week >= 0" class="greenColor weight500">\n\n              <span class="size1rem7">&#9650;</span>+{{coinDetail.change.week}}%\n\n            </span>\n\n            <span *ngIf="coinDetail.change.week < 0" class="redColor weight500">\n\n              <span class="size1rem7">&#9660;</span>{{coinDetail.change.week}}%\n\n            </span>\n\n          </span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row *ngIf="coinDetail.volatility">\n\n        <ion-col col-6 class="center paddingBottom0">\n\n          <span>High: </span>\n\n          <span class="greenColor weight500">{{coinDetail.max.formatted}}</span>\n\n        </ion-col>\n\n\n\n        <ion-col col-6 class="center">\n\n          Price Index:\n\n          <span [ngClass]="coinDetail.price_index">{{coinDetail.price_index}}</span>\n\n        </ion-col>\n\n      </ion-row>\n\n\n\n      <ion-row *ngIf="coinDetail.volatility">\n\n        <ion-col col-6 class="center paddingBottom0">\n\n          <span>Low: </span>\n\n          <span class="redColor weight500">{{coinDetail.min.formatted}}</span>\n\n        </ion-col>\n\n        <ion-col col-6 class="center">\n\n          Volatility:\n\n          <span class="riseFallSymbol weight500 size1rem9"> &#8645;</span>\n\n          <span class="weight500"> {{coinDetail.volatility}}% </span>\n\n        </ion-col>\n\n\n\n      </ion-row>\n\n    </ion-grid>\n\n    <hr>\n\n    <ion-grid *ngIf="coinDetail.global != undefined">\n\n      <ion-card-header class="size1rem7 greyColor padding1rem">Global price -\n\n      </ion-card-header>\n\n      <ion-row>\n\n        <ion-col col-6 class="right">\n\n          <span class="price">{{coinDetail.global.INR.formatted}} </span>\n\n        </ion-col>\n\n\n\n        <ion-col col-6 class="left">\n\n          <span class="price">({{coinDetail.global.USD.formatted}})</span>\n\n        </ion-col>\n\n      </ion-row>\n\n      <br>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Global Diff(%):\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <div *ngIf="coinDetail.globalDiff.percent >= 0">\n\n            <span class="greenColor weight500">{{coinDetail.globalDiff.percent}}%</span>\n\n          </div>\n\n          <div *ngIf="coinDetail.globalDiff.percent < 0">\n\n            <span class="redColor weight500">{{coinDetail.globalDiff.percent}}%</span>\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          Global Price Diff:\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <div *ngIf="coinDetail.globalDiff.val.no >= 0">\n\n            <span class="greenColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>\n\n          </div>\n\n          <div *ngIf="coinDetail.globalDiff.val.no < 0">\n\n            <span class="redColor weight500">{{coinDetail.globalDiff.val.formatted}}</span>\n\n          </div>\n\n        </ion-col>\n\n      </ion-row>\n\n      <ion-row>\n\n        <ion-col col-6>\n\n          <button (click)="gotoCalcQuantityPage()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">\n\n            Calculate Quantity</button>\n\n        </ion-col>\n\n        <ion-col col-6>\n\n          <button (click)="openReferralLink()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">Buy / Sell</button>\n\n        </ion-col>\n\n      </ion-row>\n\n    </ion-grid>\n\n  </ion-card>\n\n</ion-content>\n\n\n\n<!-- Rage for setting price alert -->\n\n\n\n<!-- <ion-item>\n\n        <h2> From : {{rangeRegion.lower}}</h2>\n\n        <h2> To: {{rangeRegion.upper}}</h2>\n\n      </ion-item>\n\n      <ion-item>\n\n        <ion-range dualKnobs="true" pin="true" snaps="true" [step]="coinDetail.step" (ionChange)="change()" steps [(ngModel)]="rangeRegion"\n\n          [min]="coinDetail.minus20.no" [max]="coinDetail.plus20.no">\n\n          <ion-label range-left>{{coinDetail.minus20.formatted}}</ion-label>\n\n          <ion-label range-right>{{coinDetail.plus20.formatted}}</ion-label>\n\n        </ion-range>\n\n      </ion-item> -->\n\n\n\n<!-- Alert Button -->\n\n\n\n<!-- <ion-item>\n\n        <button ion-button large>Set Alert</button>\n\n\n\n      </ion-item> -->'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\pages\coin-detail\coin-detail.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_3__providers_api_data_api_data__["a" /* ApiDataProvider */]])
     ], CoinDetailPage);
@@ -748,7 +769,7 @@ var CoinDetailPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_utilities_utilities__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_profit_calc__ = __webpack_require__(317);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_profit_calc__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_data_api_data__ = __webpack_require__(34);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -929,13 +950,13 @@ var NewsPage = (function () {
 
 /***/ }),
 
-/***/ 220:
+/***/ 221:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(242);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -943,41 +964,43 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 241:
+/***/ 242:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(283);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(318);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(319);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(319);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(217);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(201);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(204);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_api_data_api_data__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(322);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__providers_utilities_utilities__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_firebase_analytics__ = __webpack_require__(212);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_google_analytics__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_google_analytics__ = __webpack_require__(323);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_fcm__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_android_permissions__ = __webpack_require__(220);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1052,7 +1075,8 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__["a" /* AdMobFree */],
                 __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__["b" /* AdMobFreeRewardVideo */],
                 __WEBPACK_IMPORTED_MODULE_22__ionic_native_fcm__["a" /* FCM */],
-                __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__["a" /* Network */]
+                __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__["a" /* Network */],
+                __WEBPACK_IMPORTED_MODULE_24__ionic_native_android_permissions__["a" /* AndroidPermissions */]
             ]
         })
     ], AppModule);
@@ -1063,7 +1087,7 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 282:
+/***/ 283:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1079,6 +1103,7 @@ var AppModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_quantity_calc_quantity_calc__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_android_permissions__ = __webpack_require__(220);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1099,8 +1124,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var MyApp = (function () {
-    function MyApp(platform, statusBar, splashScreen, api, fcm, app, alertCtrl) {
+    function MyApp(platform, statusBar, splashScreen, api, fcm, app, alertCtrl, androidPermissions) {
         this.platform = platform;
         this.statusBar = statusBar;
         this.splashScreen = splashScreen;
@@ -1108,6 +1134,7 @@ var MyApp = (function () {
         this.fcm = fcm;
         this.app = app;
         this.alertCtrl = alertCtrl;
+        this.androidPermissions = androidPermissions;
         // rootPage: any = HomePage;
         this.tab1Root = __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */];
         this.tab2Root = __WEBPACK_IMPORTED_MODULE_8__pages_quantity_calc_quantity_calc__["a" /* QuantityCalcPage */];
@@ -1123,7 +1150,7 @@ var MyApp = (function () {
         // console.log("Ng oninit Called - app component");
         var _this = this;
         this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["s" /* POINTS */]).then(function (points) {
-            // console.log("Points", points);
+            console.log("Points App component", points);
             if (points == undefined) {
                 _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["s" /* POINTS */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["d" /* DEFAULT_POINT */]);
             }
@@ -1158,6 +1185,14 @@ var MyApp = (function () {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // console.log("Platform ready");
+            _this.androidPermissions.requestPermissions([_this.androidPermissions.PERMISSION.INTERNET,
+                _this.androidPermissions.PERMISSION.WAKE_LOCK,
+                _this.androidPermissions.PERMISSION.ACCESS_WIFI_STATE,
+                _this.androidPermissions.PERMISSION.CHANGE_WIFI_STATE,
+                _this.androidPermissions.PERMISSION.ACCESS_NETWORK_STATE,
+                _this.androidPermissions.PERMISSION.CHANGE_NETWORK_STATE,
+                _this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+                _this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]);
             _this.api.prepareVideoAd();
             _this.statusBar.overlaysWebView(true);
             _this.statusBar.styleBlackOpaque();
@@ -1206,8 +1241,8 @@ var MyApp = (function () {
     MyApp.prototype.likeAppDialog = function () {
         var _this = this;
         var alert = this.alertCtrl.create({
-            title: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["p" /* LIKE_DIALOG_HEAD */],
-            message: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["o" /* LIKE_DIALOG_DESC */],
+            title: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["q" /* LIKE_DIALOG_HEAD */],
+            message: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["p" /* LIKE_DIALOG_DESC */],
             buttons: [
                 {
                     text: 'No',
@@ -1239,8 +1274,8 @@ var MyApp = (function () {
                     text: 'Later',
                     handler: function () {
                         // console.log('Remind Later clicked');
-                        _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["n" /* LATER_LIKE */];
-                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["n" /* LATER_LIKE */]);
+                        _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["o" /* LATER_LIKE */];
+                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["o" /* LATER_LIKE */]);
                         _this.platform.exitApp();
                     }
                 },
@@ -1274,9 +1309,9 @@ var MyApp = (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/'<ion-menu [content]="content">\n\n  <ion-header>\n\n    <ion-toolbar>\n\n      <ion-title>Settings</ion-title>\n\n    </ion-toolbar>\n\n  </ion-header>\n\n\n\n  <ion-content>\n\n    <ion-list>\n\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n\n        {{p.title}}\n\n      </button>\n\n    </ion-list>\n\n  </ion-content>\n\n\n\n</ion-menu>\n\n<ion-content>\n\n  <ion-tabs>\n\n    <ion-tab [root]="tab1Root" tabTitle="Market View" tabIcon="logo-bitcoin"></ion-tab>\n\n    <ion-tab [root]="tab2Root" tabTitle="Quantity Calc" tabIcon="bookmark"></ion-tab>\n\n    <ion-tab [root]="tab4Root" tabTitle="Profit Calc" tabIcon="logo-usd"></ion-tab>\n\n  </ion-tabs>\n\n</ion-content>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n\n<!-- <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav> -->'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/'<!-- <ion-menu [content]="content">\n\n  <ion-header>\n\n    <ion-toolbar>\n\n      <ion-title>Settings</ion-title>\n\n    </ion-toolbar>\n\n  </ion-header>\n\n  <ion-content>\n\n    <ion-list>\n\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n\n        {{p.title}}\n\n      </button>\n\n    </ion-list>\n\n  </ion-content>\n\n</ion-menu> -->\n\n\n\n<ion-content>\n\n  <ion-tabs>\n\n    <ion-tab [root]="tab1Root" tabTitle="Market View" tabIcon="logo-bitcoin"></ion-tab>\n\n    <ion-tab [root]="tab2Root" tabTitle="Quantity Calc" tabIcon="bookmark"></ion-tab>\n\n    <ion-tab [root]="tab4Root" tabTitle="Profit Calc" tabIcon="logo-usd"></ion-tab>\n\n  </ion-tabs>\n\n</ion-content>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n\n<!-- <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav> -->'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_6__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__["a" /* FCM */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_6__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__["a" /* FCM */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */], __WEBPACK_IMPORTED_MODULE_11__ionic_native_android_permissions__["a" /* AndroidPermissions */]])
     ], MyApp);
     return MyApp;
 }());
@@ -1285,7 +1320,7 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 317:
+/***/ 318:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1308,7 +1343,7 @@ var ProfitCalc = (function () {
 
 /***/ }),
 
-/***/ 318:
+/***/ 319:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1343,7 +1378,7 @@ var BuySellPage = (function () {
 
 /***/ }),
 
-/***/ 319:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1378,7 +1413,7 @@ var FavouritesPage = (function () {
 
 /***/ }),
 
-/***/ 320:
+/***/ 321:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1420,19 +1455,19 @@ var RemindersPage = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiDataProvider; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(294);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(295);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(298);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(299);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(300);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(308);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(309);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(310);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__ = __webpack_require__(55);
@@ -1469,10 +1504,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var videoConfig = {
-    // add your config here
-    // for the sake of this example we will just use the test config
-    // id: "ca-app-pub-4512084985073909/9656600655",
-    isTesting: true,
+    id: "ca-app-pub-4512084985073909/9656600655",
+    isTesting: false,
+    autoShow: false
+};
+var interstitialConfig = {
+    id: "ca-app-pub-4512084985073909/3055346907",
+    isTesting: false,
     autoShow: false
 };
 var ApiDataProvider = (function () {
@@ -1492,14 +1530,14 @@ var ApiDataProvider = (function () {
         this.koinexData = {};
         this.zebpayData = {};
         this.usedFlag = false;
-        this.adRetryCounter = 2;
-        this.adRetryLock = false;
         // ******************************************************************************
         this.coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
         this.koinexTest = false;
         this.rewardNotif = false;
     }
     ApiDataProvider.prototype.ngOnInit = function () {
+        this.admobFree.rewardVideo.config(videoConfig);
+        this.admobFree.interstitial.config(interstitialConfig);
     };
     ApiDataProvider.prototype.getApiUrl = function () {
         var _this = this;
@@ -1554,44 +1592,35 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.prepareVideoAd = function (show) {
         var _this = this;
         if (show === void 0) { show = false; }
-        this.admobFree.rewardVideo.config(videoConfig);
         this.admobFree.rewardVideo.isReady().then(function (res) {
             if (res) {
                 if (show) {
-                    // console.log("Video Ad Already Ready - calling Show!");
-                    // console.log("prepared Video ad - ready response", res);
+                    console.log("Video Ad Already Ready - calling Show!");
+                    console.log("prepared Video ad - ready response", res);
                     _this.showVideoAd();
-                    show = false;
                 }
             }
             else {
-                // console.log("AD not ready - Preparing...");
+                console.log("AD not ready - Preparing...");
                 _this.admobFree.rewardVideo.prepare().then(function (res) {
-                    // console.log("Reward Video Prepared", res);
+                    console.log("Reward Video Prepared", res);
+                    if (show) {
+                        _this.showVideoAd();
+                    }
                 }).catch(function (err) {
-                    // console.log("Unable to prepare", err);
+                    console.log("Unable to prepare", err);
+                    if (show) {
+                        _this.prepareInterstitialAd(true);
+                    }
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(function (res) {
-                    // console.log("AD failed to Load - new", res);
-                    // console.log("AD Retries Left", this.adRetryCounter);
-                    if (show && _this.adRetryCounter == 0) {
-                        // console.log("retry depletion with show");
-                        _this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["r" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["F" /* TOP */]);
-                    }
-                    else if (show && _this.adRetryCounter > 0) {
-                        // console.log("Show retry , retry count ", this.adRetryCounter);
-                        _this.adRetryCounter -= 1;
-                        _this.prepareVideoAd(true);
-                    }
-                    else if (_this.adRetryCounter > 0) {
-                        // console.log("No show retry");
-                        _this.adRetryCounter -= 1;
-                        _this.prepareVideoAd();
+                    console.log("AD failed to Load - new", res);
+                    if (show) {
+                        _this.prepareInterstitialAd(true);
                     }
                 });
                 _this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(function (res) {
-                    _this.adRetryCounter = 2;
-                    // console.log("AD loadded - new", res);
+                    console.log("AD loadded - new", res);
                     if (show) {
                         _this.showVideoAd();
                         show = false;
@@ -1600,60 +1629,119 @@ var ApiDataProvider = (function () {
             }
         });
     };
+    ApiDataProvider.prototype.prepareInterstitialAd = function (show) {
+        var _this = this;
+        if (show === void 0) { show = false; }
+        this.admobFree.interstitial.isReady().then(function (res) {
+            if (res) {
+                if (show) {
+                    console.log("Interstitial Ad Already Ready - calling Show!");
+                    _this.showInterstitialAd();
+                    show = false;
+                }
+            }
+            else {
+                console.log("Interstitial AD not ready - Preparing...");
+                _this.admobFree.interstitial.prepare().then(function (res) {
+                    console.log("interstitial Ad Prepared", res);
+                }).catch(function (err) {
+                    console.log("Unable to prepare interstitial Ad", err);
+                    console.log("Giving 1 free point showing toast try later no ADs");
+                });
+                _this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(function (res) {
+                    console.log("Interstitial AD failed to Load - new", res);
+                    if (show) {
+                        console.log("Unable to prepare interstitial Ad", res);
+                        console.log("Giving 1 free point showing toast try later no ADs");
+                    }
+                });
+                _this.admobFree.on("admob.interstitial.events.LOAD").subscribe(function (res) {
+                    console.log("Interstitial AD loaded - new ", res);
+                    console.log("Interstitial show value Outside", show);
+                    if (show) {
+                        console.log("Interstitial show value ", show);
+                        _this.showInterstitialAd();
+                        show = false;
+                    }
+                });
+            }
+        });
+    };
+    ApiDataProvider.prototype.addGracePoints = function () {
+        var _this = this;
+        this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */]).then(function (points) {
+            console.log("Fetch service old points before ", points);
+            var newPoints = points;
+            newPoints += 1;
+            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */], newPoints);
+            console.log("Added Grace Points", newPoints);
+        });
+    };
+    ApiDataProvider.prototype.showInterstitialAd = function () {
+        var _this = this;
+        console.log("Showing interstitial");
+        this.admobFree.interstitial.isReady().then(function (res) {
+            if (res) {
+                _this.admobFree.interstitial.show().then(function (res) {
+                    console.log("Interstitial Ad showing ", res);
+                    _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */]).then(function (points) {
+                        console.log("Fetch service old points before ", points);
+                        var newPoints = points;
+                        newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* INTERSTITIAL_AD_REWARD */];
+                        _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */], newPoints);
+                        console.log("Earned New points (interstitial Ads) ", newPoints);
+                    }).catch(function (err) {
+                        console.log("Error Fetching old points ", err);
+                    });
+                }).catch(function (err) {
+                    console.log("Error showing interstitial Ads");
+                    _this.addGracePoints();
+                });
+            }
+            else {
+                console.log("Interstitial Ad not ready, preparing and showing");
+                _this.prepareInterstitialAd(true);
+            }
+        }).catch(function (err) {
+            console.log("Exception thrown Ready ", err);
+            _this.addGracePoints();
+        });
+    };
     ApiDataProvider.prototype.showVideoAd = function () {
         var _this = this;
-        if (!this.adRetryLock) {
-            this.admobFree.rewardVideo.isReady().then(function (res) {
-                if (res) {
-                    _this.adRetryCounter = 2;
-                    _this.admobFree.rewardVideo.show().then(function (res) {
-                        // console.log("Video Ad is Showing", res);
-                        _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
-                            // console.log("Reward Video value return ", res);
-                            // console.log(res.rewardAmount);
-                            var refillPoints = res.rewardAmount;
-                            _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */]).then(function (points) {
-                                var newPoints = points;
-                                newPoints += refillPoints;
-                                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */], newPoints);
-                                // console.log("Earned New points", newPoints);
-                            });
-                            // console.log("Successful view - reward", res);
+        this.admobFree.rewardVideo.isReady().then(function (res) {
+            if (res) {
+                _this.admobFree.rewardVideo.show().then(function (res) {
+                    console.log("Video Ad is Showing", res);
+                    _this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(function (res) {
+                        console.log("Reward Video value return ", res);
+                        console.log(res.rewardAmount);
+                        var refillPoints = res.rewardAmount;
+                        _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */]).then(function (points) {
+                            var newPoints = points;
+                            newPoints += refillPoints;
+                            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["s" /* POINTS */], newPoints);
+                            console.log("Earned New points", newPoints);
                         });
-                        _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
-                            _this.prepareVideoAd();
-                            // console.log("AD closed", res);
-                        });
-                    }).catch(function (err) {
-                        // console.log("Unable to show Video Ad", err);
+                        console.log("Successful view - reward", res);
                     });
-                }
-                else {
-                    // console.log("Video not ready, preparing and showing");
-                    // console.log("ad retry counter - showing method", this.adRetryCounter);
-                    if (_this.adRetryCounter > 0) {
-                        _this.adRetryCounter -= 1;
-                        // console.log("reducing retry, count value ", this.adRetryCounter);
-                        _this.prepareVideoAd(true);
-                    }
-                    else {
-                        _this.adRetryLock = true;
-                        var resetRetry = __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].timer(15000);
-                        resetRetry.subscribe(function (res) {
-                            _this.adRetryLock = false;
-                            _this.adRetryCounter = 2;
-                            // console.log("Ad retry lock DISABLED", this.adRetryLock);
-                            // console.log("Ad retry counter Reset ", this.adRetryCounter);
-                        });
-                    }
-                }
-            }).catch(function (err) {
-                console.log("Exception thrown - ready", err);
-            });
-        }
-        else {
-            this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["r" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["F" /* TOP */]);
-        }
+                    _this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
+                        _this.prepareVideoAd();
+                        console.log("AD closed", res);
+                    });
+                }).catch(function (err) {
+                    console.log("Unable to show Video Ad", err);
+                    _this.showVideoAd();
+                });
+            }
+            else {
+                console.log("Video Ad not ready - Showing Interstitial Ads");
+                _this.showInterstitialAd();
+            }
+        }).catch(function (err) {
+            console.log("Exception thrown - ready", err);
+            _this.showInterstitialAd();
+        });
     };
     ApiDataProvider.prototype.setApiUrl = function (apiUrl) {
         this.apiUrls = apiUrl;
@@ -1739,9 +1827,10 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.fetchService = function (key) {
         var _this = this;
+        console.log("Calling fetch service");
         return this.storage.ready().then(function () {
             return _this.storage.get(key).catch(function (err) {
-                // console.log("Error fetching data from storage");
+                console.log("Error fetching data from storage");
             });
         });
     };
@@ -1780,7 +1869,7 @@ var ApiDataProvider = (function () {
         // console.log(this.koinexData, "before");
         var _this = this;
         if (this.koinexTest) {
-            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData = __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX_DATA */]);
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.koinexData = __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["l" /* KOINEX_DATA */]);
         }
         else {
             if (this.koinexData.lock == false || this.koinexData.lock == undefined) {
@@ -1789,10 +1878,10 @@ var ApiDataProvider = (function () {
                 return this.http.get(this.apiUrls.exchange.Koinex.api).map(function (res) {
                     // console.log(res);
                     // console.log("FETCHED - koinex data", res);
-                    _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */], res);
+                    _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */], res);
                     return res;
                 }).catch(function (error) {
-                    _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */]);
+                    _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */]);
                     return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.koinexData);
                 });
             }
@@ -1811,7 +1900,7 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.lockExchange = function (exchange) {
         var _this = this;
         switch (exchange) {
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */]: {
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */]: {
                 this.koinexData.lock = true;
                 // console.log("LOCK SET", this.koinexData);
                 var releaseLockKoinex = __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].timer(15000);
@@ -1863,7 +1952,7 @@ var ApiDataProvider = (function () {
     ApiDataProvider.prototype.getExchangeData = function (exchange, data) {
         if (data === void 0) { data = true; }
         switch (exchange) {
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */]:
                 {
                     // console.log("switch case koinex");
                     if (data) {
@@ -1972,6 +2061,7 @@ var ApiDataProvider = (function () {
         }
         catch (e) {
             console.log("Error Formatting Coin Details", e);
+            return processedCoin;
         }
     };
     ApiDataProvider.prototype.plusMinusPercent = function (ObjectTarget, market, percent) {
@@ -2028,6 +2118,7 @@ var ApiDataProvider = (function () {
         }
         catch (e) {
             console.log("Coin Global Stats Exception", e);
+            return false;
         }
     };
     // TO BE TESTED
@@ -2118,14 +2209,16 @@ var ApiDataProvider = (function () {
             }
             processedCoin.coinCode = coinCode;
             var coinGlobalStats = this.getCoinGlobalStats(coinCode, coinMarketCapData, coinDeskData);
-            processedCoin.global.INR.no = +coinGlobalStats.globalINR;
-            processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
-            processedCoin.change.hour = +coinGlobalStats.changeHour;
-            processedCoin.change.day = +coinGlobalStats.changeDay;
-            processedCoin.change.week = +coinGlobalStats.changeWeek;
-            processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
-            processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
-            // console.log(processedCoin.globalDiff.percent);
+            if (coinGlobalStats != false) {
+                processedCoin.global.INR.no = +coinGlobalStats.globalINR;
+                processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
+                processedCoin.change.hour = +coinGlobalStats.changeHour;
+                processedCoin.change.day = +coinGlobalStats.changeDay;
+                processedCoin.change.week = +coinGlobalStats.changeWeek;
+                processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
+                processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
+                // console.log(processedCoin.globalDiff.percent);
+            }
             return processedCoin;
         }
         catch (e) {
@@ -2195,7 +2288,7 @@ var ApiDataProvider = (function () {
         // console.log(coinMarketCapData, " inside process Exchange data - SWITCH");
         try {
             switch (exchange) {
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */]:
                     {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -2223,7 +2316,7 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.setExchangeData = function (exchange, exchangeData) {
         switch (exchange) {
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["j" /* KOINEX */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* KOINEX */]:
                 {
                     this.koinexData = exchangeData;
                     // console.log("SET - koinex exchange data", this.koinexData);
@@ -2253,12 +2346,12 @@ var ApiDataProvider = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return API_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return KOINEX_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return KOINEX_DATA; });
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "G", function() { return XRP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return ETH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "q", function() { return LTC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return BCH; });
 /* unused harmony export OMG */
 /* unused harmony export REQ */
@@ -2279,13 +2372,13 @@ var ApiDataProvider = (function () {
 /* unused harmony export BOTTOM */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return INSUF_POINTS_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return INSUF_POINTS_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return LAST_POINT_MSG; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return LAST_POINT_DESC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return LAST_POINT_MSG; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return LAST_POINT_DESC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return POINTS_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return POINTS_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return NO_VIDEO_AD; });
+/* unused harmony export NO_VIDEO_AD */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return ZEBPAY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return KOINEX; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return KOINEX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return POINTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return DEFAULT_POINT; });
 /* unused harmony export LIGHT */
@@ -2293,8 +2386,8 @@ var ApiDataProvider = (function () {
 /* unused harmony export INR */
 /* unused harmony export USD */
 /* unused harmony export ALL */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return LIKE_DIALOG_HEAD; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return LIKE_DIALOG_DESC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "q", function() { return LIKE_DIALOG_HEAD; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return LIKE_DIALOG_DESC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return RATE_DIALOG_HEAD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return RATE_DIALOG_DESC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "D", function() { return RATE_USES_UNTIL; });
@@ -2302,9 +2395,10 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return DEFAULT_USES_UNTIL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return RATE_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return DONT_LIKE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return LATER_LIKE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return LATER_LIKE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "B", function() { return RATE_REWARD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return RATED; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return INTERSTITIAL_AD_REWARD; });
 //Payloads
 var API_URL = { "exchange": { "Koinex": { "api": "https://koinex.in/api/ticker", "fees": { "buy": "0.0025", "sell": "0.002" }, "referral": "https://koinex.in/?ref=a2fae6", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "omg", "req", "zrx", "gnt", "bat", "ae", "trx", "xlm", "neo", "gas", "aion", "ncash", "xrb", "eos", "ont", "zil", "iost", "zco", "poly", "elf"] }, "Zebpay": { "api": "https://www.zebapi.com/api/v1/market/ticker-new/", "fees": { "buy": "0.0059", "sell": "0.0059" }, "referral": "http://link.zebpay.com/ref/REF97131420", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "eos", "omg", "trx", "gnt", "zrx", "rep", "bat", "ven", "ae"] } }, "global": { "coindesk": { "api": "https://api.coindesk.com/v1/bpi/currentprice/inr.json" }, "coinmarketcap": { "api": "https://api.coinmarketcap.com/v1/ticker/COINNAME/?convert=INR" } }, "coins": { "BTC": { "name": "Bitcoin", "imageUrl": "https://i.imgur.com/PRysm7E.png" }, "XRP": { "name": "Ripple", "imageUrl": "https://i.imgur.com/jzCyWct.png" }, "ETH": { "name": "Ethereum", "imageUrl": "https://i.imgur.com/gmGSzVJ.png" }, "LTC": { "name": "Litecoin", "imageUrl": "https://i.imgur.com/Ov9h1ZT.png" }, "BCH": { "name": "Bitcoin Cash", "imageUrl": "https://i.imgur.com/gUtu5Eo.png" }, "OMG": { "name": "OmiseGo", "imageUrl": "https://i.imgur.com/p0Phr0Y.png" }, "REQ": { "name": "Request Network", "imageUrl": "https://i.imgur.com/6909idR.png" }, "ZRX": { "name": "0x", "imageUrl": "https://i.imgur.com/ESIyWUE.png" }, "GNT": { "name": "Golem", "imageUrl": "https://i.imgur.com/5ryFDz5.png" }, "BAT": { "name": "Basic Attention Token", "imageUrl": "https://i.imgur.com/c5ADvNs.png" }, "AE": { "name": "Aeternity", "imageUrl": "https://i.imgur.com/Hn4v2q1.png" }, "TRX": { "name": "Tron", "imageUrl": "https://i.imgur.com/A39UF1i.png" }, "MIOTA": { "name": "IOTA", "imageUrl": "https://i.imgur.com/u5slvez.png" }, "EOS": { "name": "Eos", "imageUrl": "https://i.imgur.com/8MPSsON.png" }, "KNC": { "name": "Kyber Network", "imageUrl": "https://i.imgur.com/hn2onbS.png" }, "XRB": { "name": "Nano", "imageUrl": "https://i.imgur.com/tp5wt6g.png" }, "XLM": { "name": "Stellar", "imageUrl": "https://i.imgur.com/7sbDVmq.png" }, "GAS": { "name": "Gas", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "NEO": { "name": "Neo", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "AION": { "name": "Aion", "imageUrl": "https://i.imgur.com/7BPKN5h.png" }, "NCASH": { "name": "Nucleus Vision", "imageUrl": "https://i.imgur.com/BNMkOVY.jpg" }, "ONT": { "name": "Ontology", "imageUrl": "https://i.imgur.com/sAmdk8w.png" }, "ZIL": { "name": "Zilliqa", "imageUrl": "https://i.imgur.com/wMERZVq.png" }, "IOST": { "name": "IosToken", "imageUrl": "https://i.imgur.com/39N3aWl.png" }, "ZCO": { "name": "Zebi", "imageUrl": "https://i.imgur.com/fRgfUci.png" }, "POLY": { "name": "Polymath network", "imageUrl": "https://i.imgur.com/65T4QnL.png" }, "ELF": { "name": "Aelf", "imageUrl": "https://i.imgur.com/1ZLtWEM.png" }, "REP": { "name": "augur", "imageUrl": "https://i.imgur.com/l5OcnMf.png" }, "VEN": { "name": "vechain", "imageUrl": "https://i.imgur.com/6Iq92BR.png" } }, "version": "1.0.0" };
 var KOINEX_DATA = { "prices": { "BTC": "660000.0", "ETH": "49550.0", "XRP": "55.32", "BCH": "75700.0", "LTC": "12845.99", "MIOTA": 91.07, "TRX": "2.63", "OMG": "976.0", "AE": "126.5", "ZRX": "46.12", "BAT": "18.9", "GNT": "21.53", "REQ": "14.74", "XLM": "20.68" }, "stats": { "ETH": { "last_traded_price": 49550.0, "lowest_ask": "49800.0", "highest_bid": "49550.0", "min_24hrs": "48800.0", "max_24hrs": "50300.0", "vol_24hrs": 310 }, "BTC": { "last_traded_price": 660000.0, "lowest_ask": "660000.0", "highest_bid": "658050.0", "min_24hrs": "620000.0", "max_24hrs": "660000.0", "vol_24hrs": 88 }, "LTC": { "last_traded_price": 12845.99, "lowest_ask": "12849.0", "highest_bid": "12820.0", "min_24hrs": "12650.0", "max_24hrs": "13150.0", "vol_24hrs": 1208 }, "XRP": { "last_traded_price": 55.32, "lowest_ask": "55.4", "highest_bid": "55.32", "min_24hrs": "54.56", "max_24hrs": "56.61", "vol_24hrs": 815919 }, "BCH": { "last_traded_price": 75700.0, "lowest_ask": "75800.0", "highest_bid": "75600.0", "min_24hrs": "72002.0", "max_24hrs": "77500.0", "vol_24hrs": 118 }, "OMG": { "last_traded_price": 976.0, "lowest_ask": "984.99", "highest_bid": "976.0", "min_24hrs": "960.0", "max_24hrs": "1010.0", "vol_24hrs": 5790 }, "REQ": { "last_traded_price": 14.74, "lowest_ask": "14.74", "highest_bid": "14.72", "min_24hrs": "14.26", "max_24hrs": "15.06", "vol_24hrs": 443076 }, "ZRX": { "last_traded_price": 46.12, "lowest_ask": "46.3", "highest_bid": "46.2", "min_24hrs": "44.2", "max_24hrs": "47.98", "vol_24hrs": 67665 }, "GNT": { "last_traded_price": 21.53, "lowest_ask": "21.98", "highest_bid": "21.58", "min_24hrs": "21.03", "max_24hrs": "22.24", "vol_24hrs": 81813 }, "BAT": { "last_traded_price": 18.9, "lowest_ask": "19.0", "highest_bid": "18.9", "min_24hrs": "18.6", "max_24hrs": "19.34", "vol_24hrs": 64093 }, "AE": { "last_traded_price": 126.5, "lowest_ask": "126.5", "highest_bid": "125.03", "min_24hrs": "125.0", "max_24hrs": "131.0", "vol_24hrs": 2566 }, "TRX": { "last_traded_price": 2.63, "lowest_ask": "2.63", "highest_bid": "2.62", "min_24hrs": "2.52", "max_24hrs": "2.69", "vol_24hrs": 9286780 }, "XLM": { "last_traded_price": 20.68, "lowest_ask": "20.69", "highest_bid": "20.6", "min_24hrs": "20.11", "max_24hrs": "20.68", "vol_24hrs": 242816 } } };
@@ -2345,7 +2439,7 @@ var NO_VIDEO_AD = "Try Later - Video Ad not available";
 var ZEBPAY = "Zebpay";
 var KOINEX = "Koinex";
 var POINTS = "points";
-var DEFAULT_POINT = 3;
+var DEFAULT_POINT = 15;
 //Generic
 var LIGHT = "light";
 var DARK = "dark";
@@ -2359,12 +2453,13 @@ var RATE_DIALOG_HEAD = "Rate & Get 5 Refill Points!";
 var RATE_DIALOG_DESC = "Give us a 5 start rating if you like the app! :)";
 var RATE_USES_UNTIL = "rateUsesLeft";
 var RATE_REWARD_MSG = "5 Reward Points added for Rating!";
-var DEFAULT_USES_UNTIL = 2;
-var RATE_LINK = "market://details?id=in.extendsapk.beaky.android";
+var DEFAULT_USES_UNTIL = 15;
+var RATE_LINK = "market://details?id=com.extendsapk.coinassist";
 var DONT_LIKE = 10;
 var LATER_LIKE = 5;
 var RATE_REWARD = 5;
 var RATED = "rated";
+var INTERSTITIAL_AD_REWARD = 2;
 //# sourceMappingURL=api-constants.js.map
 
 /***/ }),
@@ -2406,7 +2501,7 @@ var Utilities = (function () {
                 {
                     return trimmedQty = +quantity.toFixed(0);
                 }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["q" /* LTC */]:
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["r" /* LTC */]:
                 {
                     return trimmedQty = +quantity.toFixed(3);
                 }
@@ -2458,5 +2553,5 @@ var Utilities = (function () {
 
 /***/ })
 
-},[220]);
+},[221]);
 //# sourceMappingURL=main.js.map

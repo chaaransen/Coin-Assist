@@ -41,7 +41,7 @@
         <ion-col col-8 class="priceDetail center">
           {{coinDetail.market.formatted}}
         </ion-col>
-        <ion-col col-4 class="boldTextValue left size1rem6 center" *ngIf="coinDetail.change">
+        <ion-col col-4 class="boldTextValue left size1rem6 center" *ngIf="coinDetail.change != undefined">
           <div *ngIf="coinDetail.change.day >= 0" class="greenColor weight500">
             <span class="size1rem7">&#9650;</span>+{{coinDetail.change.day}}%
           </div>
@@ -59,7 +59,7 @@
         </ion-col>
       </ion-row>
       <br>
-      <ion-row class="marginBottom0">
+      <ion-row class="marginBottom0" *ngIf="coinDetail.change != undefined">
         <hr>
         <ion-col col-4 class="center marginBottom0 padding1">
           (1h):
@@ -72,7 +72,7 @@
         </ion-col>
         <hr>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="coinDetail.change != undefined">
         <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">
           <span class="boldTextValue">
             <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">
@@ -131,7 +131,7 @@
       </ion-row>
     </ion-grid>
     <hr>
-    <ion-grid>
+    <ion-grid *ngIf="coinDetail.global != undefined">
       <ion-card-header class="size1rem7 greyColor padding1rem">Global price -
       </ion-card-header>
       <ion-row>
