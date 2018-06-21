@@ -25,7 +25,7 @@ export class ProfitCalcPage {
   public checkRequiredFields() {
     // console.log("Check Required fields", this.quantity.no.no, this.amount);
 
-    console.log("Quantity", this.profitCalc.quantity.no);
+    // console.log("Quantity", this.profitCalc.quantity.no);
     if (this.profitCalc.quantity.no <= 0) {
       this.profitCalc.quantity.no = 1;
     }

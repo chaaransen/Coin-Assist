@@ -32,7 +32,7 @@ export class HomePage {
     // console.log("ngOnInit - home called");
     this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
-      console.log("Network flag - Home page ", this.networkFlag);
+      // console.log("Network flag - Home page ", this.networkFlag);
 
       this.networkFlag = val;
       if (this.networkFlag) {
@@ -85,7 +85,7 @@ export class HomePage {
       this.ngOnInit();
     }
     // console.log("Home page -View Entered", this.alive);
-    console.log("Home page view will enter ", this.networkFlag);
+    // console.log("Home page view will enter ", this.networkFlag);
 
   }
 

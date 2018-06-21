@@ -25751,6 +25751,20 @@ ion-navbar.toolbar {
   font-weight: 500;
 }
 
+.centerNetwork {
+  margin-top: 60%;
+  text-align: center;
+  border: 3px solid grey;
+  padding: 10px;
+}
+
+.coinSpinner {
+  margin-top: 45%;
+  margin-left: 45%;
+  height: 60px;
+  width: 60px;
+}
+
 .boldTextValue {
   font-weight: 500;
   font-size: 1.5rem;

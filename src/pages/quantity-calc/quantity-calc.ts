@@ -49,7 +49,7 @@ export class QuantityCalcPage {
     if (this.networkFlag) {
 
       this.api.getApiUrl().then(apiUrl => {
-        console.log("Response API url ", apiUrl);
+        // console.log("Response API url ", apiUrl);
 
         this.apiUrls = apiUrl;
 
@@ -338,7 +338,8 @@ export class QuantityCalcPage {
 
   public showAd() {
     // this.api.showVideoAd();
-    this.api.showVideoAd();
+    this.api.showToast(Constants.SHOWING_ADS, Constants.TOP);
+    this.api.prepareVideoAd(true);
 
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {

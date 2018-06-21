@@ -39,7 +39,7 @@ export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
 export const POINTS_MSG: string = "Info:";
 export const POINTS_DESC: string = "You can refill the 'Uses left' by clicking 'Refill Use' and  watch a Video Ad";
 
-export const NO_VIDEO_AD: string = "Video Ad unavailable";
+export const NO_VIDEO_AD: string = "Video Ad unavailable, Showing Image AD.";
 
 //Exchanges
 export const ZEBPAY: string = "Zebpay";
@@ -71,7 +71,9 @@ export const GRACE_POINTS: number = 1;
 export const RATED: string = "rated";
 export const INTERSTITIAL_AD_REWARD: number = 2;
 
-export const NO_INTERNET: string = "Network not Connected. Try Again."
+export const NO_INTERNET: string = "Network not Connected. Try Again.";
+export const SHOWING_ADS: string = "Loading Ads...";
+
 
 
 

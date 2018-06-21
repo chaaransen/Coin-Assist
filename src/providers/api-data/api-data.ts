@@ -41,7 +41,7 @@ export class ApiDataProvider {
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
   rewardNotif: boolean = false;
-  retryLockFlagInterstitial: boolean = false;
+
   // private coinAssistApis = "http://localhost:3000/apis";
 
   constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network) {
@@ -54,20 +54,20 @@ export class ApiDataProvider {
   getApiUrl(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.getApiUrlStorage().then(res => {
-        console.log("Fetching api urls from storage ", res);
+        // console.log("Fetching api urls from storage ", res);
 
         if (res != null) {
-          console.log("Setting fetched from storage");
+          // console.log("Setting fetched from storage");
           this.apiUrls = res;
           resolve(this.apiUrls);
         }
         else {
-          console.log("Api url null so fetching from cloud");
+          // console.log("Api url null so fetching from cloud");
 
           this.fetchApiUrl().then(res => {
             // console.log("Fetched api urls", res);
             this.generateZebpayApis(res).subscribe(generated => {
-              console.log("generated urls passed for store", generated);
+              // console.log("generated urls passed for store", generated);
               this.apiUrls = generated
               this.storeApiUrl(this.apiUrls);
             });
@@ -76,7 +76,7 @@ export class ApiDataProvider {
           });
 
           this.generateZebpayApis(this.getConstantApiUrl()).subscribe(generated => {
-            console.log("Constant API Urls Used");
+            // console.log("Constant API Urls Used");
 
             this.apiUrls = generated
             resolve(this.apiUrls);
@@ -93,7 +93,7 @@ export class ApiDataProvider {
       // console.log("platform ready - api data");
       return new Promise((resolve, reject) => {
         if (this.network.type != 'none') {
-          console.log(this.network.type);
+          // console.log(this.network.type);
           // console.log("network flag set as true");
           this.networkFlag = true;
           resolve(this.networkFlag);
@@ -115,6 +115,20 @@ export class ApiDataProvider {
 
       });
 
+    });
+  }
+
+  addGracePoints() {
+    this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
+    this.fetchService(Constants.POINTS).then(points => {
+      console.log("Fetch service old points before ", points);
+      if (points <= 0) {
+        console.log("points less or equals 0 so adding grace points");
+        let newPoints: number = points;
+        newPoints += Constants.GRACE_POINTS;
+        this.storeService(Constants.POINTS, newPoints);
+        console.log("Added Grace Points", newPoints);
+      }
     });
   }
 
@@ -159,107 +173,6 @@ export class ApiDataProvider {
     });
   }
 
-  prepareInterstitialAd(show: boolean = false) {
-    this.admobFree.interstitial.config(interstitialConfig);
-    this.admobFree.interstitial.isReady().then(res => {
-      console.log("Interstitial Ready status", res);
-
-      if (res) {
-        if (show) {
-          console.log("Interstitial Ad Already Ready - calling Show!");
-          this.showInterstitialAd();
-        }
-      } else {
-        console.log("Interstitial AD not ready - Preparing...");
-        if (!this.retryLockFlagInterstitial) {
-          this.admobFree.interstitial.prepare().then(res => {
-            console.log("interstitial Ad Prepared", res);
-            if (show) {
-              this.showInterstitialAd();
-            }
-          }).catch(err => {
-            this.addGracePoints();
-            console.log("Retry Lock - Released");
-            this.retryLockFlagInterstitial = true;
-            console.log("Unable to prepare interstitial Ad", err);
-            console.log("Giving 1 free point showing toast try later no ADs");
-          });
-          this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
-            console.log("Interstitial AD failed to Load - new ", res);
-            if (show) {
-              this.addGracePoints();
-              console.log("Unable to prepare interstitial Ad ", res);
-              console.log("Giving 1 free point showing toast try later no ADs");
-            }
-          });
-
-          this.admobFree.on("admob.interstitial.events.LOAD").subscribe(res => {
-            console.log("Retry Lock - Released");
-            this.retryLockFlagInterstitial = false;
-            console.log("Interstitial AD loaded - new ", res);
-            console.log("Interstitial show value Outside ", show);
-            if (show) {
-              console.log("Interstitial show value ", show);
-              this.showInterstitialAd();
-            }
-          });
-          this.retryLockFlagInterstitial = true;
-        } else {
-          console.log("Retry Locked");
-          this.addGracePoints();
-        }
-      }
-    });
-  }
-
-  addGracePoints() {
-    this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
-    this.fetchService(Constants.POINTS).then(points => {
-      console.log("Fetch service old points before ", points);
-      if (points <= 0) {
-        console.log("points less or equals 0 so adding grace points");
-        let newPoints: number = points;
-        newPoints += Constants.GRACE_POINTS;
-        this.storeService(Constants.POINTS, newPoints);
-        console.log("Added Grace Points", newPoints);
-      }
-    });
-  }
-
-  showInterstitialAd() {
-    console.log("Showing interstitial");
-    this.admobFree.interstitial.isReady().then(res => {
-      console.log("Interstitial ready status ", res);
-
-      if (res) {
-        this.admobFree.interstitial.show().then(res => {
-          this.retryLockFlagInterstitial = false;
-          console.log("Interstitial Ad show status ", res);
-          this.fetchService(Constants.POINTS).then(points => {
-            console.log("Fetch service old points before ", points);
-
-            let newPoints: number = points;
-            newPoints += Constants.INTERSTITIAL_AD_REWARD;
-            this.storeService(Constants.POINTS, newPoints);
-            console.log("Earned New points (interstitial Ads) ", newPoints);
-          }).catch(err => {
-            console.log("Error Fetching old points ", err);
-          });
-        }).catch(err => {
-          console.log("Error showing interstitial Ads - Adding grace points");
-          this.addGracePoints();
-        });
-      } else {
-        console.log("Interstitial Ad not ready, preparing and showing");
-        this.prepareInterstitialAd(true);
-      }
-
-    }).catch(err => {
-      console.log("Exception thrown Ready ", err);
-      this.addGracePoints();
-    });
-  }
-
   showVideoAd() {
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
@@ -282,24 +195,102 @@ export class ApiDataProvider {
           });
 
           this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-
             this.prepareVideoAd();
             console.log("AD closed", res);
           });
 
         }).catch(err => {
           console.log("Unable to show Video Ad", err);
-          this.showInterstitialAd();
+          this.prepareInterstitialAd(true);
         });
       } else {
         console.log("Video Ad not ready - Showing Interstitial Ads");
-        this.showInterstitialAd();
+        this.prepareVideoAd(true);
       }
     }).catch(err => {
       console.log("Exception thrown - ready", err);
-      this.showInterstitialAd();
+      this.prepareInterstitialAd(true);
     });
 
+  }
+
+
+
+  prepareInterstitialAd(show: boolean = false) {
+    this.admobFree.interstitial.config(interstitialConfig);
+    this.admobFree.interstitial.isReady().then(res => {
+      console.log("Interstitial Ready status", res);
+
+      if (res) {
+        if (show) {
+          console.log("Interstitial Ad Already Ready - calling Show!");
+          this.showInterstitialAd();
+        }
+      } else {
+        console.log("Interstitial AD not ready - Preparing...");
+        this.admobFree.interstitial.prepare().then(res => {
+          console.log("interstitial Ad Prepared", res);
+          if (show) {
+            this.showInterstitialAd();
+          }
+        }).catch(err => {
+          this.addGracePoints();
+          console.log("Unable to prepare interstitial Ad", err);
+          console.log("Giving 1 free point showing toast try later no ADs");
+        });
+
+        this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
+          console.log("Interstitial AD failed to Load - new ", res);
+          if (show) {
+            this.addGracePoints();
+            console.log("Unable to prepare interstitial Ad ", res);
+            console.log("Giving 1 free point showing toast try later no ADs");
+          }
+        });
+
+        this.admobFree.on("admob.interstitial.events.LOAD").subscribe(res => {
+          console.log("Interstitial AD loaded - new ", res);
+          console.log("Interstitial show value Outside ", show);
+          if (show) {
+            console.log("Interstitial show value ", show);
+            this.showInterstitialAd();
+          }
+        });
+      }
+    });
+  }
+
+  showInterstitialAd() {
+    console.log("Showing interstitial");
+    this.admobFree.interstitial.isReady().then(res => {
+      console.log("Interstitial ready status ", res);
+
+      if (res) {
+        this.admobFree.interstitial.show().then(res => {
+          console.log("Interstitial Ad show status ", res);
+          this.fetchService(Constants.POINTS).then(points => {
+            console.log("Fetch service old points before ", points);
+
+            let newPoints: number = points;
+            newPoints += Constants.INTERSTITIAL_AD_REWARD;
+            this.storeService(Constants.POINTS, newPoints);
+            console.log("Earned New points (interstitial Ads) ", newPoints);
+          }).catch(err => {
+            console.log("Error Fetching old points ", err);
+          });
+        }).catch(err => {
+          console.log("Error showing interstitial Ads - Adding grace points");
+          this.addGracePoints();
+        });
+      } else {
+        console.log("Interstitial Ad not ready adding Grace points");
+        this.addGracePoints();
+      }
+
+    }).catch(err => {
+      console.log("Exception thrown Ready ", err);
+      this.addGracePoints();
+    });
   }
 
   setApiUrl(apiUrl: any): any {

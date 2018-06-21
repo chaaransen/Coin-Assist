@@ -77,7 +77,7 @@ var QuantityCalcPage = (function () {
         this.networkFlag = this.api.networkFlag;
         if (this.networkFlag) {
             this.api.getApiUrl().then(function (apiUrl) {
-                console.log("Response API url ", apiUrl);
+                // console.log("Response API url ", apiUrl);
                 _this.apiUrls = apiUrl;
                 _this.apis = _this.apiUrls.exchange;
                 // console.log("Exchange values", this.apis);
@@ -122,7 +122,7 @@ var QuantityCalcPage = (function () {
             });
         }
         else {
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
         }
     };
     QuantityCalcPage.prototype.ionViewWillEnter = function () {
@@ -131,7 +131,7 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage.prototype.ionViewDidEnter = function () {
         if (this.api.rewardNotif) {
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["F" /* RATE_REWARD_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["F" /* RATE_REWARD_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
             this.api.rewardNotif = false;
         }
     };
@@ -183,13 +183,13 @@ var QuantityCalcPage = (function () {
             this.apiUrls = this.api.apiUrls;
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
         }
     };
     QuantityCalcPage.prototype.populateView = function () {
@@ -328,7 +328,8 @@ var QuantityCalcPage = (function () {
     QuantityCalcPage.prototype.showAd = function () {
         var _this = this;
         // this.api.showVideoAd();
-        this.api.showVideoAd();
+        this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* SHOWING_ADS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+        this.api.prepareVideoAd(true);
         this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
             _this.api.fetchService("points").then(function (points) {
                 console.log("Ad Closed");
@@ -336,7 +337,7 @@ var QuantityCalcPage = (function () {
                 if (_this.points > 0) {
                     _this.enable = true;
                     if (_this.reward) {
-                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */], 2000);
+                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */], 2000);
                         _this.reward = false;
                     }
                 }
@@ -350,7 +351,7 @@ var QuantityCalcPage = (function () {
                 if (_this.points > 0) {
                     _this.enable = true;
                     if (_this.reward) {
-                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */], 2000);
+                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */], 2000);
                         _this.reward = false;
                     }
                 }
@@ -461,7 +462,7 @@ var HomePage = (function () {
         // console.log("ngOnInit - home called");
         this.firstEntryFlag = false;
         this.api.checkNetworkConnection().then(function (val) {
-            console.log("Network flag - Home page ", _this.networkFlag);
+            // console.log("Network flag - Home page ", this.networkFlag);
             _this.networkFlag = val;
             if (_this.networkFlag) {
                 // console.log("network present - fetching api");
@@ -470,7 +471,7 @@ var HomePage = (function () {
                 _this.api.instructionToast(_this.pageName, 0);
             }
             else {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
             }
         });
     };
@@ -505,7 +506,7 @@ var HomePage = (function () {
             this.ngOnInit();
         }
         // console.log("Home page -View Entered", this.alive);
-        console.log("Home page view will enter ", this.networkFlag);
+        // console.log("Home page view will enter ", this.networkFlag);
     };
     HomePage.prototype.doRefresh = function (refresher) {
         var _this = this;
@@ -516,13 +517,13 @@ var HomePage = (function () {
             this.apiUrls = this.api.apiUrls;
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
         }
     };
     HomePage.prototype.populateView = function () {
@@ -724,13 +725,13 @@ var CoinDetailPage = (function () {
         if (this.networkFlag) {
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["I" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["J" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["I" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["J" /* TOP */]);
         }
     };
     CoinDetailPage.prototype.populateView = function () {
@@ -813,7 +814,7 @@ var ProfitCalcPage = (function () {
     };
     ProfitCalcPage.prototype.checkRequiredFields = function () {
         // console.log("Check Required fields", this.quantity.no.no, this.amount);
-        console.log("Quantity", this.profitCalc.quantity.no);
+        // console.log("Quantity", this.profitCalc.quantity.no);
         if (this.profitCalc.quantity.no <= 0) {
             this.profitCalc.quantity.no = 1;
         }
@@ -1540,6 +1541,7 @@ var ApiDataProvider = (function () {
         this.koinexTest = false;
         this.rewardNotif = false;
         this.retryLockFlagInterstitial = false;
+        this.retryLockFlagVideo = false;
     }
     ApiDataProvider.prototype.ngOnInit = function () {
     };
@@ -1547,18 +1549,18 @@ var ApiDataProvider = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.getApiUrlStorage().then(function (res) {
-                console.log("Fetching api urls from storage ", res);
+                // console.log("Fetching api urls from storage ", res);
                 if (res != null) {
-                    console.log("Setting fetched from storage");
+                    // console.log("Setting fetched from storage");
                     _this.apiUrls = res;
                     resolve(_this.apiUrls);
                 }
                 else {
-                    console.log("Api url null so fetching from cloud");
+                    // console.log("Api url null so fetching from cloud");
                     _this.fetchApiUrl().then(function (res) {
                         // console.log("Fetched api urls", res);
                         _this.generateZebpayApis(res).subscribe(function (generated) {
-                            console.log("generated urls passed for store", generated);
+                            // console.log("generated urls passed for store", generated);
                             _this.apiUrls = generated;
                             _this.storeApiUrl(_this.apiUrls);
                         });
@@ -1566,7 +1568,7 @@ var ApiDataProvider = (function () {
                         console.log("Error Fetching API Urls ", err);
                     });
                     _this.generateZebpayApis(_this.getConstantApiUrl()).subscribe(function (generated) {
-                        console.log("Constant API Urls Used");
+                        // console.log("Constant API Urls Used");
                         _this.apiUrls = generated;
                         resolve(_this.apiUrls);
                     });
@@ -1580,7 +1582,7 @@ var ApiDataProvider = (function () {
             // console.log("platform ready - api data");
             return new Promise(function (resolve, reject) {
                 if (_this.network.type != 'none') {
-                    console.log(_this.network.type);
+                    // console.log(this.network.type);
                     // console.log("network flag set as true");
                     _this.networkFlag = true;
                     resolve(_this.networkFlag);
@@ -1599,6 +1601,20 @@ var ApiDataProvider = (function () {
                     _this.networkFlag = false;
                 });
             });
+        });
+    };
+    ApiDataProvider.prototype.addGracePoints = function () {
+        var _this = this;
+        this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["J" /* TOP */]);
+        this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+            console.log("Fetch service old points before ", points);
+            if (points <= 0) {
+                console.log("points less or equals 0 so adding grace points");
+                var newPoints = points;
+                newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* GRACE_POINTS */];
+                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
+                console.log("Added Grace Points", newPoints);
+            }
         });
     };
     ApiDataProvider.prototype.prepareVideoAd = function (show) {
@@ -1641,106 +1657,6 @@ var ApiDataProvider = (function () {
             }
         });
     };
-    ApiDataProvider.prototype.prepareInterstitialAd = function (show) {
-        var _this = this;
-        if (show === void 0) { show = false; }
-        this.admobFree.interstitial.config(interstitialConfig);
-        this.admobFree.interstitial.isReady().then(function (res) {
-            console.log("Interstitial Ready status", res);
-            if (res) {
-                if (show) {
-                    console.log("Interstitial Ad Already Ready - calling Show!");
-                    _this.showInterstitialAd();
-                }
-            }
-            else {
-                console.log("Interstitial AD not ready - Preparing...");
-                if (!_this.retryLockFlagInterstitial) {
-                    _this.admobFree.interstitial.prepare().then(function (res) {
-                        console.log("interstitial Ad Prepared", res);
-                        if (show) {
-                            _this.showInterstitialAd();
-                        }
-                    }).catch(function (err) {
-                        _this.addGracePoints();
-                        console.log("Retry Lock - Released");
-                        _this.retryLockFlagInterstitial = true;
-                        console.log("Unable to prepare interstitial Ad", err);
-                        console.log("Giving 1 free point showing toast try later no ADs");
-                    });
-                    _this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(function (res) {
-                        console.log("Interstitial AD failed to Load - new ", res);
-                        if (show) {
-                            _this.addGracePoints();
-                            console.log("Unable to prepare interstitial Ad ", res);
-                            console.log("Giving 1 free point showing toast try later no ADs");
-                        }
-                    });
-                    _this.admobFree.on("admob.interstitial.events.LOAD").subscribe(function (res) {
-                        console.log("Retry Lock - Released");
-                        _this.retryLockFlagInterstitial = false;
-                        console.log("Interstitial AD loaded - new ", res);
-                        console.log("Interstitial show value Outside ", show);
-                        if (show) {
-                            console.log("Interstitial show value ", show);
-                            _this.showInterstitialAd();
-                        }
-                    });
-                    _this.retryLockFlagInterstitial = true;
-                }
-                else {
-                    console.log("Retry Locked");
-                    _this.addGracePoints();
-                }
-            }
-        });
-    };
-    ApiDataProvider.prototype.addGracePoints = function () {
-        var _this = this;
-        this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["I" /* TOP */]);
-        this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
-            console.log("Fetch service old points before ", points);
-            if (points <= 0) {
-                console.log("points less or equals 0 so adding grace points");
-                var newPoints = points;
-                newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* GRACE_POINTS */];
-                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
-                console.log("Added Grace Points", newPoints);
-            }
-        });
-    };
-    ApiDataProvider.prototype.showInterstitialAd = function () {
-        var _this = this;
-        console.log("Showing interstitial");
-        this.admobFree.interstitial.isReady().then(function (res) {
-            console.log("Interstitial ready status ", res);
-            if (res) {
-                _this.admobFree.interstitial.show().then(function (res) {
-                    _this.retryLockFlagInterstitial = false;
-                    console.log("Interstitial Ad show status ", res);
-                    _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
-                        console.log("Fetch service old points before ", points);
-                        var newPoints = points;
-                        newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* INTERSTITIAL_AD_REWARD */];
-                        _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
-                        console.log("Earned New points (interstitial Ads) ", newPoints);
-                    }).catch(function (err) {
-                        console.log("Error Fetching old points ", err);
-                    });
-                }).catch(function (err) {
-                    console.log("Error showing interstitial Ads - Adding grace points");
-                    _this.addGracePoints();
-                });
-            }
-            else {
-                console.log("Interstitial Ad not ready, preparing and showing");
-                _this.prepareInterstitialAd(true);
-            }
-        }).catch(function (err) {
-            console.log("Exception thrown Ready ", err);
-            _this.addGracePoints();
-        });
-    };
     ApiDataProvider.prototype.showVideoAd = function () {
         var _this = this;
         this.admobFree.rewardVideo.isReady().then(function (res) {
@@ -1765,16 +1681,90 @@ var ApiDataProvider = (function () {
                     });
                 }).catch(function (err) {
                     console.log("Unable to show Video Ad", err);
-                    _this.showInterstitialAd();
+                    _this.prepareInterstitialAd(true);
                 });
             }
             else {
                 console.log("Video Ad not ready - Showing Interstitial Ads");
-                _this.showInterstitialAd();
+                _this.prepareVideoAd(true);
             }
         }).catch(function (err) {
             console.log("Exception thrown - ready", err);
-            _this.showInterstitialAd();
+            _this.prepareInterstitialAd(true);
+        });
+    };
+    ApiDataProvider.prototype.prepareInterstitialAd = function (show) {
+        var _this = this;
+        if (show === void 0) { show = false; }
+        this.admobFree.interstitial.config(interstitialConfig);
+        this.admobFree.interstitial.isReady().then(function (res) {
+            console.log("Interstitial Ready status", res);
+            if (res) {
+                if (show) {
+                    console.log("Interstitial Ad Already Ready - calling Show!");
+                    _this.showInterstitialAd();
+                }
+            }
+            else {
+                console.log("Interstitial AD not ready - Preparing...");
+                _this.admobFree.interstitial.prepare().then(function (res) {
+                    console.log("interstitial Ad Prepared", res);
+                    if (show) {
+                        _this.showInterstitialAd();
+                    }
+                }).catch(function (err) {
+                    _this.addGracePoints();
+                    console.log("Unable to prepare interstitial Ad", err);
+                    console.log("Giving 1 free point showing toast try later no ADs");
+                });
+                _this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(function (res) {
+                    console.log("Interstitial AD failed to Load - new ", res);
+                    if (show) {
+                        _this.addGracePoints();
+                        console.log("Unable to prepare interstitial Ad ", res);
+                        console.log("Giving 1 free point showing toast try later no ADs");
+                    }
+                });
+                _this.admobFree.on("admob.interstitial.events.LOAD").subscribe(function (res) {
+                    console.log("Interstitial AD loaded - new ", res);
+                    console.log("Interstitial show value Outside ", show);
+                    if (show) {
+                        console.log("Interstitial show value ", show);
+                        _this.showInterstitialAd();
+                    }
+                });
+            }
+        });
+    };
+    ApiDataProvider.prototype.showInterstitialAd = function () {
+        var _this = this;
+        console.log("Showing interstitial");
+        this.admobFree.interstitial.isReady().then(function (res) {
+            console.log("Interstitial ready status ", res);
+            if (res) {
+                _this.admobFree.interstitial.show().then(function (res) {
+                    console.log("Interstitial Ad show status ", res);
+                    _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+                        console.log("Fetch service old points before ", points);
+                        var newPoints = points;
+                        newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* INTERSTITIAL_AD_REWARD */];
+                        _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
+                        console.log("Earned New points (interstitial Ads) ", newPoints);
+                    }).catch(function (err) {
+                        console.log("Error Fetching old points ", err);
+                    });
+                }).catch(function (err) {
+                    console.log("Error showing interstitial Ads - Adding grace points");
+                    _this.addGracePoints();
+                });
+            }
+            else {
+                console.log("Interstitial Ad not ready adding Grace points");
+                _this.addGracePoints();
+            }
+        }).catch(function (err) {
+            console.log("Exception thrown Ready ", err);
+            _this.addGracePoints();
         });
     };
     ApiDataProvider.prototype.setApiUrl = function (apiUrl) {
@@ -1944,7 +1934,7 @@ var ApiDataProvider = (function () {
                 });
                 break;
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
                 {
                     this.zebpayData.lock = true;
                     // console.log("LOCK SET", this.zebpayData);
@@ -1971,10 +1961,10 @@ var ApiDataProvider = (function () {
             return Object(__WEBPACK_IMPORTED_MODULE_12_rxjs_observable_forkJoin__["forkJoin"])(coinRequests).map(function (res) {
                 // console.log(res);
                 // console.log("FETCHED - zebpay data", res);
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */], res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */], res);
                 return res;
             }).catch(function (error) {
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]);
                 return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.zebpayData);
             });
         }
@@ -1994,7 +1984,7 @@ var ApiDataProvider = (function () {
                     }
                     return this.getKoinexTemplate();
                 }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
                 {
                     if (data) {
                         return this.getZebpayData();
@@ -2327,7 +2317,7 @@ var ApiDataProvider = (function () {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
                     }
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
                     {
                         // console.log("switch case zebpay");
                         return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -2356,7 +2346,7 @@ var ApiDataProvider = (function () {
                     // console.log("SET - koinex exchange data", this.koinexData);
                     break;
                 }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
                 {
                     // console.log("SET - zebpay exchange data");
                     this.zebpayData = exchangeData;
@@ -2383,7 +2373,7 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return KOINEX_DATA; });
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "K", function() { return XRP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return ETH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return BCH; });
@@ -2402,7 +2392,7 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return PRICE_REFRESH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return PRICE_REFRESH_FAIL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return REWARD_POINTS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return TOP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return TOP; });
 /* unused harmony export BOTTOM */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return INSUF_POINTS_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return INSUF_POINTS_DESC; });
@@ -2411,7 +2401,7 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return POINTS_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return POINTS_DESC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return NO_VIDEO_AD; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "K", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "L", function() { return ZEBPAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return KOINEX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "v", function() { return POINTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return DEFAULT_POINT; });
@@ -2435,6 +2425,7 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return RATED; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return INTERSTITIAL_AD_REWARD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return NO_INTERNET; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return SHOWING_ADS; });
 //Payloads
 var API_URL = { "exchange": { "Koinex": { "api": "https://koinex.in/api/ticker", "fees": { "buy": "0.0025", "sell": "0.002" }, "referral": "https://koinex.in/?ref=a2fae6", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "omg", "req", "zrx", "gnt", "bat", "ae", "trx", "xlm", "neo", "gas", "aion", "ncash", "xrb", "eos", "ont", "zil", "iost", "zco", "poly", "elf"] }, "Zebpay": { "api": "https://www.zebapi.com/api/v1/market/ticker-new/", "fees": { "buy": "0.0059", "sell": "0.0059" }, "referral": "http://link.zebpay.com/ref/REF97131420", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "eos", "omg", "trx", "gnt", "zrx", "rep", "bat", "ven", "ae"] } }, "global": { "coindesk": { "api": "https://api.coindesk.com/v1/bpi/currentprice/inr.json" }, "coinmarketcap": { "api": "https://api.coinmarketcap.com/v1/ticker/COINNAME/?convert=INR" } }, "coins": { "BTC": { "name": "Bitcoin", "imageUrl": "https://i.imgur.com/PRysm7E.png" }, "XRP": { "name": "Ripple", "imageUrl": "https://i.imgur.com/jzCyWct.png" }, "ETH": { "name": "Ethereum", "imageUrl": "https://i.imgur.com/gmGSzVJ.png" }, "LTC": { "name": "Litecoin", "imageUrl": "https://i.imgur.com/Ov9h1ZT.png" }, "BCH": { "name": "Bitcoin Cash", "imageUrl": "https://i.imgur.com/gUtu5Eo.png" }, "OMG": { "name": "OmiseGo", "imageUrl": "https://i.imgur.com/p0Phr0Y.png" }, "REQ": { "name": "Request Network", "imageUrl": "https://i.imgur.com/6909idR.png" }, "ZRX": { "name": "0x", "imageUrl": "https://i.imgur.com/ESIyWUE.png" }, "GNT": { "name": "Golem", "imageUrl": "https://i.imgur.com/5ryFDz5.png" }, "BAT": { "name": "Basic Attention Token", "imageUrl": "https://i.imgur.com/c5ADvNs.png" }, "AE": { "name": "Aeternity", "imageUrl": "https://i.imgur.com/Hn4v2q1.png" }, "TRX": { "name": "Tron", "imageUrl": "https://i.imgur.com/A39UF1i.png" }, "MIOTA": { "name": "IOTA", "imageUrl": "https://i.imgur.com/u5slvez.png" }, "EOS": { "name": "Eos", "imageUrl": "https://i.imgur.com/8MPSsON.png" }, "KNC": { "name": "Kyber Network", "imageUrl": "https://i.imgur.com/hn2onbS.png" }, "XRB": { "name": "Nano", "imageUrl": "https://i.imgur.com/tp5wt6g.png" }, "XLM": { "name": "Stellar", "imageUrl": "https://i.imgur.com/7sbDVmq.png" }, "GAS": { "name": "Gas", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "NEO": { "name": "Neo", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "AION": { "name": "Aion", "imageUrl": "https://i.imgur.com/7BPKN5h.png" }, "NCASH": { "name": "Nucleus Vision", "imageUrl": "https://i.imgur.com/BNMkOVY.jpg" }, "ONT": { "name": "Ontology", "imageUrl": "https://i.imgur.com/sAmdk8w.png" }, "ZIL": { "name": "Zilliqa", "imageUrl": "https://i.imgur.com/wMERZVq.png" }, "IOST": { "name": "IosToken", "imageUrl": "https://i.imgur.com/39N3aWl.png" }, "ZCO": { "name": "Zebi", "imageUrl": "https://i.imgur.com/fRgfUci.png" }, "POLY": { "name": "Polymath network", "imageUrl": "https://i.imgur.com/65T4QnL.png" }, "ELF": { "name": "Aelf", "imageUrl": "https://i.imgur.com/1ZLtWEM.png" }, "REP": { "name": "augur", "imageUrl": "https://i.imgur.com/l5OcnMf.png" }, "VEN": { "name": "vechain", "imageUrl": "https://i.imgur.com/6Iq92BR.png" } }, "version": "1.0.0" };
 var KOINEX_DATA = { "prices": { "BTC": "660000.0", "ETH": "49550.0", "XRP": "55.32", "BCH": "75700.0", "LTC": "12845.99", "MIOTA": 91.07, "TRX": "2.63", "OMG": "976.0", "AE": "126.5", "ZRX": "46.12", "BAT": "18.9", "GNT": "21.53", "REQ": "14.74", "XLM": "20.68" }, "stats": { "ETH": { "last_traded_price": 49550.0, "lowest_ask": "49800.0", "highest_bid": "49550.0", "min_24hrs": "48800.0", "max_24hrs": "50300.0", "vol_24hrs": 310 }, "BTC": { "last_traded_price": 660000.0, "lowest_ask": "660000.0", "highest_bid": "658050.0", "min_24hrs": "620000.0", "max_24hrs": "660000.0", "vol_24hrs": 88 }, "LTC": { "last_traded_price": 12845.99, "lowest_ask": "12849.0", "highest_bid": "12820.0", "min_24hrs": "12650.0", "max_24hrs": "13150.0", "vol_24hrs": 1208 }, "XRP": { "last_traded_price": 55.32, "lowest_ask": "55.4", "highest_bid": "55.32", "min_24hrs": "54.56", "max_24hrs": "56.61", "vol_24hrs": 815919 }, "BCH": { "last_traded_price": 75700.0, "lowest_ask": "75800.0", "highest_bid": "75600.0", "min_24hrs": "72002.0", "max_24hrs": "77500.0", "vol_24hrs": 118 }, "OMG": { "last_traded_price": 976.0, "lowest_ask": "984.99", "highest_bid": "976.0", "min_24hrs": "960.0", "max_24hrs": "1010.0", "vol_24hrs": 5790 }, "REQ": { "last_traded_price": 14.74, "lowest_ask": "14.74", "highest_bid": "14.72", "min_24hrs": "14.26", "max_24hrs": "15.06", "vol_24hrs": 443076 }, "ZRX": { "last_traded_price": 46.12, "lowest_ask": "46.3", "highest_bid": "46.2", "min_24hrs": "44.2", "max_24hrs": "47.98", "vol_24hrs": 67665 }, "GNT": { "last_traded_price": 21.53, "lowest_ask": "21.98", "highest_bid": "21.58", "min_24hrs": "21.03", "max_24hrs": "22.24", "vol_24hrs": 81813 }, "BAT": { "last_traded_price": 18.9, "lowest_ask": "19.0", "highest_bid": "18.9", "min_24hrs": "18.6", "max_24hrs": "19.34", "vol_24hrs": 64093 }, "AE": { "last_traded_price": 126.5, "lowest_ask": "126.5", "highest_bid": "125.03", "min_24hrs": "125.0", "max_24hrs": "131.0", "vol_24hrs": 2566 }, "TRX": { "last_traded_price": 2.63, "lowest_ask": "2.63", "highest_bid": "2.62", "min_24hrs": "2.52", "max_24hrs": "2.69", "vol_24hrs": 9286780 }, "XLM": { "last_traded_price": 20.68, "lowest_ask": "20.69", "highest_bid": "20.6", "min_24hrs": "20.11", "max_24hrs": "20.68", "vol_24hrs": 242816 } } };
@@ -2470,7 +2461,7 @@ var LAST_POINT_MSG = "1 Use Point remaining!";
 var LAST_POINT_DESC = "Watch Video Ad to refill Use points";
 var POINTS_MSG = "Info:";
 var POINTS_DESC = "You can refill the 'Uses left' by clicking 'Refill Use' and  watch a Video Ad";
-var NO_VIDEO_AD = "Video Ad unavailable";
+var NO_VIDEO_AD = "Video Ad unavailable, Showing Image AD.";
 //Exchanges
 var ZEBPAY = "Zebpay";
 var KOINEX = "Koinex";
@@ -2498,6 +2489,7 @@ var GRACE_POINTS = 1;
 var RATED = "rated";
 var INTERSTITIAL_AD_REWARD = 2;
 var NO_INTERNET = "Network not Connected. Try Again.";
+var SHOWING_ADS = "Loading Ads...";
 //# sourceMappingURL=api-constants.js.map
 
 /***/ }),
@@ -2535,7 +2527,7 @@ var Utilities = (function () {
                 {
                     return trimmedQty = +quantity.toFixed(3);
                 }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["J" /* XRP */]:
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["K" /* XRP */]:
                 {
                     return trimmedQty = +quantity.toFixed(0);
                 }
