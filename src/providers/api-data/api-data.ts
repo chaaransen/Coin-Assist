@@ -119,7 +119,6 @@ export class ApiDataProvider {
   }
 
   addGracePoints() {
-    this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
     this.fetchService(Constants.POINTS).then(points => {
       console.log("Fetch service old points before ", points);
       if (points <= 0) {
@@ -203,9 +202,6 @@ export class ApiDataProvider {
           console.log("Unable to show Video Ad", err);
           this.prepareInterstitialAd(true);
         });
-      } else {
-        console.log("Video Ad not ready - Showing Interstitial Ads");
-        this.prepareVideoAd(true);
       }
     }).catch(err => {
       console.log("Exception thrown - ready", err);
@@ -279,12 +275,9 @@ export class ApiDataProvider {
             console.log("Error Fetching old points ", err);
           });
         }).catch(err => {
-          console.log("Error showing interstitial Ads - Adding grace points");
+          console.log("Error showing interstitial Ads - Adding grace points ", err);
           this.addGracePoints();
         });
-      } else {
-        console.log("Interstitial Ad not ready, preparing and showing");
-        this.prepareInterstitialAd(true);
       }
 
     }).catch(err => {

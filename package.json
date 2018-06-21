@@ -37,7 +37,6 @@
     "cordova-android": "6.3.0",
     "cordova-browser": "5.0.3",
     "cordova-plugin-admob-free": "^0.15.0",
-    "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-badge": "^0.8.7",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-device": "^1.1.7",
@@ -88,8 +87,7 @@
       },
       "cordova-plugin-fcm": {},
       "cordova-plugin-local-notification": {},
-      "cordova-plugin-network-information": {},
-      "cordova-plugin-android-permissions": {}
+      "cordova-plugin-network-information": {}
     },
     "platforms": [
       "browser",

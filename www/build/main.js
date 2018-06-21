@@ -113,7 +113,7 @@ var QuantityCalcPage = (function () {
                         _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["o" /* LAST_POINT_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["n" /* LAST_POINT_DESC */]);
                     }
                     // console.log("Storing new Points", this.points);
-                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["v" /* POINTS */], _this.points);
+                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["u" /* POINTS */], _this.points);
                     if (!_this.enable) {
                         _this.presentGetPoints(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["j" /* INSUF_POINTS_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["i" /* INSUF_POINTS_DESC */]);
                     }
@@ -122,7 +122,7 @@ var QuantityCalcPage = (function () {
             });
         }
         else {
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
         }
     };
     QuantityCalcPage.prototype.ionViewWillEnter = function () {
@@ -131,15 +131,15 @@ var QuantityCalcPage = (function () {
     };
     QuantityCalcPage.prototype.ionViewDidEnter = function () {
         if (this.api.rewardNotif) {
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["F" /* RATE_REWARD_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["E" /* RATE_REWARD_MSG */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
             this.api.rewardNotif = false;
         }
     };
     QuantityCalcPage.prototype.infoAlert = function () {
         var _this = this;
         var alert = this.alertCtrl.create({
-            title: __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["x" /* POINTS_MSG */],
-            message: __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["w" /* POINTS_DESC */],
+            title: __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["w" /* POINTS_MSG */],
+            message: __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["v" /* POINTS_DESC */],
             buttons: [
                 {
                     text: 'Got it!',
@@ -183,13 +183,13 @@ var QuantityCalcPage = (function () {
             this.apiUrls = this.api.apiUrls;
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["x" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
         }
     };
     QuantityCalcPage.prototype.populateView = function () {
@@ -328,7 +328,7 @@ var QuantityCalcPage = (function () {
     QuantityCalcPage.prototype.showAd = function () {
         var _this = this;
         // this.api.showVideoAd();
-        this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* SHOWING_ADS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+        this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* SHOWING_ADS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
         this.api.prepareVideoAd(true);
         this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(function (res) {
             _this.api.fetchService("points").then(function (points) {
@@ -337,7 +337,7 @@ var QuantityCalcPage = (function () {
                 if (_this.points > 0) {
                     _this.enable = true;
                     if (_this.reward) {
-                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */], 2000);
+                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["G" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */], 2000);
                         _this.reward = false;
                     }
                 }
@@ -345,13 +345,13 @@ var QuantityCalcPage = (function () {
         });
         this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(function (res) {
             console.log("Interstitial close - Quant page");
-            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["u" /* POINTS */]).then(function (points) {
                 console.log("Interstitial Ad Closed");
                 _this.points = points;
                 if (_this.points > 0) {
                     _this.enable = true;
                     if (_this.reward) {
-                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["H" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */], 2000);
+                        _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["G" /* REWARD_POINTS */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */], 2000);
                         _this.reward = false;
                     }
                 }
@@ -422,9 +422,9 @@ webpackEmptyAsyncContext.id = 161;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_api_data_api_data__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__coin_detail_coin_detail__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__ = __webpack_require__(313);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__ = __webpack_require__(315);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__ = __webpack_require__(314);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_takeWhile__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__ = __webpack_require__(216);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_observable_IntervalObservable__);
@@ -471,7 +471,7 @@ var HomePage = (function () {
                 _this.api.instructionToast(_this.pageName, 0);
             }
             else {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["t" /* NO_INTERNET */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
             }
         });
     };
@@ -517,13 +517,13 @@ var HomePage = (function () {
             this.apiUrls = this.api.apiUrls;
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["x" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["J" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["y" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_7__constants_api_constants__["I" /* TOP */]);
         }
     };
     HomePage.prototype.populateView = function () {
@@ -725,13 +725,13 @@ var CoinDetailPage = (function () {
         if (this.networkFlag) {
             this.populateView();
             setTimeout(function () {
-                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["y" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["J" /* TOP */]);
+                _this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["x" /* PRICE_REFRESH */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["I" /* TOP */]);
                 refresher.complete();
             }, 800);
         }
         else {
             refresher.complete();
-            this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["z" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["J" /* TOP */]);
+            this.api.showToast(__WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["y" /* PRICE_REFRESH_FAIL */], __WEBPACK_IMPORTED_MODULE_6__constants_api_constants__["I" /* TOP */]);
         }
     };
     CoinDetailPage.prototype.populateView = function () {
@@ -783,7 +783,7 @@ var CoinDetailPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_utilities_utilities__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_profit_calc__ = __webpack_require__(318);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_profit_calc__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_data_api_data__ = __webpack_require__(34);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -953,13 +953,13 @@ var NewsPage = (function () {
 
 /***/ }),
 
-/***/ 221:
+/***/ 220:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(221);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(241);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -967,43 +967,41 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 242:
+/***/ 241:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(282);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_coin_detail_coin_detail__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(319);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(320);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_buy_sell_buy_sell__ = __webpack_require__(318);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_favourites_favourites__ = __webpack_require__(319);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_reminders_reminders__ = __webpack_require__(320);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_profit_calc_profit_calc__ = __webpack_require__(217);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(201);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(204);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_api_data_api_data__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_common_http__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_quantity_calc_quantity_calc__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_news_news__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__providers_utilities_utilities__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_firebase_analytics__ = __webpack_require__(212);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_google_analytics__ = __webpack_require__(323);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_google_analytics__ = __webpack_require__(322);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_fcm__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__ = __webpack_require__(214);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_android_permissions__ = __webpack_require__(220);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -1078,8 +1076,7 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__["a" /* AdMobFree */],
                 __WEBPACK_IMPORTED_MODULE_21__ionic_native_admob_free__["b" /* AdMobFreeRewardVideo */],
                 __WEBPACK_IMPORTED_MODULE_22__ionic_native_fcm__["a" /* FCM */],
-                __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__["a" /* Network */],
-                __WEBPACK_IMPORTED_MODULE_24__ionic_native_android_permissions__["a" /* AndroidPermissions */]
+                __WEBPACK_IMPORTED_MODULE_23__ionic_native_network__["a" /* Network */]
             ]
         })
     ], AppModule);
@@ -1090,7 +1087,7 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 283:
+/***/ 282:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1106,7 +1103,6 @@ var AppModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_quantity_calc_quantity_calc__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__ = __webpack_require__(219);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_android_permissions__ = __webpack_require__(220);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1127,9 +1123,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var MyApp = (function () {
-    function MyApp(platform, statusBar, splashScreen, api, fcm, app, alertCtrl, androidPermissions) {
+    function MyApp(platform, statusBar, splashScreen, api, fcm, app, alertCtrl) {
         this.platform = platform;
         this.statusBar = statusBar;
         this.splashScreen = splashScreen;
@@ -1137,7 +1132,6 @@ var MyApp = (function () {
         this.fcm = fcm;
         this.app = app;
         this.alertCtrl = alertCtrl;
-        this.androidPermissions = androidPermissions;
         // rootPage: any = HomePage;
         this.tab1Root = __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */];
         this.tab2Root = __WEBPACK_IMPORTED_MODULE_8__pages_quantity_calc_quantity_calc__["a" /* QuantityCalcPage */];
@@ -1153,29 +1147,29 @@ var MyApp = (function () {
         var _this = this;
         // console.log("Ng oninit Called - app component");
         this.platform.ready().then(function () {
-            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["u" /* POINTS */]).then(function (points) {
                 // console.log("Points App component", points);
                 if (points == null) {
                     // console.log("Points is undefined ", points);
-                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["v" /* POINTS */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["d" /* DEFAULT_POINT */]);
+                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["u" /* POINTS */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["d" /* DEFAULT_POINT */]);
                 }
             });
-            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["A" /* RATED */]).then(function (rateFlag) {
+            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["z" /* RATED */]).then(function (rateFlag) {
                 // console.log("Rate Flag ", rateFlag);
                 if (rateFlag == null) {
                     _this.rateFlag = false;
-                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["A" /* RATED */], _this.rateFlag);
+                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["z" /* RATED */], _this.rateFlag);
                 }
                 else {
                     _this.rateFlag = rateFlag;
                 }
             });
-            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["G" /* RATE_USES_UNTIL */]).then(function (rateUsesLeft) {
+            _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["F" /* RATE_USES_UNTIL */]).then(function (rateUsesLeft) {
                 // console.log("USES UNTIL LEFT", rateUsesLeft);
                 if (rateUsesLeft == null) {
                     var defaultLeft = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["e" /* DEFAULT_USES_UNTIL */];
                     _this.usesUntilPrompt = defaultLeft;
-                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["G" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
+                    _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["F" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
                     // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
                 }
                 else {
@@ -1217,7 +1211,7 @@ var MyApp = (function () {
                         if (_this.usesUntilPrompt > 0) {
                             // console.log("Uses Until prompt ", this.usesUntilPrompt);
                             _this.usesUntilPrompt -= 1;
-                            _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["G" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
+                            _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["F" /* RATE_USES_UNTIL */], _this.usesUntilPrompt);
                             _this.platform.exitApp();
                         }
                         else if (_this.usesUntilPrompt == 0) {
@@ -1247,7 +1241,7 @@ var MyApp = (function () {
                     handler: function () {
                         // console.log('No dont like the App');
                         _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["f" /* DONT_LIKE */];
-                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["G" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["f" /* DONT_LIKE */]);
+                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["F" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["f" /* DONT_LIKE */]);
                         _this.platform.exitApp();
                     }
                 },
@@ -1265,15 +1259,15 @@ var MyApp = (function () {
     MyApp.prototype.rateDialog = function () {
         var _this = this;
         var alert = this.alertCtrl.create({
-            title: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["C" /* RATE_DIALOG_HEAD */],
-            message: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["B" /* RATE_DIALOG_DESC */],
+            title: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["B" /* RATE_DIALOG_HEAD */],
+            message: __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["A" /* RATE_DIALOG_DESC */],
             buttons: [
                 {
                     text: 'Later',
                     handler: function () {
                         // console.log('Remind Later clicked');
                         _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["p" /* LATER_LIKE */];
-                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["G" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["p" /* LATER_LIKE */]);
+                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["F" /* RATE_USES_UNTIL */], __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["p" /* LATER_LIKE */]);
                         _this.platform.exitApp();
                     }
                 },
@@ -1282,14 +1276,14 @@ var MyApp = (function () {
                     handler: function () {
                         // console.log('Rating and getting 5 points');
                         _this.api.rewardNotif = true;
-                        window.open(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_LINK */], '_system', 'location=yes');
-                        _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["E" /* RATE_REWARD */];
-                        _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+                        window.open(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["C" /* RATE_LINK */], '_system', 'location=yes');
+                        _this.usesUntilPrompt = __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_REWARD */];
+                        _this.api.fetchService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["u" /* POINTS */]).then(function (points) {
                             // console.log("Points", points);
-                            _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["v" /* POINTS */], points + __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["E" /* RATE_REWARD */]);
+                            _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["u" /* POINTS */], points + __WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["D" /* RATE_REWARD */]);
                         });
                         _this.rateFlag = true;
-                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["A" /* RATED */], _this.rateFlag);
+                        _this.api.storeService(__WEBPACK_IMPORTED_MODULE_9__constants_api_constants__["z" /* RATED */], _this.rateFlag);
                         // console.log("Rated Flag set", this.rateFlag);
                     }
                 }
@@ -1309,7 +1303,7 @@ var MyApp = (function () {
     MyApp = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/'<!-- <ion-menu [content]="content">\n\n  <ion-header>\n\n    <ion-toolbar>\n\n      <ion-title>Settings</ion-title>\n\n    </ion-toolbar>\n\n  </ion-header>\n\n  <ion-content>\n\n    <ion-list>\n\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n\n        {{p.title}}\n\n      </button>\n\n    </ion-list>\n\n  </ion-content>\n\n</ion-menu> -->\n\n\n\n<ion-content>\n\n  <ion-tabs>\n\n    <ion-tab [root]="tab1Root" tabTitle="Market View" tabIcon="logo-bitcoin"></ion-tab>\n\n    <ion-tab [root]="tab2Root" tabTitle="Quantity Calc" tabIcon="bookmark"></ion-tab>\n\n    <ion-tab [root]="tab4Root" tabTitle="Profit Calc" tabIcon="logo-usd"></ion-tab>\n\n  </ion-tabs>\n\n</ion-content>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n\n<!-- <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav> -->'/*ion-inline-end:"C:\Users\i342664\Documents\private\dev\coin-assist\src\app\app.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_6__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__["a" /* FCM */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */], __WEBPACK_IMPORTED_MODULE_11__ionic_native_android_permissions__["a" /* AndroidPermissions */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_6__providers_api_data_api_data__["a" /* ApiDataProvider */], __WEBPACK_IMPORTED_MODULE_10__ionic_native_fcm__["a" /* FCM */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]])
     ], MyApp);
     return MyApp;
 }());
@@ -1318,7 +1312,7 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 318:
+/***/ 317:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1341,7 +1335,7 @@ var ProfitCalc = (function () {
 
 /***/ }),
 
-/***/ 319:
+/***/ 318:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1376,7 +1370,7 @@ var BuySellPage = (function () {
 
 /***/ }),
 
-/***/ 320:
+/***/ 319:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1411,7 +1405,7 @@ var FavouritesPage = (function () {
 
 /***/ }),
 
-/***/ 321:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1453,19 +1447,19 @@ var RemindersPage = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiDataProvider; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(295);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(294);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__ = __webpack_require__(298);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_forkJoin__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(300);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__ = __webpack_require__(299);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_timer__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(308);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__ = __webpack_require__(307);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_add_observable_empty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(310);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__ = __webpack_require__(309);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_catch__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_coin_detail__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__utilities_utilities__ = __webpack_require__(55);
@@ -1595,14 +1589,13 @@ var ApiDataProvider = (function () {
     };
     ApiDataProvider.prototype.addGracePoints = function () {
         var _this = this;
-        this.showToast(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* NO_VIDEO_AD */], __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["J" /* TOP */]);
-        this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+        this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */]).then(function (points) {
             console.log("Fetch service old points before ", points);
             if (points <= 0) {
                 console.log("points less or equals 0 so adding grace points");
                 var newPoints = points;
                 newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["h" /* GRACE_POINTS */];
-                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
+                _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */], newPoints);
                 console.log("Added Grace Points", newPoints);
             }
         });
@@ -1657,10 +1650,10 @@ var ApiDataProvider = (function () {
                         console.log("Reward Video value return ", res);
                         console.log(res.rewardAmount);
                         var refillPoints = res.rewardAmount;
-                        _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+                        _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */]).then(function (points) {
                             var newPoints = points;
                             newPoints += refillPoints;
-                            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
+                            _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */], newPoints);
                             console.log("Earned New points", newPoints);
                         });
                         console.log("Successful view - reward", res);
@@ -1673,10 +1666,6 @@ var ApiDataProvider = (function () {
                     console.log("Unable to show Video Ad", err);
                     _this.prepareInterstitialAd(true);
                 });
-            }
-            else {
-                console.log("Video Ad not ready - Showing Interstitial Ads");
-                _this.prepareVideoAd(true);
             }
         }).catch(function (err) {
             console.log("Exception thrown - ready", err);
@@ -1734,23 +1723,19 @@ var ApiDataProvider = (function () {
             if (res) {
                 _this.admobFree.interstitial.show().then(function (res) {
                     console.log("Interstitial Ad show status ", res);
-                    _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */]).then(function (points) {
+                    _this.fetchService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */]).then(function (points) {
                         console.log("Fetch service old points before ", points);
                         var newPoints = points;
                         newPoints += __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["k" /* INTERSTITIAL_AD_REWARD */];
-                        _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["v" /* POINTS */], newPoints);
+                        _this.storeService(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["u" /* POINTS */], newPoints);
                         console.log("Earned New points (interstitial Ads) ", newPoints);
                     }).catch(function (err) {
                         console.log("Error Fetching old points ", err);
                     });
                 }).catch(function (err) {
-                    console.log("Error showing interstitial Ads - Adding grace points");
+                    console.log("Error showing interstitial Ads - Adding grace points ", err);
                     _this.addGracePoints();
                 });
-            }
-            else {
-                console.log("Interstitial Ad not ready, preparing and showing");
-                _this.prepareInterstitialAd(true);
             }
         }).catch(function (err) {
             console.log("Exception thrown Ready ", err);
@@ -1924,7 +1909,7 @@ var ApiDataProvider = (function () {
                 });
                 break;
             }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
                 {
                     this.zebpayData.lock = true;
                     // console.log("LOCK SET", this.zebpayData);
@@ -1951,10 +1936,10 @@ var ApiDataProvider = (function () {
             return Object(__WEBPACK_IMPORTED_MODULE_12_rxjs_observable_forkJoin__["forkJoin"])(coinRequests).map(function (res) {
                 // console.log(res);
                 // console.log("FETCHED - zebpay data", res);
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */], res);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */], res);
                 return res;
             }).catch(function (error) {
-                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]);
+                _this.updateRecentExchangeData(__WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]);
                 return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(_this.zebpayData);
             });
         }
@@ -1974,7 +1959,7 @@ var ApiDataProvider = (function () {
                     }
                     return this.getKoinexTemplate();
                 }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
                 {
                     if (data) {
                         return this.getZebpayData();
@@ -2307,7 +2292,7 @@ var ApiDataProvider = (function () {
                         // console.log("switch case koinex");
                         return this.koinexProcessor(exchangeData, coinMarketCapData, coinDeskData);
                     }
-                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
+                case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
                     {
                         // console.log("switch case zebpay");
                         return this.zebpayProcessor(exchangeData, coinMarketCapData, coinDeskData);
@@ -2336,7 +2321,7 @@ var ApiDataProvider = (function () {
                     // console.log("SET - koinex exchange data", this.koinexData);
                     break;
                 }
-            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["L" /* ZEBPAY */]:
+            case __WEBPACK_IMPORTED_MODULE_5__constants_api_constants__["K" /* ZEBPAY */]:
                 {
                     // console.log("SET - zebpay exchange data");
                     this.zebpayData = exchangeData;
@@ -2363,7 +2348,7 @@ var ApiDataProvider = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return KOINEX_DATA; });
 /* unused harmony export COIN_LIST_TEMPLATE */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BTC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "K", function() { return XRP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return XRP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return ETH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return LTC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return BCH; });
@@ -2379,21 +2364,21 @@ var ApiDataProvider = (function () {
 /* unused harmony export KNC */
 /* unused harmony export NANO */
 /* unused harmony export XLM */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return PRICE_REFRESH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return PRICE_REFRESH_FAIL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return REWARD_POINTS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return TOP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return PRICE_REFRESH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return PRICE_REFRESH_FAIL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "G", function() { return REWARD_POINTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return TOP; });
 /* unused harmony export BOTTOM */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return INSUF_POINTS_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return INSUF_POINTS_DESC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return LAST_POINT_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return LAST_POINT_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return POINTS_MSG; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return POINTS_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return NO_VIDEO_AD; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "L", function() { return ZEBPAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return POINTS_MSG; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "v", function() { return POINTS_DESC; });
+/* unused harmony export NO_VIDEO_AD */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "K", function() { return ZEBPAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return KOINEX; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "v", function() { return POINTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return POINTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return DEFAULT_POINT; });
 /* unused harmony export LIGHT */
 /* unused harmony export DARK */
@@ -2402,20 +2387,20 @@ var ApiDataProvider = (function () {
 /* unused harmony export ALL */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return LIKE_DIALOG_HEAD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "q", function() { return LIKE_DIALOG_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "C", function() { return RATE_DIALOG_HEAD; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "B", function() { return RATE_DIALOG_DESC; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "G", function() { return RATE_USES_UNTIL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "F", function() { return RATE_REWARD_MSG; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "B", function() { return RATE_DIALOG_HEAD; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return RATE_DIALOG_DESC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "F", function() { return RATE_USES_UNTIL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "E", function() { return RATE_REWARD_MSG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return DEFAULT_USES_UNTIL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "D", function() { return RATE_LINK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "C", function() { return RATE_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return DONT_LIKE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return LATER_LIKE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "E", function() { return RATE_REWARD; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "D", function() { return RATE_REWARD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return GRACE_POINTS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return RATED; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return RATED; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return INTERSTITIAL_AD_REWARD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return NO_INTERNET; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return SHOWING_ADS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return SHOWING_ADS; });
 //Payloads
 var API_URL = { "exchange": { "Koinex": { "api": "https://koinex.in/api/ticker", "fees": { "buy": "0.0025", "sell": "0.002" }, "referral": "https://koinex.in/?ref=a2fae6", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "omg", "req", "zrx", "gnt", "bat", "ae", "trx", "xlm", "neo", "gas", "aion", "ncash", "xrb", "eos", "ont", "zil", "iost", "zco", "poly", "elf"] }, "Zebpay": { "api": "https://www.zebapi.com/api/v1/market/ticker-new/", "fees": { "buy": "0.0059", "sell": "0.0059" }, "referral": "http://link.zebpay.com/ref/REF97131420", "coinList": ["btc", "ltc", "xrp", "bch", "eth", "eos", "omg", "trx", "gnt", "zrx", "rep", "bat", "ven", "ae"] } }, "global": { "coindesk": { "api": "https://api.coindesk.com/v1/bpi/currentprice/inr.json" }, "coinmarketcap": { "api": "https://api.coinmarketcap.com/v1/ticker/COINNAME/?convert=INR" } }, "coins": { "BTC": { "name": "Bitcoin", "imageUrl": "https://i.imgur.com/PRysm7E.png" }, "XRP": { "name": "Ripple", "imageUrl": "https://i.imgur.com/jzCyWct.png" }, "ETH": { "name": "Ethereum", "imageUrl": "https://i.imgur.com/gmGSzVJ.png" }, "LTC": { "name": "Litecoin", "imageUrl": "https://i.imgur.com/Ov9h1ZT.png" }, "BCH": { "name": "Bitcoin Cash", "imageUrl": "https://i.imgur.com/gUtu5Eo.png" }, "OMG": { "name": "OmiseGo", "imageUrl": "https://i.imgur.com/p0Phr0Y.png" }, "REQ": { "name": "Request Network", "imageUrl": "https://i.imgur.com/6909idR.png" }, "ZRX": { "name": "0x", "imageUrl": "https://i.imgur.com/ESIyWUE.png" }, "GNT": { "name": "Golem", "imageUrl": "https://i.imgur.com/5ryFDz5.png" }, "BAT": { "name": "Basic Attention Token", "imageUrl": "https://i.imgur.com/c5ADvNs.png" }, "AE": { "name": "Aeternity", "imageUrl": "https://i.imgur.com/Hn4v2q1.png" }, "TRX": { "name": "Tron", "imageUrl": "https://i.imgur.com/A39UF1i.png" }, "MIOTA": { "name": "IOTA", "imageUrl": "https://i.imgur.com/u5slvez.png" }, "EOS": { "name": "Eos", "imageUrl": "https://i.imgur.com/8MPSsON.png" }, "KNC": { "name": "Kyber Network", "imageUrl": "https://i.imgur.com/hn2onbS.png" }, "XRB": { "name": "Nano", "imageUrl": "https://i.imgur.com/tp5wt6g.png" }, "XLM": { "name": "Stellar", "imageUrl": "https://i.imgur.com/7sbDVmq.png" }, "GAS": { "name": "Gas", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "NEO": { "name": "Neo", "imageUrl": "https://i.imgur.com/KuKbCfk.png" }, "AION": { "name": "Aion", "imageUrl": "https://i.imgur.com/7BPKN5h.png" }, "NCASH": { "name": "Nucleus Vision", "imageUrl": "https://i.imgur.com/BNMkOVY.jpg" }, "ONT": { "name": "Ontology", "imageUrl": "https://i.imgur.com/sAmdk8w.png" }, "ZIL": { "name": "Zilliqa", "imageUrl": "https://i.imgur.com/wMERZVq.png" }, "IOST": { "name": "IosToken", "imageUrl": "https://i.imgur.com/39N3aWl.png" }, "ZCO": { "name": "Zebi", "imageUrl": "https://i.imgur.com/fRgfUci.png" }, "POLY": { "name": "Polymath network", "imageUrl": "https://i.imgur.com/65T4QnL.png" }, "ELF": { "name": "Aelf", "imageUrl": "https://i.imgur.com/1ZLtWEM.png" }, "REP": { "name": "augur", "imageUrl": "https://i.imgur.com/l5OcnMf.png" }, "VEN": { "name": "vechain", "imageUrl": "https://i.imgur.com/6Iq92BR.png" } }, "version": "1.0.0" };
 var KOINEX_DATA = { "prices": { "BTC": "660000.0", "ETH": "49550.0", "XRP": "55.32", "BCH": "75700.0", "LTC": "12845.99", "MIOTA": 91.07, "TRX": "2.63", "OMG": "976.0", "AE": "126.5", "ZRX": "46.12", "BAT": "18.9", "GNT": "21.53", "REQ": "14.74", "XLM": "20.68" }, "stats": { "ETH": { "last_traded_price": 49550.0, "lowest_ask": "49800.0", "highest_bid": "49550.0", "min_24hrs": "48800.0", "max_24hrs": "50300.0", "vol_24hrs": 310 }, "BTC": { "last_traded_price": 660000.0, "lowest_ask": "660000.0", "highest_bid": "658050.0", "min_24hrs": "620000.0", "max_24hrs": "660000.0", "vol_24hrs": 88 }, "LTC": { "last_traded_price": 12845.99, "lowest_ask": "12849.0", "highest_bid": "12820.0", "min_24hrs": "12650.0", "max_24hrs": "13150.0", "vol_24hrs": 1208 }, "XRP": { "last_traded_price": 55.32, "lowest_ask": "55.4", "highest_bid": "55.32", "min_24hrs": "54.56", "max_24hrs": "56.61", "vol_24hrs": 815919 }, "BCH": { "last_traded_price": 75700.0, "lowest_ask": "75800.0", "highest_bid": "75600.0", "min_24hrs": "72002.0", "max_24hrs": "77500.0", "vol_24hrs": 118 }, "OMG": { "last_traded_price": 976.0, "lowest_ask": "984.99", "highest_bid": "976.0", "min_24hrs": "960.0", "max_24hrs": "1010.0", "vol_24hrs": 5790 }, "REQ": { "last_traded_price": 14.74, "lowest_ask": "14.74", "highest_bid": "14.72", "min_24hrs": "14.26", "max_24hrs": "15.06", "vol_24hrs": 443076 }, "ZRX": { "last_traded_price": 46.12, "lowest_ask": "46.3", "highest_bid": "46.2", "min_24hrs": "44.2", "max_24hrs": "47.98", "vol_24hrs": 67665 }, "GNT": { "last_traded_price": 21.53, "lowest_ask": "21.98", "highest_bid": "21.58", "min_24hrs": "21.03", "max_24hrs": "22.24", "vol_24hrs": 81813 }, "BAT": { "last_traded_price": 18.9, "lowest_ask": "19.0", "highest_bid": "18.9", "min_24hrs": "18.6", "max_24hrs": "19.34", "vol_24hrs": 64093 }, "AE": { "last_traded_price": 126.5, "lowest_ask": "126.5", "highest_bid": "125.03", "min_24hrs": "125.0", "max_24hrs": "131.0", "vol_24hrs": 2566 }, "TRX": { "last_traded_price": 2.63, "lowest_ask": "2.63", "highest_bid": "2.62", "min_24hrs": "2.52", "max_24hrs": "2.69", "vol_24hrs": 9286780 }, "XLM": { "last_traded_price": 20.68, "lowest_ask": "20.69", "highest_bid": "20.6", "min_24hrs": "20.11", "max_24hrs": "20.68", "vol_24hrs": 242816 } } };
@@ -2456,7 +2441,7 @@ var NO_VIDEO_AD = "Video Ad unavailable, Showing Image AD.";
 var ZEBPAY = "Zebpay";
 var KOINEX = "Koinex";
 var POINTS = "points";
-var DEFAULT_POINT = 15;
+var DEFAULT_POINT = 1;
 //Generic
 var LIGHT = "light";
 var DARK = "dark";
@@ -2517,7 +2502,7 @@ var Utilities = (function () {
                 {
                     return trimmedQty = +quantity.toFixed(3);
                 }
-            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["K" /* XRP */]:
+            case __WEBPACK_IMPORTED_MODULE_1__constants_api_constants__["J" /* XRP */]:
                 {
                     return trimmedQty = +quantity.toFixed(0);
                 }
@@ -2573,5 +2558,5 @@ var Utilities = (function () {
 
 /***/ })
 
-},[221]);
+},[220]);
 //# sourceMappingURL=main.js.map

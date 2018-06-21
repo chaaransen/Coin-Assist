@@ -46,7 +46,7 @@ export const ZEBPAY: string = "Zebpay";
 export const KOINEX: string = "Koinex";
 
 export const POINTS: string = "points";
-export const DEFAULT_POINT: number = 15;
+export const DEFAULT_POINT: number = 1;
 
 //Generic
 export const LIGHT: string = "light";
