@@ -39,7 +39,7 @@ export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
 export const POINTS_MSG: string = "Info:";
 export const POINTS_DESC: string = "You can refill the 'Uses left' by clicking 'Refill Use' and  watch a Video Ad";
 
-export const NO_VIDEO_AD: string = "Try Later - Video Ad not available";
+export const NO_VIDEO_AD: string = "Video Ad unavailable";
 
 //Exchanges
 export const ZEBPAY: string = "Zebpay";
