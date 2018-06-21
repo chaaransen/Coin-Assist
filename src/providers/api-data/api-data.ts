@@ -283,8 +283,8 @@ export class ApiDataProvider {
           this.addGracePoints();
         });
       } else {
-        console.log("Interstitial Ad not ready adding Grace points");
-        this.addGracePoints();
+        console.log("Interstitial Ad not ready, preparing and showing");
+        this.prepareInterstitialAd(true);
       }
 
     }).catch(err => {
