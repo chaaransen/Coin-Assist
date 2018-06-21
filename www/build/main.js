@@ -1191,14 +1191,6 @@ var MyApp = (function () {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // console.log("Platform ready");
-            _this.androidPermissions.requestPermissions([_this.androidPermissions.PERMISSION.INTERNET,
-                _this.androidPermissions.PERMISSION.WAKE_LOCK,
-                _this.androidPermissions.PERMISSION.ACCESS_WIFI_STATE,
-                _this.androidPermissions.PERMISSION.CHANGE_WIFI_STATE,
-                _this.androidPermissions.PERMISSION.ACCESS_NETWORK_STATE,
-                _this.androidPermissions.PERMISSION.CHANGE_NETWORK_STATE,
-                _this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
-                _this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]);
             _this.api.prepareVideoAd();
             _this.statusBar.overlaysWebView(true);
             _this.statusBar.styleBlackOpaque();
@@ -1540,8 +1532,6 @@ var ApiDataProvider = (function () {
         this.coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
         this.koinexTest = false;
         this.rewardNotif = false;
-        this.retryLockFlagInterstitial = false;
-        this.retryLockFlagVideo = false;
     }
     ApiDataProvider.prototype.ngOnInit = function () {
     };
@@ -1759,8 +1749,8 @@ var ApiDataProvider = (function () {
                 });
             }
             else {
-                console.log("Interstitial Ad not ready adding Grace points");
-                _this.addGracePoints();
+                console.log("Interstitial Ad not ready, preparing and showing");
+                _this.prepareInterstitialAd(true);
             }
         }).catch(function (err) {
             console.log("Exception thrown Ready ", err);

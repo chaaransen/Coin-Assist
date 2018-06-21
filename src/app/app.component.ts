@@ -9,7 +9,6 @@ import { NewsPage } from '../pages/news/news';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import * as Constants from '../constants/api-constants';
 import { FCM } from '@ionic-native/fcm';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 @Component({
   templateUrl: 'app.html'
@@ -27,7 +26,7 @@ export class MyApp {
   usesUntilPrompt: number;
   rateFlag: boolean;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController, private androidPermissions: AndroidPermissions) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController) {
     this.initializeApp();
     // used for an example of ngFor and navigation
     this.pages = [
@@ -79,15 +78,6 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       // console.log("Platform ready");
-
-      this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.INTERNET,
-      this.androidPermissions.PERMISSION.WAKE_LOCK,
-      this.androidPermissions.PERMISSION.ACCESS_WIFI_STATE,
-      this.androidPermissions.PERMISSION.CHANGE_WIFI_STATE,
-      this.androidPermissions.PERMISSION.ACCESS_NETWORK_STATE,
-      this.androidPermissions.PERMISSION.CHANGE_NETWORK_STATE,
-      this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
-      this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE]);
 
       this.api.prepareVideoAd();
       this.statusBar.overlaysWebView(true);

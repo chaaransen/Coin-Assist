@@ -22,7 +22,6 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
 import { FCM } from '@ionic-native/fcm';
 import { Network } from '@ionic-native/network';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 @NgModule({
   declarations: [
@@ -71,8 +70,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     AdMobFree,
     AdMobFreeRewardVideo,
     FCM,
-    Network,
-    AndroidPermissions
+    Network
   ]
 })
 export class AppModule { }
