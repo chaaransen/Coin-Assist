@@ -36,8 +36,8 @@ export const INSUF_POINTS_DESC: string = "Get Use Points by watching Video Ad";
 export const LAST_POINT_MSG: string = "1 Use Point remaining!";
 export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
 
-export const POINTS_MSG: string = "Info:";
-export const POINTS_DESC: string = "You can refill the 'Uses left' by clicking 'Refill Use' and  watch a Video Ad";
+export const POINTS_MSG: string = "Info - Refill Uses:";
+export const POINTS_DESC: string = "Continue using by tapping 'Refill Points' button and watching an Video AD";
 
 export const NO_VIDEO_AD: string = "Video Ad unavailable, Showing Image AD.";
 
@@ -46,7 +46,7 @@ export const ZEBPAY: string = "Zebpay";
 export const KOINEX: string = "Koinex";
 
 export const POINTS: string = "points";
-export const DEFAULT_POINT: number = 1;
+export const DEFAULT_POINT: number = 15;
 
 //Generic
 export const LIGHT: string = "light";
