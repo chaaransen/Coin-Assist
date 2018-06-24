@@ -56,6 +56,13 @@ export class CoinDetailPage {
     }
   }
 
+  swipe(event) {
+    if (event.direction === 2) {
+      this.navCtrl.parent.select(1);
+    }
+  }
+
+
   ionViewDidLeave() {
 
     this.alive = false;

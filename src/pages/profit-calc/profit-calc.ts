@@ -22,6 +22,12 @@ export class ProfitCalcPage {
     this.api.logAnalytics(this.pageName);
   }
 
+  swipe(event) {
+    if (event.direction === 4) {
+      this.navCtrl.parent.select(1);
+    }
+  }
+
   public checkRequiredFields() {
     // console.log("Check Required fields", this.quantity.no.no, this.amount);
 

@@ -17,11 +17,10 @@ import { RateStatus } from '../models/api-urls';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  // rootPage: any = HomePage;
   tab1Root = HomePage;
   tab2Root = QuantityCalcPage;
-  tab4Root = ProfitCalcPage;
-  tab5Root = NewsPage;
+  tab3Root = ProfitCalcPage;
+  tab4Root = NewsPage;
   apiUrls: any;
   pages: Array<{ title: string, component: any }>;
   usesUntilPrompt: number;
@@ -31,7 +30,7 @@ export class MyApp {
     this.initializeApp();
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage }
+      { title: 'Home', component: HomePage }, { title: 'Quantity Calc', component: QuantityCalcPage }, { title: 'Profit Calc', component: ProfitCalcPage }
     ];
   }
 
@@ -86,6 +85,7 @@ export class MyApp {
       // console.log("Platform ready");
 
       this.api.prepareVideoAd();
+      this.splashScreen.hide();
       this.statusBar.overlaysWebView(true);
       this.statusBar.styleBlackOpaque();
       this.statusBar.show();
