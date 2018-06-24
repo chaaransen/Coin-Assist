@@ -121,13 +121,13 @@ export class ApiDataProvider {
 
   addGracePoints() {
     this.fetchService(Constants.POINTS).then(points => {
-      console.log("Fetch service old points before ", points);
+      // console.log("Fetch service old points before ", points);
       if (points <= 0) {
-        console.log("points less or equals 0 so adding grace points");
+        // console.log("points less or equals 0 so adding grace points");
         let newPoints: number = points;
         newPoints += Constants.GRACE_POINTS;
         this.storeService(Constants.POINTS, newPoints);
-        console.log("Added Grace Points", newPoints);
+        // console.log("Added Grace Points", newPoints);
       }
     });
   }
@@ -139,16 +139,16 @@ export class ApiDataProvider {
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
-          console.log("Video Ad Already Ready - calling Show!");
+          // console.log("Video Ad Already Ready - calling Show!");
           // console.log("prepared Video ad - ready response", res);
           this.showVideoAd();
           show = false;
         }
       } else {
-        console.log("AD not ready - Preparing...");
+        // console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
-          console.log("Reward Video Prepared", res);
+          // console.log("Reward Video Prepared", res);
           if (show) {
             this.showVideoAd();
             show = false;
@@ -161,7 +161,7 @@ export class ApiDataProvider {
           }
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
-          console.log("AD failed to Load - new", res);
+          // console.log("AD failed to Load - new", res);
           if (show) {
             this.prepareInterstitialAd(true);
             show = false;
@@ -169,7 +169,7 @@ export class ApiDataProvider {
         });
 
         this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
-          console.log("AD loadded - new", res);
+          // console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
             show = false;
@@ -184,35 +184,35 @@ export class ApiDataProvider {
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         this.admobFree.rewardVideo.show().then(res => {
-          console.log("Video Ad is Showing", res);
+          // console.log("Video Ad is Showing", res);
 
           this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-            console.log("Reward Video value return ", res);
-            console.log(res.rewardAmount);
+            // console.log("Reward Video value return ", res);
+            // console.log(res.rewardAmount);
             var refillPoints = res.rewardAmount;
             this.fetchService(Constants.POINTS).then(points => {
 
               let newPoints: number = points;
               newPoints += refillPoints;
               this.storeService(Constants.POINTS, newPoints);
-              console.log("Earned New points", newPoints);
+              // console.log("Earned New points", newPoints);
             });
-            console.log("Successful view - reward", res);
+            // console.log("Successful view - reward", res);
 
           });
 
           this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
             this.prepareVideoAd();
-            console.log("AD closed", res);
+            // console.log("AD closed", res);
           });
 
         }).catch(err => {
-          console.log("Unable to show Video Ad", err);
+          // console.log("Unable to show Video Ad", err);
           this.prepareInterstitialAd(true);
         });
       }
     }).catch(err => {
-      console.log("Exception thrown - ready", err);
+      // console.log("Exception thrown - ready", err);
       this.prepareInterstitialAd(true);
     });
 
@@ -225,18 +225,18 @@ export class ApiDataProvider {
 
     this.admobFree.interstitial.config(interstitialConfig);
     this.admobFree.interstitial.isReady().then(res => {
-      console.log("Interstitial Ready status", res);
+      // console.log("Interstitial Ready status", res);
 
       if (res) {
         if (show) {
-          console.log("Interstitial Ad Already Ready - calling Show!");
+          // console.log("Interstitial Ad Already Ready - calling Show!");
           this.showInterstitialAd();
           show = false;
         }
       } else {
-        console.log("Interstitial AD not ready - Preparing...");
+        // console.log("Interstitial AD not ready - Preparing...");
         this.admobFree.interstitial.prepare().then(res => {
-          console.log("interstitial Ad Prepared", res);
+          // console.log("interstitial Ad Prepared", res);
           if (show) {
             this.showInterstitialAd();
             show = false;
@@ -244,24 +244,24 @@ export class ApiDataProvider {
         }).catch(err => {
           this.addGracePoints();
           console.log("Unable to prepare interstitial Ad", err);
-          console.log("Giving 1 free point showing toast try later no ADs");
+          // console.log("Giving 1 free point showing toast try later no ADs");
         });
 
         this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
-          console.log("Interstitial AD failed to Load - new ", res);
+          // console.log("Interstitial AD failed to Load - new ", res);
           if (show) {
             this.addGracePoints();
             show = false;
-            console.log("Unable to prepare interstitial Ad ", res);
-            console.log("Giving 1 free point showing toast try later no ADs");
+            // console.log("Unable to prepare interstitial Ad ", res);
+            // console.log("Giving 1 free point showing toast try later no ADs");
           }
         });
 
         this.admobFree.on("admob.interstitial.events.LOAD").subscribe(res => {
-          console.log("Interstitial AD loaded - new ", res);
-          console.log("Interstitial show value Outside ", show);
+          // console.log("Interstitial AD loaded - new ", res);
+          // console.log("Interstitial show value Outside ", show);
           if (show) {
-            console.log("Interstitial show value ", show);
+            // console.log("Interstitial show value ", show);
             this.showInterstitialAd();
             show = false;
           }
@@ -271,20 +271,20 @@ export class ApiDataProvider {
   }
 
   showInterstitialAd() {
-    console.log("Showing interstitial");
+    // console.log("Showing interstitial");
     this.admobFree.interstitial.isReady().then(res => {
-      console.log("Interstitial ready status ", res);
+      // console.log("Interstitial ready status ", res);
 
       if (res) {
         this.admobFree.interstitial.show().then(res => {
-          console.log("Interstitial Ad show status ", res);
+          // console.log("Interstitial Ad show status ", res);
           this.fetchService(Constants.POINTS).then(points => {
-            console.log("Fetch service old points before ", points);
+            // console.log("Fetch service old points before ", points);
 
             let newPoints: number = points;
             newPoints += Constants.INTERSTITIAL_AD_REWARD;
             this.storeService(Constants.POINTS, newPoints);
-            console.log("Earned New points (interstitial Ads) ", newPoints);
+            // console.log("Earned New points (interstitial Ads) ", newPoints);
           }).catch(err => {
             console.log("Error Fetching old points ", err);
           });
