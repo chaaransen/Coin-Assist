@@ -50,7 +50,7 @@ export class QuantityCalcPage {
     if (this.networkFlag) {
 
       this.platform.resume.subscribe(() => {
-        console.log("QTY resume");
+        // console.log("QTY resume");
 
         this.fetchPoints();
       });
@@ -122,13 +122,13 @@ export class QuantityCalcPage {
 
   fetchPoints() {
     this.api.fetchService("points").then(points => {
-      console.log("QTY fetch and update points", points);
+      // console.log("QTY fetch and update points", points);
       this.points = points;
     });
   }
 
   ionViewWillEnter() {
-    console.log("QTY view will enter");
+    // console.log("QTY view will enter");
     this.networkFlag = this.api.networkFlag;
     this.fetchPoints();
   }
@@ -367,11 +367,11 @@ export class QuantityCalcPage {
     });
 
     this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(res => {
-      console.log("Interstitial close - Quant page");
+      // console.log("Interstitial close - Quant page");
 
       this.api.fetchService(Constants.POINTS).then(points => {
 
-        console.log("Interstitial Ad Closed");
+        // console.log("Interstitial Ad Closed");
 
         this.points = points;
         if (this.points > 0) {
@@ -385,12 +385,12 @@ export class QuantityCalcPage {
     });
 
     this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
-      console.log("Interstitial open - Quant page");
+      // console.log("Interstitial open - Quant page");
       this.reward = true;
     });
 
     this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-      console.log("Quant Reward Called");
+      // console.log("Quant Reward Called");
 
       this.reward = true;
     });

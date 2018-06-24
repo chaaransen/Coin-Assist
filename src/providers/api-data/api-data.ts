@@ -133,13 +133,16 @@ export class ApiDataProvider {
   }
 
   prepareVideoAd(show: boolean = false) {
+    // console.log("show value ", show);
+
     this.admobFree.rewardVideo.config(videoConfig);
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
           console.log("Video Ad Already Ready - calling Show!");
-          console.log("prepared Video ad - ready response", res);
+          // console.log("prepared Video ad - ready response", res);
           this.showVideoAd();
+          show = false;
         }
       } else {
         console.log("AD not ready - Preparing...");
@@ -148,17 +151,20 @@ export class ApiDataProvider {
           console.log("Reward Video Prepared", res);
           if (show) {
             this.showVideoAd();
+            show = false;
           }
         }).catch(err => {
           console.log("Unable to prepare", err);
           if (show) {
             this.prepareInterstitialAd(true);
+            show = false;
           }
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
           console.log("AD failed to Load - new", res);
           if (show) {
             this.prepareInterstitialAd(true);
+            show = false;
           }
         });
 
@@ -166,6 +172,7 @@ export class ApiDataProvider {
           console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
+            show = false;
           }
         });
 
@@ -214,6 +221,8 @@ export class ApiDataProvider {
 
 
   prepareInterstitialAd(show: boolean = false) {
+    // console.log("show value - interstitial ", show);
+
     this.admobFree.interstitial.config(interstitialConfig);
     this.admobFree.interstitial.isReady().then(res => {
       console.log("Interstitial Ready status", res);
@@ -222,6 +231,7 @@ export class ApiDataProvider {
         if (show) {
           console.log("Interstitial Ad Already Ready - calling Show!");
           this.showInterstitialAd();
+          show = false;
         }
       } else {
         console.log("Interstitial AD not ready - Preparing...");
@@ -229,6 +239,7 @@ export class ApiDataProvider {
           console.log("interstitial Ad Prepared", res);
           if (show) {
             this.showInterstitialAd();
+            show = false;
           }
         }).catch(err => {
           this.addGracePoints();
@@ -240,6 +251,7 @@ export class ApiDataProvider {
           console.log("Interstitial AD failed to Load - new ", res);
           if (show) {
             this.addGracePoints();
+            show = false;
             console.log("Unable to prepare interstitial Ad ", res);
             console.log("Giving 1 free point showing toast try later no ADs");
           }
@@ -251,6 +263,7 @@ export class ApiDataProvider {
           if (show) {
             console.log("Interstitial show value ", show);
             this.showInterstitialAd();
+            show = false;
           }
         });
       }

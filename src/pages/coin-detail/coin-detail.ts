@@ -129,7 +129,7 @@ export class CoinDetailPage {
       // console.log("coin array detail", coinArray);
       this.coinDetail = coinArray[0];
       this.initRange(this.coinDetail);
-      // console.log(this.coinDetail, "coinDetail Processed Detail");
+      console.log(this.coinDetail, "coinDetail Processed Detail");
     },
       err => {
         console.log(err);
