@@ -3,3 +3,8 @@ export class ApiUrls {
     global: any;
     version: any;
 }
+
+export class RateStatus {
+    rated: boolean;
+    notify: boolean;
+}

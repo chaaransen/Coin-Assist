@@ -41,6 +41,7 @@ export class ApiDataProvider {
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
   rewardNotif: boolean = false;
+  rateNotif: boolean = false;
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
@@ -325,10 +326,10 @@ export class ApiDataProvider {
       if (lock != true) {
         let toast = this.toastCtrl.create({
           message: 'Pull down to refresh',
-          position: 'bottom',
+          position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'Ok'
+          closeButtonText: 'OK'
         });
         toast.onDidDismiss(() => {
           this.storeService(page, true);

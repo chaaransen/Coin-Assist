@@ -61,7 +61,7 @@ export const LIKE_DIALOG_DESC: string = "Do you Like the App?";
 export const RATE_DIALOG_HEAD: string = "Rate & Get 5 Refill Points!";
 export const RATE_DIALOG_DESC: string = "Give us a 5 start rating if you like the app! :)";
 export const RATE_USES_UNTIL: string = "rateUsesLeft";
-export const RATE_REWARD_MSG: string = "5 Reward Points added for Rating!";
+export const RATE_REWARD_MSG: string = "Thank you for your Support! Reward Points added";
 export const DEFAULT_USES_UNTIL: number = 15;
 export const RATE_LINK: string = "market://details?id=in.extendsapk.coinassist";
 export const DONT_LIKE: number = 10;

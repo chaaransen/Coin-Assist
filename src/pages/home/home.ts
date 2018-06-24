@@ -5,8 +5,8 @@ import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Network } from '@ionic-native/network';
 import * as Constants from '../../constants/api-constants'
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 @Component({
   selector: 'page-home',
@@ -23,7 +23,7 @@ export class HomePage {
   networkFlag: boolean = true;
   firstEntryFlag: boolean = true;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform, private splashScreen: SplashScreen) {
     // console.log("Constructor - Home page");
     this.alive = true;
   }
@@ -41,11 +41,20 @@ export class HomePage {
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);
+        if (this.api.rateNotif == true) {
+          this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
+        }
+
+        this.platform.ready().then(() => {
+          this.splashScreen.hide();
+        });
       } else {
         this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
       }
     });
   }
+
+
 
   setApiUrl() {
     // console.log("Setting api urls");
@@ -79,6 +88,8 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
+    console.log("ion view will enter");
+
     this.alive = true;
     this.networkFlag = this.api.networkFlag;
     if (!this.firstEntryFlag && this.networkFlag && this.apiUrls == undefined) {

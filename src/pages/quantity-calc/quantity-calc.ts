@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Platform } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { CoinDetail } from '../../models/coin-detail';
 import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants'
+import { RateStatus } from '../../models/api-urls';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -33,7 +34,7 @@ export class QuantityCalcPage {
   enable: boolean;
   networkFlag: boolean = true;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController, private platform: Platform) {
     // console.log("1 qty constructor called");
     this.selExchange = this.navParam.get("exchange");
     this.selCoin.coinName = this.navParam.get("coin");
@@ -47,6 +48,12 @@ export class QuantityCalcPage {
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
+
+      this.platform.resume.subscribe(() => {
+        console.log("QTY resume");
+
+        this.fetchPoints();
+      });
 
       this.api.getApiUrl().then(apiUrl => {
         // console.log("Response API url ", apiUrl);
@@ -113,15 +120,17 @@ export class QuantityCalcPage {
     }
   }
 
-  ionViewWillEnter() {
-    this.networkFlag = this.api.networkFlag;
-    // console.log("Home page -View Entered", this.alive);
+  fetchPoints() {
+    this.api.fetchService("points").then(points => {
+      console.log("QTY fetch and update points", points);
+      this.points = points;
+    });
   }
-  ionViewDidEnter() {
-    if (this.api.rewardNotif) {
-      this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
-      this.api.rewardNotif = false;
-    }
+
+  ionViewWillEnter() {
+    console.log("QTY view will enter");
+    this.networkFlag = this.api.networkFlag;
+    this.fetchPoints();
   }
 
   infoAlert() {

@@ -9,6 +9,7 @@ import { NewsPage } from '../pages/news/news';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import * as Constants from '../constants/api-constants';
 import { FCM } from '@ionic-native/fcm';
+import { RateStatus } from '../models/api-urls';
 
 @Component({
   templateUrl: 'app.html'
@@ -45,13 +46,18 @@ export class MyApp {
         }
       });
 
-      this.api.fetchService(Constants.RATED).then(rateFlag => {
+      this.api.fetchService(Constants.RATED).then(rateRes => {
         // console.log("Rate Flag ", rateFlag);
-        if (rateFlag == null) {
+        if (rateRes == null) {
           this.rateFlag = false;
-          this.api.storeService(Constants.RATED, this.rateFlag);
+
+          let rateStatus = new RateStatus();
+          rateStatus.rated = this.rateFlag;
+          rateStatus.notify = this.api.rateNotif;
+          this.api.storeService(Constants.RATED, rateStatus);
         } else {
-          this.rateFlag = rateFlag;
+          this.api.rateNotif = rateRes.notify;
+          this.rateFlag = rateRes.rated;
         }
 
       });
@@ -83,7 +89,7 @@ export class MyApp {
       this.statusBar.overlaysWebView(true);
       this.statusBar.styleBlackOpaque();
       this.statusBar.show();
-      this.splashScreen.hide()
+      // this.splashScreen.hide()
       this.fcm.onNotification().subscribe(data => {
         if (data.wasTapped) {
           console.log(data);
@@ -91,6 +97,18 @@ export class MyApp {
         } else {
           console.log(data);
         };
+      });
+
+      this.platform.resume.subscribe(() => {
+        if (this.api.rewardNotif) {
+          this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP, 3000);
+          this.api.rewardNotif = false;
+          let rateStatus = new RateStatus();
+          rateStatus.rated = true;
+          rateStatus.notify = this.api.rateNotif;
+          this.api.storeService(Constants.RATED, rateStatus);
+        }
+
       });
 
       this.platform.registerBackButtonAction(() => {
@@ -172,13 +190,17 @@ export class MyApp {
             // console.log('Rating and getting 5 points');
             this.api.rewardNotif = true;
             window.open(Constants.RATE_LINK, '_system', 'location=yes');
-            this.usesUntilPrompt = Constants.RATE_REWARD;
             this.api.fetchService(Constants.POINTS).then(points => {
               // console.log("Points", points);
               this.api.storeService(Constants.POINTS, points + Constants.RATE_REWARD);
             });
             this.rateFlag = true;
-            this.api.storeService(Constants.RATED, this.rateFlag);
+            this.api.rateNotif = true;
+
+            let rateStatus = new RateStatus();
+            rateStatus.rated = this.rateFlag;
+            rateStatus.notify = this.api.rateNotif;
+            this.api.storeService(Constants.RATED, rateStatus);
             // console.log("Rated Flag set", this.rateFlag);
 
           }
