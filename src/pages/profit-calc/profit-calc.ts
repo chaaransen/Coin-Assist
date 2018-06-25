@@ -11,7 +11,7 @@ import * as Constants from '../../constants/api-constants';
 })
 export class ProfitCalcPage {
   public profitCalc: ProfitCalc = new ProfitCalc();
-  pageName: string = "profit-calc page";
+  pageName: string = Constants.PROFIT_PAGE;
 
   constructor(public navCtrl: NavController, public utilities: Utilities, public api: ApiDataProvider) {
   }

@@ -10,6 +10,7 @@ import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import * as Constants from '../constants/api-constants';
 import { FCM } from '@ionic-native/fcm';
 import { RateStatus } from '../models/api-urls';
+import { NativeTransitionOptions, NativePageTransitions } from '@ionic-native/native-page-transitions';
 
 @Component({
   templateUrl: 'app.html'
@@ -26,7 +27,11 @@ export class MyApp {
   usesUntilPrompt: number;
   rateFlag: boolean;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController) {
+  //Tabs animation
+  loaded: boolean = false;
+  tabIndex: number = 0;
+
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController, private nativePageTransitions: NativePageTransitions) {
     this.initializeApp();
     // used for an example of ngFor and navigation
     this.pages = [
@@ -76,6 +81,39 @@ export class MyApp {
         }
       });
     });
+  }
+
+  public transition(e): void {
+    let options: NativeTransitionOptions = {
+      direction: this.getAnimationDirection(e.index),
+      duration: 250,
+      slowdownfactor: -1,
+      slidePixels: 0,
+      iosdelay: 20,
+      androiddelay: 0,
+      fixedPixelsTop: 0,
+      fixedPixelsBottom: 48
+    };
+
+    if (!this.loaded) {
+      this.loaded = true;
+      return;
+    }
+
+    this.nativePageTransitions.slide(options);
+  }
+
+  private getAnimationDirection(index): string {
+    var currentIndex = this.tabIndex;
+
+    this.tabIndex = index;
+
+    switch (true) {
+      case (currentIndex < index):
+        return ('left');
+      case (currentIndex > index):
+        return ('right');
+    }
   }
 
   initializeApp() {

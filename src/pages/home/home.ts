@@ -18,7 +18,7 @@ export class HomePage {
   apiUrls: any;
   selExchange: any;
   alive: boolean;
-  pageName: string = "home page";
+  pageName: string = Constants.HOME_PAGE;
   networkFlag: boolean = true;
   firstEntryFlag: boolean = true;
 
@@ -87,7 +87,7 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
-    console.log("ion view will enter");
+    // console.log("ion view will enter");
 
     this.alive = true;
     this.networkFlag = this.api.networkFlag;

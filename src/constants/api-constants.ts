@@ -22,10 +22,18 @@ export const KNC: string = "Kyber Network";
 export const NANO: string = "Nano";
 export const XLM: string = "Stellar";
 
+//Pages
+export const HOME_PAGE: string = "home page";
+export const QUANTITY_PAGE: string = "quantity-calc page";
+export const PROFIT_PAGE: string = "profit-calc page";
+export const COIN_DETAIL_PAGE: string = "coin-detail page";
+
 //Messages
 export const PRICE_REFRESH: string = "Latest Price Refreshed";
 export const PRICE_REFRESH_FAIL: string = "Failed to Refresh - No Network Connection";
 export const REWARD_POINTS: string = "Reward points Added!";
+export const SWIPE_GESTURE: string = "Swipe Left or Right to switch Tabs";
+export const PULL_GESTURE: string = "Pull down to refresh";
 export const TOP: string = "top";
 export const BOTTOM: string = "bottom";
 
@@ -33,13 +41,15 @@ export const BOTTOM: string = "bottom";
 export const INSUF_POINTS_MSG: string = "Insufficient Use Points";
 export const INSUF_POINTS_DESC: string = "Get Use Points by watching Video Ad";
 
-export const LAST_POINT_MSG: string = "1 Use Point remaining!";
+export const LAST_POINT_MSG: string = " Use Point remaining!";
 export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
 
 export const POINTS_MSG: string = "Info - Refill Uses:";
 export const POINTS_DESC: string = "Continue using by tapping 'Refill Points' button and watching an Video AD";
 
 export const NO_VIDEO_AD: string = "Video Ad unavailable, Showing Image AD.";
+
+export const REFILL_INFO: string = "refillInfo";
 
 //Exchanges
 export const ZEBPAY: string = "Zebpay";

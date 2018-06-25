@@ -20,7 +20,7 @@ export class CoinDetailPage {
   referralLink: string;
   apis: any;
   alive: boolean;
-  pageName: string = "coin-detail page";
+  pageName: string = Constants.COIN_DETAIL_PAGE;
   networkFlag: boolean;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider) {
@@ -59,7 +59,10 @@ export class CoinDetailPage {
   swipe(event) {
     if (event.direction === 2) {
       this.navCtrl.parent.select(1);
-    }
+    } else
+      if (event.direction === 4) {
+        this.navCtrl.parent.select(0);
+      }
   }
 
 

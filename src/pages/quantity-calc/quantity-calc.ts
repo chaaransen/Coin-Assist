@@ -5,8 +5,8 @@ import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { CoinDetail } from '../../models/coin-detail';
 import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
-import * as Constants from '../../constants/api-constants'
-import { RateStatus } from '../../models/api-urls';
+import * as Constants from '../../constants/api-constants';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -29,7 +29,7 @@ export class QuantityCalcPage {
   public quantity: ValueDetail = new ValueDetail();
   percent: number = 0.05;
   rangeValue: number;
-  pageName: string = "quantity-calc page";
+  pageName: string = Constants.QUANTITY_PAGE;
   reward: boolean;
   enable: boolean;
   networkFlag: boolean = true;
@@ -44,77 +44,84 @@ export class QuantityCalcPage {
   }
 
   ngOnInit() {
-    // console.log("2 ng oninit called");
+    // console.log("Quantity ng oninit called");
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
 
       this.platform.resume.subscribe(() => {
         // console.log("QTY resume");
-
         this.fetchPoints();
       });
 
       this.api.getApiUrl().then(apiUrl => {
-        // console.log("Response API url ", apiUrl);
+        // console.log("1st Stage ", apiUrl);
 
         this.apiUrls = apiUrl;
+        return Promise.resolve(apiUrl);
+      }).then(() => {
+        // console.log("2nd Stage");
 
         this.apis = this.apiUrls.exchange;
-        // console.log("Exchange values", this.apis);
-
         this.exchanges = Object.keys(this.apis);
-
         if (this.selExchange == undefined) {
           this.selExchange = Constants.KOINEX;
         }
         if (this.selCoin.coinName == undefined) {
           this.selCoin.coinName = this.apiUrls.coins.BTC.name;
         }
-
+        return Promise.resolve(this.apis);
+      }).then(() => {
+        // console.log("Stage 3");
 
         this.populateView();
-
-        // this.api.trackPage(this.pageName);
-        this.api.logAnalytics(this.pageName);
-
-
-        this.api.fetchService(this.pageName).then(lock => {
-          if (lock != true) {
-            this.infoAlert();
-          }
-        });
-
-        this.api.fetchService("points").then(points => {
-          // console.log("QTY fetched points", points);
-
-          this.points = points;
-
-          if (this.points > 0) {
-            if (!this.api.usedFlag) {
-              this.points = this.points - 1;
-              this.api.usedFlag = true;
-            }
-            this.enable = true;
-
-          } else {
-            this.enable = false;
-          }
-          if (this.points == 1) {
-            this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-          }
-
-
-          // console.log("Storing new Points", this.points);
-          this.api.storeService(Constants.POINTS, this.points);
-
-
-          if (!this.enable) {
-            this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
-          }
-          // console.log("Existing points", this.points);
-        });
       });
+
+      // console.log("Exchange values", this.apis);
+      // this.api.trackPage(this.pageName);
+      this.api.logAnalytics(this.pageName);
+
+
+      this.api.fetchService(Constants.REFILL_INFO).then(lock => {
+        if (lock != true) {
+          this.infoAlert();
+        }
+      });
+
+      this.api.fetchService(Constants.POINTS).then(points => {
+        // console.log("QTY fetched Out", points);
+
+        this.points = points;
+
+        if (this.points > 0) {
+          // console.log("used flag ", this.api.usedFlag);
+
+          if (!this.api.usedFlag) {
+            this.points = this.points - 1;
+            // console.log("points updated ", this.points);
+
+            this.api.usedFlag = true;
+          }
+          this.enable = true;
+
+        } else {
+          this.enable = false;
+        }
+        if (this.points <= 1) {
+          this.presentGetPoints(this.points + Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+        }
+        // console.log("QTY fetched minus", points);
+
+        // console.log("Storing new Points", this.points);
+        this.api.storeService(Constants.POINTS, this.points);
+
+
+        if (!this.enable) {
+          this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
+        }
+        // console.log("Existing points", this.points);
+      });
+
     } else {
       this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
     }
@@ -125,12 +132,13 @@ export class QuantityCalcPage {
       this.navCtrl.parent.select(0);
     } else if (event.direction === 2) {
       this.navCtrl.parent.select(2);
+
     }
   }
 
   fetchPoints() {
-    this.api.fetchService("points").then(points => {
-      // console.log("QTY fetch and update points", points);
+    this.api.fetchService(Constants.POINTS).then(points => {
+      // console.log("QTY fetch points", points);
       this.points = points;
     });
   }
@@ -150,7 +158,8 @@ export class QuantityCalcPage {
         {
           text: 'Got it!',
           handler: () => {
-            this.api.instructionToast(this.pageName, 2000);
+            this.api.storeService(Constants.REFILL_INFO, true);
+            this.api.instructionToast(this.pageName, 2500);
           }
         }
       ]
@@ -200,7 +209,7 @@ export class QuantityCalcPage {
   }
 
   populateView() {
-    // console.log("3 populate view called");
+    // console.log("3 populate view called, api values ", this.apiUrls);
     this.populateCoins(this.selExchange);
     let feesPercent = +this.apis[this.selExchange].fees.buy;
     this.buyerFeesPercent = feesPercent * 100;
@@ -222,15 +231,25 @@ export class QuantityCalcPage {
     // console.log("4 populate coins", exchange);
     this.api.getExchangeData(exchange, true).subscribe(res => {
       // console.log("Exchange data", res);
+      let exchangeDataLengths = Object.keys(res).length;
+      if (exchangeDataLengths > 1) {
+        this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
+        // console.log(this.coins, "coins in qty");
+        if (this.selCoin.coinName == undefined) {
+          this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
+          // console.log("Coiname sent", this.selCoin.coinName);
 
-      this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
-      // console.log(this.coins, "coins in qty");
-      if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-        // console.log("Coiname sent", this.selCoin.coinName);
+        }
+        if (this.coins != undefined) {
+          this.populateCoinValues(this.selCoin.coinName);
+        }
+      } else {
+        var retryFetch = Observable.timer(3000);
+        retryFetch.subscribe(res => {
+          this.populateCoins(this.selExchange);
+        });
 
       }
-      this.populateCoinValues(this.selCoin.coinName);
     });
   }
 
@@ -361,7 +380,7 @@ export class QuantityCalcPage {
     this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
       this.api.fetchService("points").then(points => {
 
-        console.log("Ad Closed");
+        // console.log("Ad Closed");
 
         this.points = points;
         if (this.points > 0) {

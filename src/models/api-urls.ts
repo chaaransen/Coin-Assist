@@ -8,3 +8,8 @@ export class RateStatus {
     rated: boolean;
     notify: boolean;
 }
+
+export class Notif {
+    pullGesture: boolean;
+    swipeGesture: boolean;
+}

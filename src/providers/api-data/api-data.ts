@@ -15,6 +15,8 @@ import { ToastController, AlertController, Platform } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { AdMobFree, AdMobFreeRewardVideoConfig, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free';
 import { Network } from '@ionic-native/network';
+import { Notif } from '../../models/api-urls';
+import { NativePageTransitions, NativeTransitionOptions } from '@ionic-native/native-page-transitions';
 
 const videoConfig: AdMobFreeRewardVideoConfig = {
   id: "ca-app-pub-4512084985073909/4639923138",
@@ -45,7 +47,7 @@ export class ApiDataProvider {
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network, private nativePageTransitions: NativePageTransitions) {
 
   }
 
@@ -333,22 +335,53 @@ export class ApiDataProvider {
   }
 
   instructionToast(page: string, duration: number) {
-    this.fetchService(page).then(lock => {
-      // console.log("instruction toast lock", page, lock);
+    this.fetchService(page).then(notifLocks => {
+      // console.log("instruction toast ", page, notifLocks);
+      var notifs = new Notif();
+      if (notifLocks != null) {
+        notifs.swipeGesture = notifLocks.swipeGesture;
+        notifs.pullGesture = notifLocks.pullGesture;
+      }
+      else {
+        notifs.swipeGesture = false;
+        notifs.pullGesture = false;
+      }
+      // console.log("Model notifs value ", notifs);
 
-      if (lock != true) {
-        let toast = this.toastCtrl.create({
-          message: 'Pull down to refresh',
+      if (notifs.pullGesture == false) {
+        // console.log("Gesture notifs");
+
+        let pullToast = this.toastCtrl.create({
+          message: Constants.PULL_GESTURE,
           position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'OK'
+          closeButtonText: 'GOT IT!'
         });
-        toast.onDidDismiss(() => {
-          this.storeService(page, true);
+        pullToast.onDidDismiss(() => {
+          notifs.pullGesture = true;
+          this.storeService(page, notifs);
         });
-        toast.present();
+        pullToast.present();
       }
+
+      if (notifs.swipeGesture == false) {
+        // console.log("Swipe Notifs");
+
+        let swipeToast = this.toastCtrl.create({
+          message: Constants.SWIPE_GESTURE,
+          position: 'top',
+          duration: duration,
+          showCloseButton: true,
+          closeButtonText: 'GOT IT!'
+        });
+        swipeToast.onDidDismiss(() => {
+          notifs.swipeGesture = true;
+          this.storeService(page, notifs);
+        });
+        swipeToast.present();
+      }
+
     });
 
   }
@@ -598,6 +631,7 @@ export class ApiDataProvider {
       var processedKoinexData = [];
       var coinList = this.apiUrls.exchange.Koinex.coinList;
       var tempKoinexData = exchangeData.stats.inr;
+
       // console.log(coinMarketCapData, "coinmarket cap data- processor");
       // console.log("temp koinex data full", tempKoinexData);
 
@@ -655,7 +689,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Koinex Processor Exception", e);
-
+      return undefined;
     }
   }
 

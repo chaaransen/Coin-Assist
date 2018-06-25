@@ -59,7 +59,7 @@
           </ion-col>
         </ion-row>
         <br>
-        <ion-row class="marginBottom0" *ngIf="coinDetail.change != undefined">
+        <ion-row class="marginBottom0" *ngIf="coinDetail.change.hour != undefined">
           <hr>
           <ion-col col-4 class="center marginBottom0 padding1">
             (1h):
@@ -72,7 +72,7 @@
           </ion-col>
           <hr>
         </ion-row>
-        <ion-row *ngIf="coinDetail.change != undefined">
+        <ion-row *ngIf="coinDetail.change.hour != undefined">
           <ion-col col-4 class="center padding0" *ngIf="coinDetail.change">
             <span class="boldTextValue">
               <span *ngIf="coinDetail.change.hour >= 0" class="greenColor weight500">
@@ -130,8 +130,8 @@
 
         </ion-row>
       </ion-grid>
-      <hr>
-      <ion-grid *ngIf="coinDetail.global != undefined">
+      <hr *ngIf="coinDetail.global.INR.no != undefined">
+      <ion-grid *ngIf="coinDetail.global.INR.no != undefined">
         <ion-card-header class="size1rem7 greyColor padding1rem">Global price -
         </ion-card-header>
         <ion-row>
