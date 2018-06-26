@@ -356,7 +356,7 @@ export class ApiDataProvider {
           position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'GOT IT!'
+          closeButtonText: 'Dismiss'
         });
         pullToast.onDidDismiss(() => {
           notifs.pullGesture = true;
@@ -373,7 +373,7 @@ export class ApiDataProvider {
           position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'GOT IT!'
+          closeButtonText: 'Dismiss'
         });
         swipeToast.onDidDismiss(() => {
           notifs.swipeGesture = true;
@@ -389,8 +389,8 @@ export class ApiDataProvider {
   infoAlert() {
 
     let alert = this.alertCtrl.create({
-      title: '',
-      message: '',
+      title: Constants.POINTS_MSG,
+      message: Constants.POINTS_DESC,
       buttons: [
         {
           text: 'Got it!',

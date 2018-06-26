@@ -45,7 +45,7 @@ export const LAST_POINT_MSG: string = " Use Point remaining!";
 export const LAST_POINT_DESC: string = "Watch Video Ad to refill Use points";
 
 export const POINTS_MSG: string = "Info - Refill Uses:";
-export const POINTS_DESC: string = "Continue using by tapping 'Refill Points' button and watching an Video AD";
+export const POINTS_DESC: string = "Continue using by tapping 'Refill Points' button and watching a Video AD";
 
 export const NO_VIDEO_AD: string = "Video Ad unavailable, Showing Image AD.";
 

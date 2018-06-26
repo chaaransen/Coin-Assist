@@ -49,7 +49,7 @@
             <ion-row>
               <ion-col col-3>
                 <ion-thumbnail item-start>
-                  <img src="{{coin.coinImage}}">
+                  <img class="imageHome" src="{{coin.coinImage}}">
                   <div class="coinName weight500">{{coin.coinName}}
                     <br> ({{coin.coinCode}})
                   </div>
@@ -73,12 +73,18 @@
                 </ion-row>
                 <ion-row>
                   <ion-col col-6 *ngIf="coin.volatility">
-                    <span class="riseFallSymbol weight500 size1rem9">&#8645;</span>
+                    <span class="weight500 size2rem paddingRight1rem">&#8645;</span>
                     <span class="weight500"> {{coin.volatility}}% </span>
                   </ion-col>
-                  <ion-col col-6>
-                    Price:
-                    <span [ngClass]="coin.price_index">{{coin.price_index}}</span>
+                  <ion-col col-6 class="paddingTop0rem7">
+                    <ion-row>
+                      <ion-col col-5 class="padding0rem paddingRight1rem">
+                        <img class="priceTag" src="assets/imgs/priceTag.png">
+                      </ion-col>
+                      <ion-col col-7 class="padding0rem">
+                        <span class="priceIndex" [ngClass]="coin.price_index">{{coin.price_index}}</span>
+                      </ion-col>
+                    </ion-row>
                   </ion-col>
                 </ion-row>
                 <ion-row *ngIf="coin.max.no">

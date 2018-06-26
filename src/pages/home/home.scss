@@ -16,7 +16,6 @@ page-home {
     * {
         font-size: 1.6rem;
     }
-  
     ion-label,
     ion-select {
         font-size: 1.8rem;
@@ -31,7 +30,7 @@ page-home {
         margin-right: 1.5rem;
     }
     .item-md ion-thumbnail ion-img,
-    .item-md ion-thumbnail img {
+    .item-md ion-thumbnail .imageHome {
         width: 6.3rem;
         height: 6.3rem;
     }

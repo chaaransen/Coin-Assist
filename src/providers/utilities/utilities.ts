@@ -65,6 +65,15 @@ export class Utilities {
         if (isNaN(number)) {
             number = 0;
         }
-        return number.toLocaleString('hi-IN');
+
+        var countDecimals = function (value) {
+            if (Math.floor(value) === value) return 0;
+            return value.toString().split(".")[1].length || 0;
+        }
+
+        let fractionDigits = countDecimals(number);
+        return number.toLocaleString('hi-IN', { minimumFractionDigits: fractionDigits });
     }
+
+
 }
