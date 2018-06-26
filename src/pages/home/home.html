@@ -18,7 +18,7 @@
   <div class="main-content" (swipe)="swipe($event)">
     <div class="centerNetwork" *ngIf="networkFlag == false && networkFlag != undefined">
       <b>Network connection unavailable.</b> Please connect to a network.
-      <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
+      <button class="padding2rem" (tap)="ngOnInit()" ion-button color="light">Retry</button>
     </div>
     <ion-item *ngIf="networkFlag">
       <ion-label>Exchange:</ion-label>
@@ -43,7 +43,7 @@
         </ion-row>
       </ion-grid>
     </ion-card> -->
-      <ion-card *ngFor="let coin of coins" (click)="navCoinDetailPage(coin)">
+      <ion-card *ngFor="let coin of coins" (tap)="navCoinDetailPage(coin)">
         <ion-item detail-push>
           <ion-grid>
             <ion-row>
@@ -62,7 +62,7 @@
                       {{coin.market.formatted}}
                     </ion-row>
                   </ion-col>
-                  <ion-col col-4 class="boldTextValue" *ngIf="coin.change != undefined">
+                  <ion-col col-4 class="paddingtop0rem2 boldTextValue" *ngIf="coin.change != undefined">
                     <div *ngIf="coin.change.day >= 0" class="greenColor weight500">
                       <span class="size1rem7">&#9650;</span>+{{coin.change.day}}%
                     </div>

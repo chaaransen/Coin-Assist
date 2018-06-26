@@ -317,7 +317,8 @@ export class ApiDataProvider {
     let toast = this.toastCtrl.create({
       message: message,
       duration: duration,
-      position: position
+      position: position,
+      cssClass: "toastFormat"
     });
     toast.present();
   }
@@ -334,7 +335,7 @@ export class ApiDataProvider {
 
   }
 
-  instructionToast(page: string, duration: number) {
+  instructionToast(page: string, duration: number, swipe: boolean = true, pull: boolean = true) {
     this.fetchService(page).then(notifLocks => {
       // console.log("instruction toast ", page, notifLocks);
       var notifs = new Notif();
@@ -343,12 +344,12 @@ export class ApiDataProvider {
         notifs.pullGesture = notifLocks.pullGesture;
       }
       else {
-        notifs.swipeGesture = false;
+        notifs.swipeGesture = 0;
         notifs.pullGesture = false;
       }
       // console.log("Model notifs value ", notifs);
 
-      if (notifs.pullGesture == false) {
+      if (notifs.pullGesture == false && pull) {
         // console.log("Gesture notifs");
 
         let pullToast = this.toastCtrl.create({
@@ -356,7 +357,8 @@ export class ApiDataProvider {
           position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'Dismiss'
+          closeButtonText: 'Dismiss',
+          cssClass: "toastFormat"
         });
         pullToast.onDidDismiss(() => {
           notifs.pullGesture = true;
@@ -365,23 +367,29 @@ export class ApiDataProvider {
         pullToast.present();
       }
 
-      if (notifs.swipeGesture == false) {
+      if (notifs.swipeGesture < 2 && swipe) {
         // console.log("Swipe Notifs");
+        var toastMessage;
+        if (page == Constants.HOME_PAGE) {
+          toastMessage = Constants.SWIPE_GESTURE;
+        } else if (page == Constants.PROFIT_PAGE) {
+          toastMessage = Constants.SWIPE_GESTURE_REV;
+        }
 
         let swipeToast = this.toastCtrl.create({
-          message: Constants.SWIPE_GESTURE,
+          message: toastMessage,
           position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'Dismiss'
+          closeButtonText: 'Dismiss',
+          cssClass: "toastFormat"
         });
         swipeToast.onDidDismiss(() => {
-          notifs.swipeGesture = true;
+          notifs.swipeGesture += 1;
           this.storeService(page, notifs);
         });
         swipeToast.present();
       }
-
     });
 
   }

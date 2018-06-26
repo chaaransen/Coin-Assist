@@ -159,7 +159,7 @@ export class QuantityCalcPage {
           text: 'Got it!',
           handler: () => {
             this.api.storeService(Constants.REFILL_INFO, true);
-            this.api.instructionToast(this.pageName, 2500);
+            this.api.instructionToast(this.pageName, 2500, false);
           }
         }
       ]

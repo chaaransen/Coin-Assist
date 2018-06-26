@@ -20,6 +20,7 @@ export class ProfitCalcPage {
     // this.api.trackPage(this.pageName);
     this.profitCalc.quantity.no = 1;
     this.api.logAnalytics(this.pageName);
+    this.api.instructionToast(this.pageName, 0, true, false)
   }
 
   swipe(event) {

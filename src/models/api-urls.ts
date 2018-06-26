@@ -11,5 +11,5 @@ export class RateStatus {
 
 export class Notif {
     pullGesture: boolean;
-    swipeGesture: boolean;
+    swipeGesture: number;
 }

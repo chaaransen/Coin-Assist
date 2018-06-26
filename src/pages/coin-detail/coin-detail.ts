@@ -52,7 +52,7 @@ export class CoinDetailPage {
           }
         });
 
-      this.api.instructionToast(this.pageName, 1500);
+      this.api.instructionToast(this.pageName, 2000, false);
     }
   }
 

@@ -15,21 +15,21 @@
     <ion-list>
       <ion-item>
         <ion-label fixed>Quantity</ion-label>
-        <ion-input type="tel" placeholder="(e.g) 0.0123" [(ngModel)]="profitCalc.quantity.no" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
+        <ion-input type="tel" placeholder="(e.g) 0.0123" maxLength="8" [(ngModel)]="profitCalc.quantity.no" clearInput="true" (ngModelChange)="checkRequiredFields()"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>Buy Price &#8377;</ion-label>
-        <ion-input type="tel" placeholder="(e.g) 1000" [(ngModel)]="profitCalc.fromValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged('buy')"></ion-input>
+        <ion-input type="tel" placeholder="(e.g) 1000" maxLength="7" [(ngModel)]="profitCalc.fromValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged('buy')"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>Sell Price &#8377;</ion-label>
-        <ion-input type="tel" placeholder=" (e.g) 2000" [(ngModel)]="profitCalc.toValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged('sell')"></ion-input>
+        <ion-input type="tel" placeholder=" (e.g) 2000" maxLength="7" [(ngModel)]="profitCalc.toValue.no" clearInput="true" (ngModelChange)="buySellPriceChanged('sell')"></ion-input>
       </ion-item>
 
       <ion-item>
-        <button class="padding2rem" (click)="clearAll()" ion-button color="light">Clear All</button>
+        <button class="padding2rem" (tap)="clearAll()" ion-button color="light">Clear All</button>
       </ion-item>
     </ion-list>
     <ion-card-header class="weight500 size1rem8">

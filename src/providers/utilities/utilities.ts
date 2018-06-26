@@ -71,7 +71,10 @@ export class Utilities {
             return value.toString().split(".")[1].length || 0;
         }
 
-        let fractionDigits = countDecimals(number);
+        var fractionDigits = countDecimals(number);
+        if (fractionDigits > 4) {
+            fractionDigits = 4;
+        }
         return number.toLocaleString('hi-IN', { minimumFractionDigits: fractionDigits });
     }
 

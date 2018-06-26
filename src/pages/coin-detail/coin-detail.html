@@ -16,7 +16,7 @@
   <div class="main-content" (swipe)="swipe($event)">
     <div class="centerNetwork" *ngIf="!networkFlag">
       <b>Network connection unavailable.</b> Please connect to a network.
-      <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
+      <button class="padding2rem" (tap)="ngOnInit()" ion-button color="light">Retry</button>
     </div>
     <ion-card *ngIf="networkFlag">
       <ion-card-header class="size2rem weight500">
@@ -182,11 +182,11 @@
         </ion-row>
         <ion-row>
           <ion-col col-6>
-            <button (click)="gotoCalcQuantityPage()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">
+            <button (tap)="gotoCalcQuantityPage()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">
               Calculate Quantity</button>
           </ion-col>
           <ion-col col-6>
-            <button (click)="openReferralLink()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">Buy / Sell</button>
+            <button (tap)="openReferralLink()" ion-button small class="boldTextValue center width100 padding2rem5" color="dark">Buy / Sell</button>
           </ion-col>
         </ion-row>
       </ion-grid>

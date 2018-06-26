@@ -140,10 +140,27 @@ export class HomePage {
       // console.log("first data - exchange data", res[0]);
       // console.log("second data - coin market Cap data", res[1]);
       // console.log("third data - coindesk data", res[2]);
-      this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
 
+      let rawCoinList: Array<any> = this.api.processExchangeData(sel, res[0], res[1], res[2]);
+
+      function compare(a, b) {
+        if (a.coinName < b.coinName || a.coinName == "Bitcoin")
+          return -1;
+        if (a.coinName > b.coinName)
+          return 1;
+        return 0;
+      }
+
+      if (rawCoinList != undefined) {
+        rawCoinList.sort(compare);
+      }
+      else {
+        this.coins = rawCoinList;
+      }
+
+      this.coins = rawCoinList
       // console.log("processed exchange data");
-      // console.log(this.coins);
+      console.log(this.coins);
 
     },
       err => {
