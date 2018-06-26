@@ -28,6 +28,13 @@
     float: right;
 }
 
+.invalidInput {
+    padding-left: 1.6rem;
+    color: salmon;
+    padding-top: 0.3rem;
+    font-size: 1.4rem;
+}
+
 .priceIndex {
     float: left;
 }
@@ -164,7 +171,7 @@
 }
 
 .blueColor {
-    color: #3784ff;
+    color: deepskyblue;
 }
 
 .price {

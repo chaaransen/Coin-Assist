@@ -7,6 +7,7 @@ import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
 import * as Constants from '../../constants/api-constants';
 import { Observable } from 'rxjs/Observable';
+import { QuantityValid } from '../../models/api-urls';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -33,6 +34,7 @@ export class QuantityCalcPage {
   reward: boolean;
   enable: boolean;
   networkFlag: boolean = true;
+  public quantityValid: QuantityValid = new QuantityValid();
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController, private platform: Platform) {
     // console.log("1 qty constructor called");
@@ -233,7 +235,8 @@ export class QuantityCalcPage {
       // console.log("Exchange data", res);
       let exchangeDataLengths = Object.keys(res).length;
       if (exchangeDataLengths > 1) {
-        this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
+        let rawCoinList: Array<any> = this.api.processExchangeData(exchange, res, undefined, undefined);
+        this.coins = this.util.coinSorter(rawCoinList);
         // console.log(this.coins, "coins in qty");
         if (this.selCoin.coinName == undefined) {
           this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
@@ -274,12 +277,22 @@ export class QuantityCalcPage {
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
     // console.log(this.selCoin);
-    this.calcQuantity();
+    if (this.quantityValid.quantityValid) {
+      this.calcQuantity();
+    }
     // console.log(this.selCoin);
   }
 
   public coinRateChanged() {
-    this.updateRange();
+    if (this.util.validNumberChecker(this.selCoin.range.rate.no)) {
+      this.quantityValid.rateValid = true;
+      this.updateRange();
+    } else {
+      this.quantityValid.rateValid = false;
+      this.dataFormatter();
+      // console.log("coin Rate value", this.quantityValid.rateValid);
+
+    }
   }
 
   formateRate() {
@@ -290,8 +303,8 @@ export class QuantityCalcPage {
   }
 
   public calcQuantity() {
-    // console.log("quantity calculated");
-    if (this.amount.no != undefined) {
+    // console.log("quantity calculation ", this.amount.no);
+    if (this.amount.no != undefined && this.amount.no != +"") {
       this.calcFeesAmount();
       // console.log("Actual Amount", this.actualAmount);
       let qty = this.actualAmount.no / this.selCoin.range.rate.no;
@@ -337,35 +350,57 @@ export class QuantityCalcPage {
   }
 
   public calcAmount(quantity: string) {
-    // console.log("quantity changed ", quantity);
-    if (quantity != "0" && quantity != '') {
-      this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
+    if (this.util.validNumberChecker(quantity)) {
+      this.quantityValid.quantityValid = true;
+      // console.log("quantity changed ", quantity);
+      if (quantity != "0" && quantity != '') {
+        this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
 
-      // console.log("Formatted quantity", this.quantity.formatted);
-      this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
-      this.calcFeesAmount(false);
+        // console.log("Formatted quantity", this.quantity.formatted);
+        if (this.quantityValid.rateValid) {
+          this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
+          this.calcFeesAmount(false);
+        }
+      }
+      this.dataFormatter();
     }
-    this.dataFormatter();
+    else {
+      this.quantityValid.quantityValid = false;
+    }
   }
 
   public amountChanged(amount: string) {
     // console.log("amount changed ", amount);
-    if (amount != '0' && amount != '') {
-      this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
+    if (this.util.validNumberChecker(amount)) {
+      this.quantityValid.amountValid = true;
+      if (amount != '0' && amount != '') {
+        this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
 
-      // console.log("formatted amount", this.amount.formatted);
-      this.calcQuantity();
+        // console.log("formatted amount", this.amount.formatted);
+        if (this.quantityValid.rateValid) {
+          this.calcQuantity();
+        }
+      } else {
+        // console.log("Nullified ", amount);
+
+        this.buyerFees.no = 0;
+        this.actualAmount.no = 0;
+      }
+      this.dataFormatter();
+      // console.log("new amount.no value", this.amount.no);
+    } else {
+      this.quantityValid.amountValid = false;
     }
-    this.dataFormatter();
-    // console.log("new amount.no value", this.amount.no);
-
   }
 
   dataFormatter() {
     // console.log(this.quantity.no);
 
+    this.selCoin.range.rate.formatted = this.util.numberFormatter(this.selCoin.range.rate.no);
     this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
     this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
+    this.buyerFees.formatted = this.util.currencyFormatter(+this.buyerFees.no);
+    this.actualAmount.formatted = this.util.currencyFormatter(+this.actualAmount.no);
     // console.log(this.quantity.no);
   }
   public trimAmount(amount) {

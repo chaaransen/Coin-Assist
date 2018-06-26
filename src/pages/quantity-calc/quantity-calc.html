@@ -50,8 +50,9 @@
 
         <ion-item>
           <ion-label fixed>Coin Rate</ion-label>
-          <ion-input type="tel" placeholder="(e.g) 3000" maxLength="7" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event) "></ion-input>
+          <ion-input type="tel" placeholder="(e.g) 3000" maxLength="8" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event) "></ion-input>
         </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.rateValid">* Enter a valid number</div>
         <ion-item>
           &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})
         </ion-item>
@@ -67,12 +68,16 @@
         <ion-item>
           <ion-label fixed>Amount &#8377;</ion-label>
           <ion-input type="tel" placeholder="(e.g) 1000" maxLength="8" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
+
         </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.amountValid">* Enter a valid number</div>
         <!-- <div *ngIf="amountFlag ">*Amount exceeding Limit</div> -->
         <ion-item>
           <ion-label fixed>Quantity</ion-label>
           <ion-input type="tel" placeholder="(e.g) 0.0001" clearInput="true" maxLength="8" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>
+
         </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.quantityValid">* Enter a valid number</div>
       </ion-list>
       <ion-card-header class="weight500 size1rem8">
         Summary
@@ -106,22 +111,24 @@
               {{selCoin.range.rate.formatted}}
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col col-6>
-              Amount:
-            </ion-col>
-            <ion-col col-6>
-              {{actualAmount.formatted}}
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col col-6>
-              Buy Fees:({{buyerFeesPercent}}%)
-            </ion-col>
-            <ion-col col-6 class="redColor">
-              {{buyerFees.formatted}}
-            </ion-col>
-          </ion-row>
+          <div class="summaryAmount">
+            <ion-row>
+              <ion-col col-6>
+                Actual Amount:
+              </ion-col>
+              <ion-col col-6>
+                {{actualAmount.formatted}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                Buy Fees:({{buyerFeesPercent}}%)
+              </ion-col>
+              <ion-col col-6 class="redColor">
+                {{buyerFees.formatted}}
+              </ion-col>
+            </ion-row>
+          </div>
           <ion-row>
             <ion-col col-6>
               Total Amount:

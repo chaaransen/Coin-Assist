@@ -6,6 +6,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import * as Constants from '../../constants/api-constants'
+import { Utilities } from '../../providers/utilities/utilities';
 
 @Component({
   selector: 'page-home',
@@ -22,7 +23,7 @@ export class HomePage {
   networkFlag: boolean = true;
   firstEntryFlag: boolean = true;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform, private util: Utilities) {
     // console.log("Constructor - Home page");
     this.alive = true;
   }
@@ -143,24 +144,11 @@ export class HomePage {
 
       let rawCoinList: Array<any> = this.api.processExchangeData(sel, res[0], res[1], res[2]);
 
-      function compare(a, b) {
-        if (a.coinName < b.coinName || a.coinName == "Bitcoin")
-          return -1;
-        if (a.coinName > b.coinName)
-          return 1;
-        return 0;
-      }
 
-      if (rawCoinList != undefined) {
-        rawCoinList.sort(compare);
-      }
-      else {
-        this.coins = rawCoinList;
-      }
 
-      this.coins = rawCoinList
+      this.coins = this.util.coinSorter(rawCoinList);
       // console.log("processed exchange data");
-      console.log(this.coins);
+      // console.log(this.coins);
 
     },
       err => {
