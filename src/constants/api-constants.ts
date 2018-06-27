@@ -37,6 +37,7 @@ export const SWIPE_GESTURE_REV: string = "Swipe screen Right to switch tab";
 export const PULL_GESTURE: string = "Pull down to refresh";
 export const TOP: string = "top";
 export const BOTTOM: string = "bottom";
+export const DEFAULT: string = "default";
 
 //Quantity Page
 export const INSUF_POINTS_MSG: string = "Insufficient Use Points";

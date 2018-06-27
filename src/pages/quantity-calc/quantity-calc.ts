@@ -91,16 +91,16 @@ export class QuantityCalcPage {
       });
 
       this.api.fetchService(Constants.POINTS).then(points => {
-        // console.log("QTY fetched Out", points);
+        console.log("QTY value before", points);
 
         this.points = points;
 
         if (this.points > 0) {
-          // console.log("used flag ", this.api.usedFlag);
-
           if (!this.api.usedFlag) {
             this.points = this.points - 1;
-            // console.log("points updated ", this.points);
+            console.log("points updated ", this.points);
+            this.api.storeService(Constants.POINTS, this.points);
+            console.log("New points stored ", this.points);
 
             this.api.usedFlag = true;
           }
@@ -112,11 +112,7 @@ export class QuantityCalcPage {
         if (this.points <= 1) {
           this.presentGetPoints(this.points + Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
         }
-        // console.log("QTY fetched minus", points);
-
         // console.log("Storing new Points", this.points);
-        this.api.storeService(Constants.POINTS, this.points);
-
 
         if (!this.enable) {
           this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
@@ -140,15 +136,17 @@ export class QuantityCalcPage {
 
   fetchPoints() {
     this.api.fetchService(Constants.POINTS).then(points => {
-      // console.log("QTY fetch points", points);
+      console.log("QTY fetch points", points);
       this.points = points;
     });
   }
 
   ionViewWillEnter() {
-    // console.log("QTY view will enter");
+    console.log("QTY view will enter");
     this.networkFlag = this.api.networkFlag;
-    this.fetchPoints();
+    if (this.api.usedFlag) {
+      this.fetchPoints();
+    }
   }
 
   infoAlert() {
@@ -335,6 +333,7 @@ export class QuantityCalcPage {
 
     if (!calcActual) {
       this.amount.no = this.actualAmount.no + this.buyerFees.no;
+      this.amount.no = this.util.trimQuantity("default", this.amount.no);
       this.amount.formatted = this.util.currencyFormatter(this.amount.no);
     }
   }
