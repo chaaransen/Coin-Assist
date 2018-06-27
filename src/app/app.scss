@@ -28,6 +28,12 @@
     float: right;
 }
 
+.tabs-md-navBarColor .tab-button:hover:not(.disable-hover),
+.tabs-md-navBarColor .tab-button[aria-selected=true],
+.tabs-md-navBarColor .tab-button[aria-selected=true] .tab-button-icon {
+    color: #296cd8;
+}
+
 .invalidInput {
     padding-left: 1.6rem;
     color: salmon;

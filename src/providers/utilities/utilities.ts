@@ -43,7 +43,7 @@ export class Utilities {
         // console.log(value, "decimal value", decimal);
         let numericValue = +value;
         let finalValue = +numericValue.toFixed(decimal);
-        // console.log(finalValue, "final value");
+        // console.log(finalValue, "Trimmed Quantity value");
 
         return finalValue;
         // return +numericValue.toFixed(decimal);

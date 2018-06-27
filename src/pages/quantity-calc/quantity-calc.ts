@@ -275,7 +275,7 @@ export class QuantityCalcPage {
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
     // console.log(this.selCoin);
-    if (this.quantityValid.quantityValid) {
+    if (this.quantityValid.amountValid && this.amount.no != +"") {
       this.calcQuantity();
     }
     // console.log(this.selCoin);
@@ -284,7 +284,9 @@ export class QuantityCalcPage {
   public coinRateChanged() {
     if (this.util.validNumberChecker(this.selCoin.range.rate.no)) {
       this.quantityValid.rateValid = true;
-      this.updateRange();
+      if (this.selCoin.range.rate.no != +"") {
+        this.updateRange();
+      }
     } else {
       this.quantityValid.rateValid = false;
       this.dataFormatter();
@@ -356,7 +358,7 @@ export class QuantityCalcPage {
         this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
 
         // console.log("Formatted quantity", this.quantity.formatted);
-        if (this.quantityValid.rateValid) {
+        if (this.quantityValid.rateValid && this.selCoin.range.rate.no != +"") {
           this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
           this.calcFeesAmount(false);
         }
@@ -376,7 +378,7 @@ export class QuantityCalcPage {
         this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
 
         // console.log("formatted amount", this.amount.formatted);
-        if (this.quantityValid.rateValid) {
+        if (this.quantityValid.rateValid && this.selCoin.range.rate.no != +"") {
           this.calcQuantity();
         }
       } else {

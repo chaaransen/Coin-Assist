@@ -37,14 +37,16 @@ export class ProfitCalcPage {
       this.profitValid.quantityValid = true;
 
       // console.log("inside quantity");
-      this.profitCalc.quantity.no = this.util.trimToDecimal(+this.profitCalc.quantity.no, 4);
-      this.calcAmount();
-      if (this.checkMandatoryFields()) {
-        // console.log("Manadatory passed");
-        this.calcProfit();
+      if (this.profitCalc.quantity.no != +"") {
+        this.profitCalc.quantity.no = this.util.trimToDecimal(+this.profitCalc.quantity.no, 4);
+        this.calcAmount();
+        if (this.checkMandatoryFields()) {
+          // console.log("Manadatory passed");
+          this.calcProfit();
+        }
+        this.formatDataValues();
       }
 
-      this.formatDataValues();
       // console.log("Exited");
     } else {
       this.profitValid.quantityValid = false;
