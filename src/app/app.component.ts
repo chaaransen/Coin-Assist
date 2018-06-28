@@ -42,6 +42,7 @@ export class MyApp {
   ngOnInit() {
     // console.log("Ng oninit Called - app component");
     this.platform.ready().then(() => {
+      this.api.fetchUrl();
       this.api.fetchService(Constants.POINTS).then(points => {
         // console.log("Points App component", points);
         if (points == null) {

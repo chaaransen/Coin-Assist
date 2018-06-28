@@ -111,25 +111,23 @@
               {{selCoin.range.rate.formatted}}
             </ion-col>
           </ion-row>
-          <div class="summaryAmount">
-            <ion-row>
-              <ion-col col-6>
-                Actual Amount:
-              </ion-col>
-              <ion-col col-6>
-                {{actualAmount.formatted}}
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col col-6>
-                Buy Fees:({{buyerFeesPercent}}%)
-              </ion-col>
-              <ion-col col-6 class="redColor">
-                {{buyerFees.formatted}}
-              </ion-col>
-            </ion-row>
-          </div>
+          <ion-row class="greyBorderTop">
+            <ion-col col-6>
+              Actual Amount:
+            </ion-col>
+            <ion-col col-6>
+              {{actualAmount.formatted}}
+            </ion-col>
+          </ion-row>
           <ion-row>
+            <ion-col col-6>
+              Buy Fees:({{buyerFeesPercent}}%)
+            </ion-col>
+            <ion-col col-6 class="redColor">
+              {{buyerFees.formatted}}
+            </ion-col>
+          </ion-row>
+          <ion-row class="greyBorderTop">
             <ion-col col-6>
               Total Amount:
             </ion-col>

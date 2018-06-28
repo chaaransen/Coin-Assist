@@ -10,6 +10,13 @@ page-home {
     .item-md ion-thumbnail[item-start] {
         margin: 20px 0px 2px 5px;
     }
+    .priceIndexVal {
+        margin-left: 0rem;
+        padding-left: 0.5rem;
+    }
+    .dayChangeVal {
+        padding-left: 1.4rem;
+    }
     .text-center {
         text-align: center;
     }
@@ -35,10 +42,13 @@ page-home {
         height: 6.3rem;
     }
     .coinName {
-        margin-top: 2rem;
+        margin-top: 1.2rem;
         color: black;
         font-size: 1.7rem;
         white-space: normal;
+        display: inline-block;
+        padding-left: 0.6rem;
+        word-break: keep-all;
     }
     .item-md {
         padding-left: 10px;

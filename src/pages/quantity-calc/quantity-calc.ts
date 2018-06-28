@@ -126,9 +126,9 @@ export class QuantityCalcPage {
   }
 
   swipe(event) {
-    if (event.direction === 4) {
+    if (event.direction === 2) {
       this.navCtrl.parent.select(0);
-    } else if (event.direction === 2) {
+    } else if (event.direction === 4) {
       this.navCtrl.parent.select(2);
 
     }
@@ -410,52 +410,56 @@ export class QuantityCalcPage {
 
   public showAd() {
     // this.api.showVideoAd();
-    this.api.showToast(Constants.SHOWING_ADS, Constants.TOP);
-    this.api.prepareVideoAd(true);
+    if (this.api.networkFlag) {
+      this.api.showToast(Constants.SHOWING_ADS, Constants.TOP);
+      this.api.prepareVideoAd(true);
 
-    this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-      this.api.fetchService("points").then(points => {
+      this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+        this.api.fetchService("points").then(points => {
 
-        // console.log("Ad Closed");
+          // console.log("Ad Closed");
 
-        this.points = points;
-        if (this.points > 0) {
-          this.enable = true;
-          if (this.reward) {
-            this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
-            this.reward = false;
+          this.points = points;
+          if (this.points > 0) {
+            this.enable = true;
+            if (this.reward) {
+              this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+              this.reward = false;
+            }
           }
-        }
+        });
       });
-    });
 
-    this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(res => {
-      // console.log("Interstitial close - Quant page");
+      this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(res => {
+        // console.log("Interstitial close - Quant page");
 
-      this.api.fetchService(Constants.POINTS).then(points => {
+        this.api.fetchService(Constants.POINTS).then(points => {
 
-        // console.log("Interstitial Ad Closed");
+          // console.log("Interstitial Ad Closed");
 
-        this.points = points;
-        if (this.points > 0) {
-          this.enable = true;
-          if (this.reward) {
-            this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
-            this.reward = false;
+          this.points = points;
+          if (this.points > 0) {
+            this.enable = true;
+            if (this.reward) {
+              this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+              this.reward = false;
+            }
           }
-        }
+        });
       });
-    });
 
-    this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
-      // console.log("Interstitial open - Quant page");
-      this.reward = true;
-    });
+      this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
+        // console.log("Interstitial open - Quant page");
+        this.reward = true;
+      });
 
-    this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-      // console.log("Quant Reward Called");
+      this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+        // console.log("Quant Reward Called");
 
-      this.reward = true;
-    });
+        this.reward = true;
+      });
+    } else {
+      this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
+    }
   }
 }

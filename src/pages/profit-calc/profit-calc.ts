@@ -20,11 +20,11 @@ export class ProfitCalcPage {
 
   ngOnInit() {
     this.api.logAnalytics(this.pageName);
-    this.api.instructionToast(this.pageName, 0, true, false)
+    this.api.instructionToast(this.pageName, 0, false, false)
   }
 
   swipe(event) {
-    if (event.direction === 4) {
+    if (event.direction === 2) {
       this.navCtrl.parent.select(1);
     }
   }

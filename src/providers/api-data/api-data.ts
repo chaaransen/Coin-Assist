@@ -44,6 +44,7 @@ export class ApiDataProvider {
   koinexTest = false;
   rewardNotif: boolean = false;
   rateNotif: boolean = false;
+  fetchLock: boolean = false;
 
   // private coinAssistApis = "http://localhost:3000/apis";
 
@@ -66,18 +67,10 @@ export class ApiDataProvider {
         }
         else {
           // console.log("Api url null so fetching from cloud");
-
-          this.fetchApiUrl().then(res => {
-            // console.log("Fetched api urls", res);
-            this.generateZebpayApis(res).subscribe(generated => {
-              // console.log("generated urls passed for store", generated);
-              this.apiUrls = generated
-              this.storeApiUrl(this.apiUrls);
-            });
-          }).catch(err => {
-            console.log("Error Fetching API Urls ", err);
-          });
-
+          // console.log("Fetch lock ", this.fetchLock);
+          if (!this.fetchLock) {
+            this.fetchUrl();
+          }
           this.generateZebpayApis(this.getConstantApiUrl()).subscribe(generated => {
             // console.log("Constant API Urls Used");
 
@@ -87,6 +80,24 @@ export class ApiDataProvider {
 
         }
       });
+    });
+  }
+
+  fetchUrl() {
+    // console.log("Fetching URL indie");
+
+    this.fetchLock = true;
+    this.fetchApiUrl().then(res => {
+      // console.log("Fetched api urls", res);
+      this.generateZebpayApis(res).subscribe(generated => {
+        // console.log("generated urls passed for store", generated);
+        this.fetchLock = false;
+        // console.log("Fetch lock released ", this.fetchLock);
+        this.apiUrls = generated
+        this.storeApiUrl(this.apiUrls);
+      });
+    }).catch(err => {
+      console.log("Error Fetching API Urls ", err);
     });
   }
 
@@ -369,15 +380,9 @@ export class ApiDataProvider {
 
       if (notifs.swipeGesture < 2 && swipe) {
         // console.log("Swipe Notifs");
-        var toastMessage;
-        if (page == Constants.HOME_PAGE) {
-          toastMessage = Constants.SWIPE_GESTURE;
-        } else if (page == Constants.PROFIT_PAGE) {
-          toastMessage = Constants.SWIPE_GESTURE_REV;
-        }
 
         let swipeToast = this.toastCtrl.create({
-          message: toastMessage,
+          message: Constants.SWIPE_GESTURE,
           position: 'top',
           duration: duration,
           showCloseButton: true,
@@ -681,7 +686,6 @@ export class ApiDataProvider {
         let diff = processedCoin.max.no - processedCoin.min.no;
         let average = diff / 2;
         processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
-
         processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
 
         // console.log(coinMarketCapData, "coin market data null check");

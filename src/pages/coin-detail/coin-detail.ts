@@ -57,10 +57,10 @@ export class CoinDetailPage {
   }
 
   swipe(event) {
-    if (event.direction === 2) {
+    if (event.direction === 4) {
       this.navCtrl.parent.select(1);
     } else
-      if (event.direction === 4) {
+      if (event.direction === 2) {
         this.navCtrl.parent.select(0);
       }
   }
