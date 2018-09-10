@@ -91,16 +91,16 @@ export class QuantityCalcPage {
       });
 
       this.api.fetchService(Constants.POINTS).then(points => {
-        console.log("QTY value before", points);
+        // console.log("QTY value before", points);
 
         this.points = points;
 
         if (this.points > 0) {
           if (!this.api.usedFlag) {
             this.points = this.points - 1;
-            console.log("points updated ", this.points);
+            // console.log("points updated ", this.points);
             this.api.storeService(Constants.POINTS, this.points);
-            console.log("New points stored ", this.points);
+            // console.log("New points stored ", this.points);
 
             this.api.usedFlag = true;
           }
@@ -136,13 +136,13 @@ export class QuantityCalcPage {
 
   fetchPoints() {
     this.api.fetchService(Constants.POINTS).then(points => {
-      console.log("QTY fetch points", points);
+      // console.log("QTY fetch points", points);
       this.points = points;
     });
   }
 
   ionViewWillEnter() {
-    console.log("QTY view will enter");
+    // console.log("QTY view will enter");
     this.networkFlag = this.api.networkFlag;
     if (this.api.usedFlag) {
       this.fetchPoints();

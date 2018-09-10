@@ -49,7 +49,7 @@ export class Utilities {
         // return +numericValue.toFixed(decimal);
     }
 
-    public currencyFormatter(number: any, locale: any = 'hi-IN', currency: any = 'INR'): any {
+    public currencyFormatter(number: any, locale: any = 'en-US', currency: any = 'INR'): any {
         number = +number;
         if (isNaN(number)) {
             number = 0;
