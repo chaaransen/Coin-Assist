@@ -43,13 +43,13 @@ export class Utilities {
         // console.log(value, "decimal value", decimal);
         let numericValue = +value;
         let finalValue = +numericValue.toFixed(decimal);
-        // console.log(finalValue, "final value");
+        // console.log(finalValue, "Trimmed Quantity value");
 
         return finalValue;
         // return +numericValue.toFixed(decimal);
     }
 
-    public currencyFormatter(number: any, locale: any = 'hi-IN', currency: any = 'INR'): any {
+    public currencyFormatter(number: any, locale: any = 'en-US', currency: any = 'INR'): any {
         number = +number;
         if (isNaN(number)) {
             number = 0;
@@ -65,6 +65,52 @@ export class Utilities {
         if (isNaN(number)) {
             number = 0;
         }
-        return number.toLocaleString('hi-IN');
+
+        var fractionDigits = this.fractionDigitsFinder(number);
+        if (fractionDigits > 4) {
+            fractionDigits = 4;
+        }
+        return number.toLocaleString('hi-IN', { minimumFractionDigits: fractionDigits });
+    }
+
+    public fractionDigitsFinder(number: any) {
+        number = +number;
+
+        var countDecimals = function (value) {
+            if (Math.floor(value) === value) return 0;
+            return value.toString().split(".")[1].length || 0;
+        }
+        return countDecimals(number);
+    }
+
+    public coinSorter(rawCoinList: Array<any>) {
+        function compare(a, b) {
+            if (a.coinName < b.coinName || a.coinName == "Bitcoin")
+                return -1;
+            if (a.coinName > b.coinName)
+                return 1;
+            return 0;
+        }
+
+        if (rawCoinList != undefined) {
+            return rawCoinList.sort(compare);
+        }
+        else {
+            return rawCoinList;
+        }
+    }
+
+    public validNumberChecker(number) {
+        number = +number;
+        var validNumber = !isNaN(number - parseFloat(number));
+        if (validNumber && number >= 0) {
+            // console.log("VALID");
+
+            return true;
+        } else {
+            // console.log("INVALID");
+            return false;
+        }
+
     }
 }

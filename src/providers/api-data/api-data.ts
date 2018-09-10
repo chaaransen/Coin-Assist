@@ -13,14 +13,37 @@ import { Utilities } from '../utilities/utilities';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ToastController, AlertController, Platform } from 'ionic-angular';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
-import { AdMobFree, AdMobFreeRewardVideoConfig } from '@ionic-native/admob-free';
+import { AdMobFree, AdMobFreeRewardVideoConfig, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free';
 import { Network } from '@ionic-native/network';
+import { Notif } from '../../models/api-urls';
+import { NativePageTransitions, NativeTransitionOptions } from '@ionic-native/native-page-transitions';
 
+
+//Platform - Android
+// const videoConfig: AdMobFreeRewardVideoConfig = {
+//   id: "ca-app-pub-4512084985073909/4639923138",
+//   isTesting: false,
+//   autoShow: false
+// };
+
+//Platform - Android
+// const interstitialConfig: AdMobFreeInterstitialConfig = {
+//   id: "ca-app-pub-4512084985073909/1939390564",
+//   isTesting: false,
+//   autoShow: false
+// };
+
+//Platform - iOS
 const videoConfig: AdMobFreeRewardVideoConfig = {
-  // add your config here
-  // for the sake of this example we will just use the test config
-  // id: "ca-app-pub-4512084985073909/9656600655",
-  isTesting: true,
+  id: "ca-app-pub-4512084985073909/1181163468",
+  isTesting: false,
+  autoShow: false
+};
+
+//Platform - iOS
+const interstitialConfig: AdMobFreeInterstitialConfig = {
+  id: "ca-app-pub-4512084985073909/2626107075",
+  isTesting: false,
   autoShow: false
 };
 
@@ -33,20 +56,20 @@ export class ApiDataProvider {
   zebpayData: any = {};
   networkFlag: boolean;
   usedFlag = false;
-  adRetryCounter = 2;
-  adRetryLock = false;
   // ******************************************************************************
   private coinAssistApis = "https://coin-assist-api.herokuapp.com/apis";
   koinexTest = false;
   rewardNotif: boolean = false;
+  rateNotif: boolean = false;
+  fetchLock: boolean = false;
+
   // private coinAssistApis = "http://localhost:3000/apis";
 
-  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network) {
+  constructor(private http: HttpClient, private storage: Storage, private utility: Utilities, private toastCtrl: ToastController, public admobFree: AdMobFree, private alertCtrl: AlertController, private firebaseAnalytics: FirebaseAnalytics, private platform: Platform, private network: Network, private nativePageTransitions: NativePageTransitions) {
 
   }
 
   ngOnInit() {
-
   }
 
   getApiUrl(): Promise<any> {
@@ -61,96 +84,124 @@ export class ApiDataProvider {
         }
         else {
           // console.log("Api url null so fetching from cloud");
+          // console.log("Fetch lock ", this.fetchLock);
+          if (!this.fetchLock) {
+            this.fetchUrl();
+          }
+          this.generateZebpayApis(this.getConstantApiUrl()).subscribe(generated => {
+            // console.log("Constant API Urls Used");
 
-          this.fetchApiUrl().then(res => {
-            // console.log("Fetched api urls", res);
-            this.generateZebpayApis(res).subscribe(generated => {
-              // console.log("generated urls passed for store", generated);
-              this.apiUrls = generated
-              this.storeApiUrl(this.apiUrls);
-              resolve(this.apiUrls);
-            });
-          }).catch(err => {
-            // console.log("constant Api urls called ", err);
-            this.apiUrls = this.getConstantApiUrl();
+            this.apiUrls = generated
             resolve(this.apiUrls);
           });
+
         }
       });
     });
   }
 
-  checkNetworkConnection(): Promise<boolean> {
+  fetchUrl() {
+    // console.log("Fetching URL indie");
+
+    this.fetchLock = true;
+    this.fetchApiUrl().then(res => {
+      // console.log("Fetched api urls", res);
+      this.generateZebpayApis(res).subscribe(generated => {
+        // console.log("generated urls passed for store", generated);
+        this.fetchLock = false;
+        // console.log("Fetch lock released ", this.fetchLock);
+        this.apiUrls = generated
+        this.storeApiUrl(this.apiUrls);
+      });
+    }).catch(err => {
+      console.log("Error Fetching API Urls ", err);
+    });
+  }
+
+  checkNetworkConnection(): Promise<any> {
 
     return this.platform.ready().then(() => {
       // console.log("platform ready - api data");
+      return new Promise((resolve, reject) => {
+        if (this.network.type != 'none') {
+          // console.log(this.network.type);
+          // console.log("network flag set as true");
+          this.networkFlag = true;
+          resolve(this.networkFlag);
+        } else {
+          this.networkFlag = false;
+          resolve(this.networkFlag);
+        }
+        // console.log("checking network connection");
 
-      if (this.network.type != 'none') {
-        // console.log(this.network.type);
-        // console.log("network flag set as true");
-        this.networkFlag = true;
+        let connectSubscription = this.network.onConnect().subscribe(() => {
+          // console.log('network connected!');
+          this.networkFlag = true;
+        });
+
+        let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+          // console.log('network was disconnected :-(');
+          this.networkFlag = false;
+        });
+
+      });
+
+    });
+  }
+
+  addGracePoints() {
+    this.fetchService(Constants.POINTS).then(points => {
+      // console.log("Fetch service old points before ", points);
+      if (points <= 0) {
+        // console.log("points less or equals 0 so adding grace points");
+        let newPoints: number = points;
+        newPoints += Constants.GRACE_POINTS;
+        this.storeService(Constants.POINTS, newPoints);
+        // console.log("Added Grace Points", newPoints);
       }
-      // console.log("checking network connection");
-
-      let connectSubscription = this.network.onConnect().subscribe(() => {
-        // console.log('network connected!');
-        this.networkFlag = true;
-      });
-
-      let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-        // console.log('network was disconnected :-(');
-        this.networkFlag = false;
-      });
-
-      return this.networkFlag;
     });
   }
 
   prepareVideoAd(show: boolean = false) {
-    this.admobFree.rewardVideo.config(videoConfig);
+    console.log("show value ", show);
 
+    this.admobFree.rewardVideo.config(videoConfig);
     this.admobFree.rewardVideo.isReady().then(res => {
       if (res) {
         if (show) {
-          // console.log("Video Ad Already Ready - calling Show!");
-          // console.log("prepared Video ad - ready response", res);
-
+          console.log("Video Ad Already Ready - calling Show!");
+          console.log("prepared Video ad - ready response", res);
           this.showVideoAd();
           show = false;
         }
       } else {
-        // console.log("AD not ready - Preparing...");
+        console.log("AD not ready - Preparing...");
 
         this.admobFree.rewardVideo.prepare().then(res => {
-          // console.log("Reward Video Prepared", res);
-
+          console.log("Reward Video Prepared", res);
+          if (show) {
+            this.showVideoAd();
+            show = false;
+          }
         }).catch(err => {
-          // console.log("Unable to prepare", err);
-
+          console.log("Unable to prepare", err);
+          if (show) {
+            this.prepareInterstitialAd(true);
+            show = false;
+          }
         });
         this.admobFree.on("admob.rewardvideo.events.LOAD_FAIL").subscribe(res => {
-          // console.log("AD failed to Load - new", res);
-          // console.log("AD Retries Left", this.adRetryCounter);
+          console.log("AD failed to Load - new", res);
+          console.log(res);
 
-          if (show && this.adRetryCounter == 0) {
-            // console.log("retry depletion with show");
-
-            this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
-          } else if (show && this.adRetryCounter > 0) {
-            // console.log("Show retry , retry count ", this.adRetryCounter);
-
-            this.adRetryCounter -= 1;
-            this.prepareVideoAd(true);
-          } else if (this.adRetryCounter > 0) {
-            // console.log("No show retry");
-            this.adRetryCounter -= 1;
-            this.prepareVideoAd();
+          if (show) {
+            this.prepareInterstitialAd(true);
+            show = false;
           }
         });
 
         this.admobFree.on("admob.rewardvideo.events.LOAD").subscribe(res => {
-          this.adRetryCounter = 2;
-          // console.log("AD loadded - new", res);
+          console.log("AD loadded - new", res);
           if (show) {
             this.showVideoAd();
             show = false;
@@ -162,65 +213,123 @@ export class ApiDataProvider {
   }
 
   showVideoAd() {
-    if (!this.adRetryLock) {
-      this.admobFree.rewardVideo.isReady().then(res => {
-        if (res) {
-          this.adRetryCounter = 2;
-          this.admobFree.rewardVideo.show().then(res => {
-            // console.log("Video Ad is Showing", res);
+    this.admobFree.rewardVideo.isReady().then(res => {
+      if (res) {
+        this.admobFree.rewardVideo.show().then(res => {
+          console.log("Video Ad is Showing", res);
 
-            this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-              // console.log("Reward Video value return ", res);
-              // console.log(res.rewardAmount);
-              var refillPoints = res.rewardAmount;
-              this.fetchService(Constants.POINTS).then(points => {
+          this.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+            console.log("Reward Video value return ", res);
+            console.log(res.rewardAmount);
+            var refillPoints = res.rewardAmount;
+            this.fetchService(Constants.POINTS).then(points => {
 
-                let newPoints: number = points;
-                newPoints += refillPoints;
-                this.storeService(Constants.POINTS, newPoints);
-                // console.log("Earned New points", newPoints);
-              });
-              // console.log("Successful view - reward", res);
-
+              let newPoints: number = points;
+              newPoints += refillPoints;
+              this.storeService(Constants.POINTS, newPoints);
+              console.log("Earned New points", newPoints);
             });
+            console.log("Successful view - reward", res);
 
-            this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-
-              this.prepareVideoAd();
-              // console.log("AD closed", res);
-            });
-
-          }).catch(err => {
-            // console.log("Unable to show Video Ad", err);
           });
-        } else {
-          // console.log("Video not ready, preparing and showing");
-          // console.log("ad retry counter - showing method", this.adRetryCounter);
 
-          if (this.adRetryCounter > 0) {
-            this.adRetryCounter -= 1;
-            // console.log("reducing retry, count value ", this.adRetryCounter);
+          this.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+            this.prepareVideoAd();
+            console.log("AD closed", res);
+          });
 
-            this.prepareVideoAd(true);
-          } else {
-            this.adRetryLock = true;
-            var resetRetry = Observable.timer(15000);
-            resetRetry.subscribe(res => {
-              this.adRetryLock = false;
-              this.adRetryCounter = 2;
-              // console.log("Ad retry lock DISABLED", this.adRetryLock);
-              // console.log("Ad retry counter Reset ", this.adRetryCounter);
+        }).catch(err => {
+          console.log("Unable to show Video Ad", err);
+          this.prepareInterstitialAd(true);
+        });
+      }
+    }).catch(err => {
+      console.log("Exception thrown - ready", err);
+      this.prepareInterstitialAd(true);
+    });
+
+  }
 
 
-            });
-          }
+
+  prepareInterstitialAd(show: boolean = false) {
+    console.log("show value - interstitial ", show);
+
+    this.admobFree.interstitial.config(interstitialConfig);
+    this.admobFree.interstitial.isReady().then(res => {
+      console.log("Interstitial Ready status", res);
+
+      if (res) {
+        if (show) {
+          console.log("Interstitial Ad Already Ready - calling Show!");
+          this.showInterstitialAd();
+          show = false;
         }
-      }).catch(err => {
-        console.log("Exception thrown - ready", err);
-      });
-    } else {
-      this.showToast(Constants.NO_VIDEO_AD, Constants.TOP);
-    }
+      } else {
+        console.log("Interstitial AD not ready - Preparing...");
+        this.admobFree.interstitial.prepare().then(res => {
+          console.log("interstitial Ad Prepared", res);
+          if (show) {
+            this.showInterstitialAd();
+            show = false;
+          }
+        }).catch(err => {
+          this.addGracePoints();
+          console.log("Unable to prepare interstitial Ad", err);
+          console.log("Giving 1 free point showing toast try later no ADs");
+        });
+
+        this.admobFree.on("admob.interstitial.events.LOAD_FAIL").subscribe(res => {
+          console.log("Interstitial AD failed to Load - new ", res);
+          if (show) {
+            this.addGracePoints();
+            show = false;
+            console.log("Unable to prepare interstitial Ad ", res);
+            console.log("Giving 1 free point showing toast try later no ADs");
+          }
+        });
+
+        this.admobFree.on("admob.interstitial.events.LOAD").subscribe(res => {
+          console.log("Interstitial AD loaded - new ", res);
+          console.log("Interstitial show value Outside ", show);
+          if (show) {
+            console.log("Interstitial show value ", show);
+            this.showInterstitialAd();
+            show = false;
+          }
+        });
+      }
+    });
+  }
+
+  showInterstitialAd() {
+    console.log("Showing interstitial");
+    this.admobFree.interstitial.isReady().then(res => {
+      console.log("Interstitial ready status ", res);
+
+      if (res) {
+        this.admobFree.interstitial.show().then(res => {
+          console.log("Interstitial Ad show status ", res);
+          this.fetchService(Constants.POINTS).then(points => {
+            console.log("Fetch service old points before ", points);
+
+            let newPoints: number = points;
+            newPoints += Constants.INTERSTITIAL_AD_REWARD;
+            this.storeService(Constants.POINTS, newPoints);
+            console.log("Earned New points (interstitial Ads) ", newPoints);
+          }).catch(err => {
+            console.log("Error Fetching old points ", err);
+          });
+        }).catch(err => {
+          console.log("Error showing interstitial Ads - Adding grace points ", err);
+          this.addGracePoints();
+        });
+      }
+
+    }).catch(err => {
+      console.log("Exception thrown Ready ", err);
+      this.addGracePoints();
+    });
   }
 
   setApiUrl(apiUrl: any): any {
@@ -238,7 +347,8 @@ export class ApiDataProvider {
     let toast = this.toastCtrl.create({
       message: message,
       duration: duration,
-      position: position
+      position: position,
+      cssClass: "toastFormat"
     });
     toast.present();
   }
@@ -255,22 +365,54 @@ export class ApiDataProvider {
 
   }
 
-  instructionToast(page: string, duration: number) {
-    this.fetchService(page).then(lock => {
-      // console.log("instruction toast lock", page, lock);
+  instructionToast(page: string, duration: number, swipe: boolean = true, pull: boolean = true) {
+    this.fetchService(page).then(notifLocks => {
+      // console.log("instruction toast ", page, notifLocks);
+      var notifs = new Notif();
+      if (notifLocks != null) {
+        notifs.swipeGesture = notifLocks.swipeGesture;
+        notifs.pullGesture = notifLocks.pullGesture;
+      }
+      else {
+        notifs.swipeGesture = 0;
+        notifs.pullGesture = false;
+      }
+      // console.log("Model notifs value ", notifs);
 
-      if (lock != true) {
-        let toast = this.toastCtrl.create({
-          message: 'Pull down to refresh',
-          position: 'bottom',
+      if (notifs.pullGesture == false && pull) {
+        // console.log("Gesture notifs");
+
+        let pullToast = this.toastCtrl.create({
+          message: Constants.PULL_GESTURE,
+          position: 'top',
           duration: duration,
           showCloseButton: true,
-          closeButtonText: 'Ok'
+          closeButtonText: 'Dismiss',
+          cssClass: "toastFormat"
         });
-        toast.onDidDismiss(() => {
-          this.storeService(page, true);
+        pullToast.onDidDismiss(() => {
+          notifs.pullGesture = true;
+          this.storeService(page, notifs);
         });
-        toast.present();
+        pullToast.present();
+      }
+
+      if (notifs.swipeGesture < 2 && swipe) {
+        // console.log("Swipe Notifs");
+
+        let swipeToast = this.toastCtrl.create({
+          message: Constants.SWIPE_GESTURE,
+          position: 'top',
+          duration: duration,
+          showCloseButton: true,
+          closeButtonText: 'Dismiss',
+          cssClass: "toastFormat"
+        });
+        swipeToast.onDidDismiss(() => {
+          notifs.swipeGesture += 1;
+          this.storeService(page, notifs);
+        });
+        swipeToast.present();
       }
     });
 
@@ -279,8 +421,8 @@ export class ApiDataProvider {
   infoAlert() {
 
     let alert = this.alertCtrl.create({
-      title: '',
-      message: '',
+      title: Constants.POINTS_MSG,
+      message: Constants.POINTS_DESC,
       buttons: [
         {
           text: 'Got it!',
@@ -321,9 +463,11 @@ export class ApiDataProvider {
   }
 
   fetchService(key: string): any {
-    return this.storage.ready().then(() => {
+    return this.storage.ready().then(res => {
+      // console.log("Storage Ready response ", res);
+
       return this.storage.get(key).catch(err => {
-        // console.log("Error fetching data from storage");
+        console.log("Error fetching data from storage");
 
       });
     });
@@ -519,6 +663,7 @@ export class ApiDataProvider {
       var processedKoinexData = [];
       var coinList = this.apiUrls.exchange.Koinex.coinList;
       var tempKoinexData = exchangeData.stats.inr;
+
       // console.log(coinMarketCapData, "coinmarket cap data- processor");
       // console.log("temp koinex data full", tempKoinexData);
 
@@ -560,7 +705,6 @@ export class ApiDataProvider {
         let diff = processedCoin.max.no - processedCoin.min.no;
         let average = diff / 2;
         processedCoin.volatility = this.utility.trimToDecimal((average / processedCoin.market.no) * 100, 2);
-
         processedCoin.price_index = this.getPriceIndex(processedCoin.min.no, processedCoin.max.no, processedCoin.market.no);
 
         // console.log(coinMarketCapData, "coin market data null check");
@@ -576,7 +720,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Koinex Processor Exception", e);
-
+      return undefined;
     }
   }
 
@@ -598,6 +742,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Error Formatting Coin Details", e);
+      return processedCoin;
 
     }
   }
@@ -665,6 +810,7 @@ export class ApiDataProvider {
     }
     catch (e) {
       console.log("Coin Global Stats Exception", e);
+      return false;
 
     }
   }
@@ -777,16 +923,17 @@ export class ApiDataProvider {
       processedCoin.coinCode = coinCode;
       let coinGlobalStats: any = this.getCoinGlobalStats(coinCode, coinMarketCapData, coinDeskData);
 
-      processedCoin.global.INR.no = +coinGlobalStats.globalINR;
-      processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
+      if (coinGlobalStats != false) {
+        processedCoin.global.INR.no = +coinGlobalStats.globalINR;
+        processedCoin.global.USD.no = +coinGlobalStats.globalUSD;
 
-      processedCoin.change.hour = +coinGlobalStats.changeHour;
-      processedCoin.change.day = +coinGlobalStats.changeDay;
-      processedCoin.change.week = +coinGlobalStats.changeWeek;
-      processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
-      processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
-      // console.log(processedCoin.globalDiff.percent);
-
+        processedCoin.change.hour = +coinGlobalStats.changeHour;
+        processedCoin.change.day = +coinGlobalStats.changeDay;
+        processedCoin.change.week = +coinGlobalStats.changeWeek;
+        processedCoin.globalDiff.val.no = processedCoin.market.no - processedCoin.global.INR.no;
+        processedCoin.globalDiff.percent = this.utility.trimToDecimal((processedCoin.globalDiff.val.no / processedCoin.market.no) * 100, 2);
+        // console.log(processedCoin.globalDiff.percent);
+      }
       return processedCoin;
     }
     catch (e) {

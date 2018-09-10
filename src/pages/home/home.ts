@@ -5,8 +5,8 @@ import { CoinDetailPage } from '../coin-detail/coin-detail';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/takeWhile';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Network } from '@ionic-native/network';
 import * as Constants from '../../constants/api-constants'
+import { Utilities } from '../../providers/utilities/utilities';
 
 @Component({
   selector: 'page-home',
@@ -19,11 +19,11 @@ export class HomePage {
   apiUrls: any;
   selExchange: any;
   alive: boolean;
-  pageName: string = "home page";
+  pageName: string = Constants.HOME_PAGE;
   networkFlag: boolean = true;
   firstEntryFlag: boolean = true;
 
-  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform) {
+  constructor(public navCtrl: NavController, public api: ApiDataProvider, public platform: Platform, private util: Utilities) {
     // console.log("Constructor - Home page");
     this.alive = true;
   }
@@ -32,6 +32,8 @@ export class HomePage {
     // console.log("ngOnInit - home called");
     this.firstEntryFlag = false;
     this.api.checkNetworkConnection().then(val => {
+      // console.log("Network flag - Home page ", this.networkFlag);
+
       this.networkFlag = val;
       if (this.networkFlag) {
         // console.log("network present - fetching api");
@@ -39,8 +41,19 @@ export class HomePage {
         this.api.logAnalytics(this.pageName);
         this.setApiUrl();
         this.api.instructionToast(this.pageName, 0);
+        if (this.api.rateNotif == true) {
+          this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
+        }
+      } else {
+        this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
       }
     });
+  }
+
+  swipe(event) {
+    if (event.direction === 4) {
+      this.navCtrl.parent.select(1);
+    }
   }
 
   setApiUrl() {
@@ -59,6 +72,7 @@ export class HomePage {
           this.networkFlag = this.api.networkFlag;
           // console.log("Auto Refresh Network Flag " + this.networkFlag);
           if (this.networkFlag) {
+            this.apiUrls = this.api.apiUrls;
             this.populateView();
           }
         });
@@ -74,12 +88,16 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
+    // console.log("ion view will enter");
+
     this.alive = true;
     this.networkFlag = this.api.networkFlag;
     if (!this.firstEntryFlag && this.networkFlag && this.apiUrls == undefined) {
       this.ngOnInit();
     }
     // console.log("Home page -View Entered", this.alive);
+    // console.log("Home page view will enter ", this.networkFlag);
+
   }
 
   doRefresh(refresher) {
@@ -87,6 +105,7 @@ export class HomePage {
     this.networkFlag = this.api.networkFlag;
     // console.log("Refresh Network Flag " + this.networkFlag);
     if (this.networkFlag) {
+      this.apiUrls = this.api.apiUrls;
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
@@ -107,18 +126,27 @@ export class HomePage {
       // console.log("Selected Exchange", this.selExchange);
 
     }
-    this.selectedExchange(this.selExchange);
+    this.populateForExchange(this.selExchange);
   }
 
   public selectedExchange(sel: any) {
-    // console.log("Coin List", this.apiUrls.exchange[sel].coinList);
+    this.coins = undefined;
+    this.populateForExchange(sel);
+  }
 
+
+  public populateForExchange(sel: any) {
+    // console.log("Coin List", this.apiUrls.exchange[sel].coinList);
     this.api.getMarketOverviewData(sel, this.apiUrls.exchange[sel].coinList).subscribe(res => {
       // console.log("first data - exchange data", res[0]);
       // console.log("second data - coin market Cap data", res[1]);
       // console.log("third data - coindesk data", res[2]);
-      this.coins = this.api.processExchangeData(sel, res[0], res[1], res[2]);
 
+      let rawCoinList: Array<any> = this.api.processExchangeData(sel, res[0], res[1], res[2]);
+
+
+
+      this.coins = this.util.coinSorter(rawCoinList);
       // console.log("processed exchange data");
       // console.log(this.coins);
 

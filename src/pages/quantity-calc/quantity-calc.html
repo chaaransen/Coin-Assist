@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="navBarColor">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -8,55 +8,55 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="centerNetwork" *ngIf="!networkFlag">
-    <b>Network connection unavailable.</b> Please connect to a network.
-    <button class="padding2rem" (click)="ngOnInit()" ion-button color="light">Retry</button>
-  </div>
-
   <ion-refresher (ionRefresh)="doRefresh($event)" *ngIf="enable">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="networkFlag">
-    <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>
-    <div class="size2rem center" *ngIf="coins != undefined">
-      <span class=" size2rem3 weight500 ">{{points}}</span>
-      <span class="padding1rem ">: Uses Left
-      </span>
-      <button class="padding1rem getPoints " (click)="showAd() " ion-button color="dark">Refill Use</button>
+  <div class="main-content" (swipe)="swipe($event)">
+    <div class="centerNetwork" *ngIf="networkFlag == false && networkFlag != undefined">
+      <b>Network connection unavailable.</b> Please connect to a network.
+      <button class="padding2rem" (tap)="ngOnInit()" ion-button color="light">Retry</button>
     </div>
+    <div *ngIf="networkFlag">
+      <ion-spinner *ngIf="coins == undefined" class="coinSpinner"></ion-spinner>
+      <div class="size2rem center" *ngIf="coins != undefined">
+        <span class=" size3rem weight500">{{points}}</span>
+        <span class="padding1rem">: Uses Left
+        </span>
+        <button class="padding1rem getPoints" (tap)="showAd()" ion-button color="dark">Refill Use</button>
+      </div>
 
-  </div>
-  <hr>
-  <div *ngIf="enable && networkFlag && coins != undefined">
-    <ion-card-header class="weight500 size1rem8 paddingTop0 ">
-      Enter Coin Detail
-    </ion-card-header>
-    <ion-list>
+    </div>
+    <hr>
+    <div *ngIf="enable && networkFlag && coins != undefined">
+      <ion-card-header class="weight500 size1rem8 paddingTop0 ">
+        Enter Coin Detail
+      </ion-card-header>
+      <ion-list>
 
-      <ion-item>
-        <ion-label fixed>Exchange</ion-label>
-        <ion-select [(ngModel)]="selExchange " *ngIf="selExchange " interface="popover " (ngModelChange)="exchangeChanged(selExchange) ">
-          <ion-option *ngFor=" let exchange of exchanges ">{{exchange}}</ion-option>
-        </ion-select>
-      </ion-item>
+        <ion-item>
+          <ion-label fixed>Exchange</ion-label>
+          <ion-select [(ngModel)]="selExchange" *ngIf="selExchange" interface="popover" (ngModelChange)="exchangeChanged(selExchange)">
+            <ion-option *ngFor=" let exchange of exchanges">{{exchange}}</ion-option>
+          </ion-select>
+        </ion-item>
 
-      <ion-item>
-        <ion-label fixed>Crypto-Coin</ion-label>
-        <ion-select [(ngModel)]="selCoin.coinName " interface="popover " (ngModelChange)="populateView() ">
-          <ion-option *ngFor=" let coin of coins " [value]="coin.coinName ">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
-        </ion-select>
-      </ion-item>
+        <ion-item>
+          <ion-label fixed>Crypto-Coin</ion-label>
+          <ion-select [(ngModel)]="selCoin.coinName" interface="popover" (ngModelChange)="populateView()">
+            <ion-option *ngFor=" let coin of coins" [value]="coin.coinName">{{coin.coinName}} ({{coin.coinCode}})</ion-option>
+          </ion-select>
+        </ion-item>
 
-      <ion-item>
-        <ion-label fixed>Coin Rate</ion-label>
-        <ion-input type="number " placeholder="(e.g) 3000 " [(ngModel)]="selCoin.range.rate.no " clearInput="true
-      " (ngModelChange)="coinRateChanged($event) "></ion-input>
-      </ion-item>
-      <ion-item>
-        &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})
-      </ion-item>
-      <!-- <ion-item>
+        <ion-item>
+          <ion-label fixed>Coin Rate</ion-label>
+          <ion-input type="tel" placeholder="(e.g) 3000" maxLength="8" [(ngModel)]="selCoin.range.rate.no" clearInput="true" (ngModelChange)="coinRateChanged($event) "></ion-input>
+        </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.rateValid">* Enter a valid number</div>
+        <ion-item>
+          &#177;20% : ({{selCoin.range.minusPercent.formatted}} - {{selCoin.range.plusPercent.formatted}})
+        </ion-item>
+        <!-- <ion-item>
       <ion-range [min]="selCoin.range.minusPercent.no " [max]="selCoin.range.plusPercent.no " step="selCoin.step
       " snaps="true " [(ngModel)]="rangeValue "
         (ionChange)="rangeChanged($event) ">
@@ -65,75 +65,78 @@
       </ion-range>
     </ion-item> -->
 
-      <ion-item>
-        <ion-label fixed>Amount &#8377;</ion-label>
-        <ion-input type="number " placeholder="(e.g) 1000 " clearInput="true " [(ngModel)]="amount.no " max="9
-      " (ngModelChange)="amountChanged($event) "></ion-input>
-      </ion-item>
-      <!-- <div *ngIf="amountFlag ">*Amount exceeding Limit</div> -->
-      <ion-item>
-        <ion-label fixed>Quantity</ion-label>
-        <ion-input type="number " placeholder="(e.g) 0.0001 " clearInput="true " [(ngModel)]="quantity.no
-      " (ngModelChange)="calcAmount($event) "></ion-input>
-      </ion-item>
-    </ion-list>
-    <ion-card-header class="weight500 size1rem8 ">
-      Summary
-    </ion-card-header>
-    <ion-card>
-      <ion-grid>
-        <ion-row>
-          <ion-col col-6 class="center ">
-            <ion-row>
-              <ion-col col-12 class="weight500 size2rem8 ">
-                {{quantity.formatted}}
+        <ion-item>
+          <ion-label fixed>Amount &#8377;</ion-label>
+          <ion-input type="tel" placeholder="(e.g) 1000" maxLength="8" clearInput="true" [(ngModel)]="amount.no" max="9" (ngModelChange)="amountChanged($event)"></ion-input>
 
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col col-12>
-                {{selCoin.coinName}}(s) ({{selCoin.coinCode}})
-              </ion-col>
-            </ion-row>
-          </ion-col>
-          <ion-col col-6>
-            <img class="center " src="{{selCoin.coinImage}} ">
-          </ion-col>
-        </ion-row>
+        </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.amountValid">* Enter a valid number</div>
+        <!-- <div *ngIf="amountFlag ">*Amount exceeding Limit</div> -->
+        <ion-item>
+          <ion-label fixed>Quantity</ion-label>
+          <ion-input type="tel" placeholder="(e.g) 0.0001" clearInput="true" maxLength="8" [(ngModel)]="quantity.no" (ngModelChange)="calcAmount($event)"></ion-input>
 
-        <ion-row>
-          <ion-col col-6>
-            Coin Rate:
-          </ion-col>
-          <ion-col col-6>
-            {{selCoin.range.rate.formatted}}
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col col-6>
-            Amount:
-          </ion-col>
-          <ion-col col-6>
-            {{actualAmount.formatted}}
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col col-6>
-            Buy Fees:({{buyerFeesPercent}}%)
-          </ion-col>
-          <ion-col col-6 class="redColor ">
-            {{buyerFees.formatted}}
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col col-6>
-            Total Amount:
-          </ion-col>
-          <ion-col col-6 class="weight500 ">
-            {{amount.formatted}}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
+        </ion-item>
+        <div class="invalidInput" *ngIf="!quantityValid.quantityValid">* Enter a valid number</div>
+      </ion-list>
+      <ion-card-header class="weight500 size1rem8">
+        Summary
+      </ion-card-header>
+      <ion-card>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-6 class="center">
+              <ion-row>
+                <ion-col col-12 class="weight500 size2rem8">
+                  {{quantity.formatted}}
+
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col col-12>
+                  {{selCoin.coinName}}(s) ({{selCoin.coinCode}})
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col col-6>
+              <img class="center" src="{{selCoin.coinImage}}">
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-6>
+              Coin Rate:
+            </ion-col>
+            <ion-col col-6>
+              {{selCoin.range.rate.formatted}}
+            </ion-col>
+          </ion-row>
+          <ion-row class="greyBorderTop">
+            <ion-col col-6>
+              Actual Amount:
+            </ion-col>
+            <ion-col col-6>
+              {{actualAmount.formatted}}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              Buy Fees:({{buyerFeesPercent}}%)
+            </ion-col>
+            <ion-col col-6 class="redColor">
+              {{buyerFees.formatted}}
+            </ion-col>
+          </ion-row>
+          <ion-row class="greyBorderTop">
+            <ion-col col-6>
+              Total Amount:
+            </ion-col>
+            <ion-col col-6 class="weight500">
+              {{amount.formatted}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
   </div>
 </ion-content>

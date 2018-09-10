@@ -22,7 +22,7 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics';
 import { AdMobFree, AdMobFreeRewardVideo } from '@ionic-native/admob-free';
 import { FCM } from '@ionic-native/fcm';
 import { Network } from '@ionic-native/network';
-
+import { NativePageTransitions } from '@ionic-native/native-page-transitions';
 
 @NgModule({
   declarations: [
@@ -71,7 +71,8 @@ import { Network } from '@ionic-native/network';
     AdMobFree,
     AdMobFreeRewardVideo,
     FCM,
-    Network
+    Network, 
+    NativePageTransitions
   ]
 })
 export class AppModule { }

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Platform } from 'ionic-angular';
 import { ApiDataProvider } from '../../providers/api-data/api-data';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { CoinDetail } from '../../models/coin-detail';
 import { ValueDetail } from '../../models/value-detail';
 import { Utilities } from '../../providers/utilities/utilities';
-import * as Constants from '../../constants/api-constants'
+import * as Constants from '../../constants/api-constants';
+import { Observable } from 'rxjs/Observable';
+import { QuantityValid } from '../../models/api-urls';
 
 @Component({
   selector: 'page-quantity-calc',
@@ -28,12 +30,13 @@ export class QuantityCalcPage {
   public quantity: ValueDetail = new ValueDetail();
   percent: number = 0.05;
   rangeValue: number;
-  pageName: string = "quantity-calc page";
+  pageName: string = Constants.QUANTITY_PAGE;
   reward: boolean;
   enable: boolean;
   networkFlag: boolean = true;
+  public quantityValid: QuantityValid = new QuantityValid();
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider, public util: Utilities, private alertCtrl: AlertController, private platform: Platform) {
     // console.log("1 qty constructor called");
     this.selExchange = this.navParam.get("exchange");
     this.selCoin.coinName = this.navParam.get("coin");
@@ -43,81 +46,106 @@ export class QuantityCalcPage {
   }
 
   ngOnInit() {
-    // console.log("2 ng oninit called");
+    // console.log("Quantity ng oninit called");
 
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
 
+      this.platform.resume.subscribe(() => {
+        // console.log("QTY resume");
+        this.fetchPoints();
+      });
+
       this.api.getApiUrl().then(apiUrl => {
-        console.log("Response API url ", apiUrl);
+        // console.log("1st Stage ", apiUrl);
 
         this.apiUrls = apiUrl;
+        return Promise.resolve(apiUrl);
+      }).then(() => {
+        // console.log("2nd Stage");
 
         this.apis = this.apiUrls.exchange;
-        // console.log("Exchange values", this.apis);
-
         this.exchanges = Object.keys(this.apis);
-
         if (this.selExchange == undefined) {
           this.selExchange = Constants.KOINEX;
         }
         if (this.selCoin.coinName == undefined) {
           this.selCoin.coinName = this.apiUrls.coins.BTC.name;
         }
-
+        return Promise.resolve(this.apis);
+      }).then(() => {
+        // console.log("Stage 3");
 
         this.populateView();
-
-        // this.api.trackPage(this.pageName);
-        this.api.logAnalytics(this.pageName);
-
-        this.api.fetchService(this.pageName).then(lock => {
-          if (lock != true) {
-            this.infoAlert();
-          }
-        });
-
-        this.api.fetchService("points").then(points => {
-          // console.log("QTY fetched points", points);
-
-          this.points = points;
-
-          if (this.points > 0) {
-            if (!this.api.usedFlag) {
-              this.points = this.points - 1;
-              this.api.usedFlag = true;
-            }
-            this.enable = true;
-
-          } else {
-            this.enable = false;
-          }
-          if (this.points == 1) {
-            this.presentGetPoints(Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
-          }
-
-
-          // console.log("Storing new Points", this.points);
-          this.api.storeService(Constants.POINTS, this.points);
-
-
-          if (!this.enable) {
-            this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
-          }
-          // console.log("Existing points", this.points);
-        });
       });
+
+      // console.log("Exchange values", this.apis);
+      // this.api.trackPage(this.pageName);
+      this.api.logAnalytics(this.pageName);
+
+
+      this.api.fetchService(Constants.REFILL_INFO).then(lock => {
+        if (lock != true) {
+          this.infoAlert();
+        }
+      });
+
+      this.api.fetchService(Constants.POINTS).then(points => {
+        // console.log("QTY value before", points);
+
+        this.points = points;
+
+        if (this.points > 0) {
+          if (!this.api.usedFlag) {
+            this.points = this.points - 1;
+            // console.log("points updated ", this.points);
+            this.api.storeService(Constants.POINTS, this.points);
+            // console.log("New points stored ", this.points);
+
+            this.api.usedFlag = true;
+          }
+          this.enable = true;
+
+        } else {
+          this.enable = false;
+        }
+        if (this.points <= 1) {
+          this.presentGetPoints(this.points + Constants.LAST_POINT_MSG, Constants.LAST_POINT_DESC);
+        }
+        // console.log("Storing new Points", this.points);
+
+        if (!this.enable) {
+          this.presentGetPoints(Constants.INSUF_POINTS_MSG, Constants.INSUF_POINTS_DESC);
+        }
+        // console.log("Existing points", this.points);
+      });
+
+    } else {
+      this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
     }
   }
 
-  ionViewWillEnter() {
-    this.networkFlag = this.api.networkFlag;
-    // console.log("Home page -View Entered", this.alive);
+  swipe(event) {
+    if (event.direction === 2) {
+      this.navCtrl.parent.select(0);
+    } else if (event.direction === 4) {
+      this.navCtrl.parent.select(2);
+
+    }
   }
-  ionViewDidEnter() {
-    if (this.api.rewardNotif) {
-      this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP);
-      this.api.rewardNotif = false;
+
+  fetchPoints() {
+    this.api.fetchService(Constants.POINTS).then(points => {
+      // console.log("QTY fetch points", points);
+      this.points = points;
+    });
+  }
+
+  ionViewWillEnter() {
+    // console.log("QTY view will enter");
+    this.networkFlag = this.api.networkFlag;
+    if (this.api.usedFlag) {
+      this.fetchPoints();
     }
   }
 
@@ -130,7 +158,8 @@ export class QuantityCalcPage {
         {
           text: 'Got it!',
           handler: () => {
-            this.api.instructionToast(this.pageName, 2000);
+            this.api.storeService(Constants.REFILL_INFO, true);
+            this.api.instructionToast(this.pageName, 2500, false);
           }
         }
       ]
@@ -167,6 +196,7 @@ export class QuantityCalcPage {
     // console.log(this.selCoin.coinName, "sel Coin Name - Refresh");
     this.networkFlag = this.api.networkFlag;
     if (this.networkFlag) {
+      this.apiUrls = this.api.apiUrls;
       this.populateView();
       setTimeout(() => {
         this.api.showToast(Constants.PRICE_REFRESH, Constants.TOP);
@@ -179,7 +209,7 @@ export class QuantityCalcPage {
   }
 
   populateView() {
-    // console.log("3 populate view called");
+    // console.log("3 populate view called, api values ", this.apiUrls);
     this.populateCoins(this.selExchange);
     let feesPercent = +this.apis[this.selExchange].fees.buy;
     this.buyerFeesPercent = feesPercent * 100;
@@ -201,15 +231,26 @@ export class QuantityCalcPage {
     // console.log("4 populate coins", exchange);
     this.api.getExchangeData(exchange, true).subscribe(res => {
       // console.log("Exchange data", res);
+      let exchangeDataLengths = Object.keys(res).length;
+      if (exchangeDataLengths > 1) {
+        let rawCoinList: Array<any> = this.api.processExchangeData(exchange, res, undefined, undefined);
+        this.coins = this.util.coinSorter(rawCoinList);
+        // console.log(this.coins, "coins in qty");
+        if (this.selCoin.coinName == undefined) {
+          this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
+          // console.log("Coiname sent", this.selCoin.coinName);
 
-      this.coins = this.api.processExchangeData(exchange, res, undefined, undefined);
-      // console.log(this.coins, "coins in qty");
-      if (this.selCoin.coinName == undefined) {
-        this.selCoin.coinName = this.api.apiUrls.coins.BTC.name;
-        // console.log("Coiname sent", this.selCoin.coinName);
+        }
+        if (this.coins != undefined) {
+          this.populateCoinValues(this.selCoin.coinName);
+        }
+      } else {
+        var retryFetch = Observable.timer(3000);
+        retryFetch.subscribe(res => {
+          this.populateCoins(this.selExchange);
+        });
 
       }
-      this.populateCoinValues(this.selCoin.coinName);
     });
   }
 
@@ -234,12 +275,24 @@ export class QuantityCalcPage {
     this.selCoin.step = this.api.rangeStepCalculator(this.selCoin.min.no, this.selCoin.max.no);
     // console.log("9 Range step called");
     // console.log(this.selCoin);
-    this.calcQuantity();
+    if (this.quantityValid.amountValid && this.amount.no != +"") {
+      this.calcQuantity();
+    }
     // console.log(this.selCoin);
   }
 
   public coinRateChanged() {
-    this.updateRange();
+    if (this.util.validNumberChecker(this.selCoin.range.rate.no)) {
+      this.quantityValid.rateValid = true;
+      if (this.selCoin.range.rate.no != +"") {
+        this.updateRange();
+      }
+    } else {
+      this.quantityValid.rateValid = false;
+      this.dataFormatter();
+      // console.log("coin Rate value", this.quantityValid.rateValid);
+
+    }
   }
 
   formateRate() {
@@ -250,8 +303,8 @@ export class QuantityCalcPage {
   }
 
   public calcQuantity() {
-    // console.log("quantity calculated");
-    if (this.amount.no != undefined) {
+    // console.log("quantity calculation ", this.amount.no);
+    if (this.amount.no != undefined && this.amount.no != +"") {
       this.calcFeesAmount();
       // console.log("Actual Amount", this.actualAmount);
       let qty = this.actualAmount.no / this.selCoin.range.rate.no;
@@ -282,6 +335,7 @@ export class QuantityCalcPage {
 
     if (!calcActual) {
       this.amount.no = this.actualAmount.no + this.buyerFees.no;
+      this.amount.no = this.util.trimQuantity("default", this.amount.no);
       this.amount.formatted = this.util.currencyFormatter(this.amount.no);
     }
   }
@@ -297,35 +351,57 @@ export class QuantityCalcPage {
   }
 
   public calcAmount(quantity: string) {
-    // console.log("quantity changed ", quantity);
-    if (quantity != "0" && quantity != '') {
-      this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
+    if (this.util.validNumberChecker(quantity)) {
+      this.quantityValid.quantityValid = true;
+      // console.log("quantity changed ", quantity);
+      if (quantity != "0" && quantity != '') {
+        this.quantity.no = quantity.length > 10 ? this.trimAmount(quantity) : quantity;
 
-      // console.log("Formatted quantity", this.quantity.formatted);
-      this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
-      this.calcFeesAmount(false);
+        // console.log("Formatted quantity", this.quantity.formatted);
+        if (this.quantityValid.rateValid && this.selCoin.range.rate.no != +"") {
+          this.actualAmount.no = this.quantity.no * this.selCoin.range.rate.no;
+          this.calcFeesAmount(false);
+        }
+      }
+      this.dataFormatter();
     }
-    this.dataFormatter();
+    else {
+      this.quantityValid.quantityValid = false;
+    }
   }
 
   public amountChanged(amount: string) {
     // console.log("amount changed ", amount);
-    if (amount != '0' && amount != '') {
-      this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
+    if (this.util.validNumberChecker(amount)) {
+      this.quantityValid.amountValid = true;
+      if (amount != '0' && amount != '') {
+        this.amount.no = amount.length > 9 ? this.trimAmount(amount) : amount;
 
-      // console.log("formatted amount", this.amount.formatted);
-      this.calcQuantity();
+        // console.log("formatted amount", this.amount.formatted);
+        if (this.quantityValid.rateValid && this.selCoin.range.rate.no != +"") {
+          this.calcQuantity();
+        }
+      } else {
+        // console.log("Nullified ", amount);
+
+        this.buyerFees.no = 0;
+        this.actualAmount.no = 0;
+      }
+      this.dataFormatter();
+      // console.log("new amount.no value", this.amount.no);
+    } else {
+      this.quantityValid.amountValid = false;
     }
-    this.dataFormatter();
-    // console.log("new amount.no value", this.amount.no);
-
   }
 
   dataFormatter() {
     // console.log(this.quantity.no);
 
+    this.selCoin.range.rate.formatted = this.util.numberFormatter(this.selCoin.range.rate.no);
     this.quantity.formatted = this.util.numberFormatter(this.quantity.no);
     this.amount.formatted = this.util.currencyFormatter(+this.amount.no);
+    this.buyerFees.formatted = this.util.currencyFormatter(+this.buyerFees.no);
+    this.actualAmount.formatted = this.util.currencyFormatter(+this.actualAmount.no);
     // console.log(this.quantity.no);
   }
   public trimAmount(amount) {
@@ -333,28 +409,57 @@ export class QuantityCalcPage {
   }
 
   public showAd() {
-    this.api.showVideoAd();
+    // this.api.showVideoAd();
+    if (this.api.networkFlag) {
+      this.api.showToast(Constants.SHOWING_ADS, Constants.TOP);
+      this.api.prepareVideoAd(true);
 
-    this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
-      this.api.fetchService("points").then(points => {
+      this.api.admobFree.on("admob.rewardvideo.events.CLOSE").subscribe(res => {
+        this.api.fetchService("points").then(points => {
 
-        console.log("Ad Closed");
+          // console.log("Ad Closed");
 
-        this.points = points;
-        if (this.points > 0) {
-          this.enable = true;
-          if (this.reward) {
-            this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
-            this.reward = false;
+          this.points = points;
+          if (this.points > 0) {
+            this.enable = true;
+            if (this.reward) {
+              this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+              this.reward = false;
+            }
           }
-        }
+        });
       });
-    });
 
-    this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
-      console.log("Quant Reward Called");
+      this.api.admobFree.on("admob.interstitial.events.CLOSE").subscribe(res => {
+        // console.log("Interstitial close - Quant page");
 
-      this.reward = true;
-    });
+        this.api.fetchService(Constants.POINTS).then(points => {
+
+          // console.log("Interstitial Ad Closed");
+
+          this.points = points;
+          if (this.points > 0) {
+            this.enable = true;
+            if (this.reward) {
+              this.api.showToast(Constants.REWARD_POINTS, Constants.TOP, 2000);
+              this.reward = false;
+            }
+          }
+        });
+      });
+
+      this.api.admobFree.on("admob.interstitial.events.OPEN").subscribe(res => {
+        // console.log("Interstitial open - Quant page");
+        this.reward = true;
+      });
+
+      this.api.admobFree.on("admob.rewardvideo.events.REWARD").subscribe(res => {
+        // console.log("Quant Reward Called");
+
+        this.reward = true;
+      });
+    } else {
+      this.api.showToast(Constants.NO_INTERNET, Constants.TOP);
+    }
   }
 }

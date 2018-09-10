@@ -9,6 +9,8 @@ import { NewsPage } from '../pages/news/news';
 import { QuantityCalcPage } from '../pages/quantity-calc/quantity-calc';
 import * as Constants from '../constants/api-constants';
 import { FCM } from '@ionic-native/fcm';
+import { RateStatus } from '../models/api-urls';
+import { NativeTransitionOptions, NativePageTransitions } from '@ionic-native/native-page-transitions';
 
 @Component({
   templateUrl: 'app.html'
@@ -16,59 +18,103 @@ import { FCM } from '@ionic-native/fcm';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  // rootPage: any = HomePage;
   tab1Root = HomePage;
   tab2Root = QuantityCalcPage;
-  tab4Root = ProfitCalcPage;
-  tab5Root = NewsPage;
+  tab3Root = ProfitCalcPage;
+  tab4Root = NewsPage;
   apiUrls: any;
   pages: Array<{ title: string, component: any }>;
   usesUntilPrompt: number;
   rateFlag: boolean;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController) {
+  //Tabs animation
+  loaded: boolean = false;
+  tabIndex: number = 0;
+
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public api: ApiDataProvider, private fcm: FCM, private app: App, private alertCtrl: AlertController, private nativePageTransitions: NativePageTransitions) {
     this.initializeApp();
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage }
+      { title: 'Home', component: HomePage }, { title: 'Quantity Calc', component: QuantityCalcPage }, { title: 'Profit Calc', component: ProfitCalcPage }
     ];
   }
 
   ngOnInit() {
     // console.log("Ng oninit Called - app component");
+    this.platform.ready().then(() => {
+      this.api.fetchUrl();
+      this.api.fetchService(Constants.POINTS).then(points => {
+        // console.log("Points App component", points);
+        if (points == null) {
+          // console.log("Points is undefined ", points);
+          this.api.storeService(Constants.POINTS, Constants.DEFAULT_POINT);
+        }
+      });
 
-    this.api.fetchService(Constants.POINTS).then(points => {
-      // console.log("Points", points);
-      if (points == undefined) {
-        this.api.storeService(Constants.POINTS, Constants.DEFAULT_POINT);
-      }
+      this.api.fetchService(Constants.RATED).then(rateRes => {
+        // console.log("Rate Flag ", rateFlag);
+        if (rateRes == null) {
+          this.rateFlag = false;
+
+          let rateStatus = new RateStatus();
+          rateStatus.rated = this.rateFlag;
+          rateStatus.notify = this.api.rateNotif;
+          this.api.storeService(Constants.RATED, rateStatus);
+        } else {
+          this.api.rateNotif = rateRes.notify;
+          this.rateFlag = rateRes.rated;
+        }
+
+      });
+
+      this.api.fetchService(Constants.RATE_USES_UNTIL).then(rateUsesLeft => {
+        // console.log("USES UNTIL LEFT", rateUsesLeft);
+        if (rateUsesLeft == null) {
+          let defaultLeft = Constants.DEFAULT_USES_UNTIL;
+          this.usesUntilPrompt = defaultLeft;
+          this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
+          // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
+
+        } else {
+          this.usesUntilPrompt = rateUsesLeft;
+          // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
+
+        }
+      });
     });
+  }
 
-    this.api.fetchService(Constants.RATED).then(rateFlag => {
-      // console.log("Rate Flag ", rateFlag);
-      if (rateFlag == undefined) {
-        this.rateFlag = false;
-        this.api.storeService(Constants.RATED, this.rateFlag);
-      } else {
-        this.rateFlag = rateFlag;
-      }
+  public transition(e): void {
+    let options: NativeTransitionOptions = {
+      direction: this.getAnimationDirection(e.index),
+      duration: 250,
+      slowdownfactor: -1,
+      slidePixels: 0,
+      iosdelay: 20,
+      androiddelay: 0,
+      fixedPixelsTop: 0,
+      fixedPixelsBottom: 48
+    };
 
-    });
+    if (!this.loaded) {
+      this.loaded = true;
+      return;
+    }
 
-    this.api.fetchService(Constants.RATE_USES_UNTIL).then(rateUsesLeft => {
-      // console.log("USES UNTIL LEFT", rateUsesLeft);
-      if (rateUsesLeft == null) {
-        let defaultLeft = Constants.DEFAULT_USES_UNTIL;
-        this.usesUntilPrompt = defaultLeft;
-        this.api.storeService(Constants.RATE_USES_UNTIL, this.usesUntilPrompt);
-        // console.log("UsesUntilLeft Null so default ", this.usesUntilPrompt);
+    this.nativePageTransitions.slide(options);
+  }
 
-      } else {
-        this.usesUntilPrompt = rateUsesLeft;
-        // console.log("Fetched Uses Until left ", this.usesUntilPrompt);
+  private getAnimationDirection(index): string {
+    var currentIndex = this.tabIndex;
 
-      }
-    });
+    this.tabIndex = index;
+
+    switch (true) {
+      case (currentIndex < index):
+        return ('left');
+      case (currentIndex > index):
+        return ('right');
+    }
   }
 
   initializeApp() {
@@ -76,11 +122,13 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       // console.log("Platform ready");
+
       this.api.prepareVideoAd();
+      this.splashScreen.hide();
       this.statusBar.overlaysWebView(true);
       this.statusBar.styleBlackOpaque();
       this.statusBar.show();
-      this.splashScreen.hide()
+      // this.splashScreen.hide()
       this.fcm.onNotification().subscribe(data => {
         if (data.wasTapped) {
           console.log(data);
@@ -88,6 +136,18 @@ export class MyApp {
         } else {
           console.log(data);
         };
+      });
+
+      this.platform.resume.subscribe(() => {
+        if (this.api.rewardNotif) {
+          this.api.showToast(Constants.RATE_REWARD_MSG, Constants.TOP, 3000);
+          this.api.rewardNotif = false;
+          let rateStatus = new RateStatus();
+          rateStatus.rated = true;
+          rateStatus.notify = this.api.rateNotif;
+          this.api.storeService(Constants.RATED, rateStatus);
+        }
+
       });
 
       this.platform.registerBackButtonAction(() => {
@@ -169,13 +229,17 @@ export class MyApp {
             // console.log('Rating and getting 5 points');
             this.api.rewardNotif = true;
             window.open(Constants.RATE_LINK, '_system', 'location=yes');
-            this.usesUntilPrompt = Constants.RATE_REWARD;
             this.api.fetchService(Constants.POINTS).then(points => {
               // console.log("Points", points);
               this.api.storeService(Constants.POINTS, points + Constants.RATE_REWARD);
             });
             this.rateFlag = true;
-            this.api.storeService(Constants.RATED, this.rateFlag);
+            this.api.rateNotif = true;
+
+            let rateStatus = new RateStatus();
+            rateStatus.rated = this.rateFlag;
+            rateStatus.notify = this.api.rateNotif;
+            this.api.storeService(Constants.RATED, rateStatus);
             // console.log("Rated Flag set", this.rateFlag);
 
           }
