@@ -20,7 +20,7 @@ export class CoinDetailPage {
   referralLink: string;
   apis: any;
   alive: boolean;
-  pageName: string = "coin-detail page";
+  pageName: string = Constants.COIN_DETAIL_PAGE;
   networkFlag: boolean;
 
   constructor(public navCtrl: NavController, public navParam: NavParams, public api: ApiDataProvider) {
@@ -52,9 +52,19 @@ export class CoinDetailPage {
           }
         });
 
-      this.api.instructionToast(this.pageName, 1500);
+      this.api.instructionToast(this.pageName, 2000, false);
     }
   }
+
+  swipe(event) {
+    if (event.direction === 4) {
+      this.navCtrl.parent.select(1);
+    } else
+      if (event.direction === 2) {
+        this.navCtrl.parent.select(0);
+      }
+  }
+
 
   ionViewDidLeave() {
 

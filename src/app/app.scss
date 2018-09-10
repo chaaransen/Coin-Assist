@@ -18,6 +18,49 @@
     font-weight: 400;
 }
 
+.main-content {
+    height: 100%;
+}
+
+.priceTag {
+    width: 2.2rem;
+    height: 2.2rem;
+    float: right;
+}
+
+.greyBorderTop {
+    border-top: 0.1rem solid #EBEBEB;
+}
+
+.marginLeft1rem3 {
+    margin-left: 1.3rem;
+}
+
+.marginLeft2rem0 {
+    margin-left: 2.0rem;
+}
+
+.tabs-md-navBarColor .tab-button:hover:not(.disable-hover),
+.tabs-md-navBarColor .tab-button[aria-selected=true],
+.tabs-md-navBarColor .tab-button[aria-selected=true] .tab-button-icon {
+    color: #296cd8;
+}
+
+.invalidInput {
+    padding-left: 1.6rem;
+    color: salmon;
+    padding-top: 0.3rem;
+    font-size: 1.4rem;
+}
+
+.priceIndex {
+    float: left;
+}
+
+.padding0rem {
+    padding: 0rem;
+}
+
 .redColor {
     color: #b95516;
 }
@@ -56,11 +99,15 @@
 }
 
 .size2rem3 {
-    font-size: 3rem;
+    font-size: 2.3rem;
 }
 
 .size2rem4 {
-    font-size: 4rem;
+    font-size: 2.4rem;
+}
+
+.size2rem5 {
+    font-size: 2.5rem;
 }
 
 .size2rem8 {
@@ -91,6 +138,22 @@
     text-align: center;
     border: 3px solid grey;
     padding: 10px;
+}
+
+.paddingRight1rem {
+    padding-right: 1rem;
+}
+
+.paddingLeft1rem {
+    padding-left: 1rem;
+}
+
+.marginLeft1rem {
+    margin-left: 1rem;
+}
+
+.paddingTop0rem7 {
+    padding-top: 0.7rem;
 }
 
 .coinSpinner {
@@ -134,7 +197,7 @@
 }
 
 .blueColor {
-    color: #3784ff;
+    color: deepskyblue;
 }
 
 .price {
@@ -165,6 +228,14 @@
 
 .paddingTop0 {
     padding-top: 0px;
+}
+
+.paddingtop0rem2 {
+    padding-top: 0.2rem;
+}
+
+.paddingTop0rem6 {
+    padding-top: 0.6rem;
 }
 
 .paddingBottom0 {
@@ -206,4 +277,13 @@ hr {
 
 .alignCenter {
     text-align: center;
+}
+
+.toastFormat {
+    .toast-button {
+        color: deepskyblue;
+    }
+    .toast-container {
+        background-color: dimgrey;
+    }
 }

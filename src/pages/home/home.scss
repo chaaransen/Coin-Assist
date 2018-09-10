@@ -8,7 +8,14 @@ page-home {
     .item-md ion-thumbnail[item-left],
     .item-md ion-avatar[item-start],
     .item-md ion-thumbnail[item-start] {
-        margin: 8px 0px 8px 0;
+        margin: 20px 0px 2px 5px;
+    }
+    .priceIndexVal {
+        margin-left: 0rem;
+        padding-left: 0.5rem;
+    }
+    .dayChangeVal {
+        padding-left: 1.4rem;
     }
     .text-center {
         text-align: center;
@@ -16,7 +23,6 @@ page-home {
     * {
         font-size: 1.6rem;
     }
-  
     ion-label,
     ion-select {
         font-size: 1.8rem;
@@ -31,15 +37,18 @@ page-home {
         margin-right: 1.5rem;
     }
     .item-md ion-thumbnail ion-img,
-    .item-md ion-thumbnail img {
+    .item-md ion-thumbnail .imageHome {
         width: 6.3rem;
         height: 6.3rem;
     }
     .coinName {
-        margin-top: 2rem;
+        margin-top: 1.2rem;
         color: black;
         font-size: 1.7rem;
         white-space: normal;
+        display: inline-block;
+        padding-left: 0.6rem;
+        word-break: keep-all;
     }
     .item-md {
         padding-left: 10px;
